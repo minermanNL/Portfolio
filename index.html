@@ -601,7 +601,63 @@
             display: flex;
             align-items: center;
         }
+
+        /* Mobile Menu Styles */
+        #mobile-menu {
+            position: fixed;
+            top: 72px; /* Adjust to match your header height */
+            left: 0;
+            width: 100%;
+            background-color: rgba(18, 18, 18, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 40;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 1rem 0;
+            display: none; /* Hide by default */
+            transform: translateY(-10px);
+            opacity: 0;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        #mobile-menu.active {
+            display: block;
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        #mobile-menu ul {
+            padding: 0.5rem 1rem;
+        }
+
+        #mobile-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        #mobile-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: white;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        #mobile-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        @media (min-width: 768px) {
+            #mobile-menu {
+                display: none !important;
+            }
+        }
+        
+        /* Your existing styles... */
     </style>
+    
+    <!-- Rest of your head content -->
 </head>
 <body class="bg-dark text-light font-sans">
     <!-- Header/Navigation -->
@@ -611,32 +667,30 @@
             
             <!-- Desktop Navigation -->
             <nav class="hidden md:block">
-                <ul class="flex space-x-1">
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#experience" class="nav-link">Experience</a></li>
-                    <li><a href="#education" class="nav-link">Education</a></li>
-                    <li><a href="#skills" class="nav-link">Skills</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                <ul class="flex space-x-6">
+                    <li><a href="#about" class="nav-link px-2">About</a></li>
+                    <li><a href="#experience" class="nav-link px-2">Experience</a></li>
+                    <li><a href="#education" class="nav-link px-2">Education</a></li>
+                    <li><a href="#skills" class="nav-link px-2">Skills</a></li>
+                    <li><a href="#contact" class="nav-link px-2">Contact</a></li>
                 </ul>
             </nav>
             
             <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="md:hidden text-light focus:outline-none p-2 rounded hover:bg-primary/20 transition-colors" aria-label="Toggle mobile menu" aria-expanded="false">
+            <button id="mobile-menu-btn" class="inline-flex md:hidden items-center justify-center w-10 h-10 text-light focus:outline-none rounded-lg hover:bg-primary/20 transition-colors">
                 <i class="fas fa-bars text-xl"></i>
             </button>
         </div>
         
-        <!-- Mobile Navigation -->
-        <div id="mobile-menu" class="md:hidden glass-effect hidden animate__animated animate__fadeIn">
-            <nav class="container mx-auto px-4 py-5">
-                <ul class="space-y-4">
-                    <li><a href="#about" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">About</a></li>
-                    <li><a href="#experience" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">Experience</a></li>
-                    <li><a href="#education" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">Education</a></li>
-                    <li><a href="#skills" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">Skills</a></li>
-                    <li><a href="#contact" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">Contact</a></li>
-                </ul>
-            </nav>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden">
+            <ul class="space-y-2">
+                <li><a href="#about">About</a></li>
+                <li><a href="#experience">Experience</a></li>
+                <li><a href="#education">Education</a></li>
+                <li><a href="#skills">Skills</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
         </div>
     </header>
 
@@ -652,14 +706,14 @@
         <div class="container mx-auto px-4 relative z-10">
             <div class="flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
                 <div data-aos="fade-up" data-aos-delay="200" class="flex flex-col items-center">
-                    <div class="mb-12 relative group flex justify-center">
-                        <div class="relative group" style="animation: gentleFloat 3s ease-in-out infinite;">
+                    <div class="mb-16 relative group flex justify-center">
+                        <div class="profile-image-container relative group" style="animation: gentleFloat 3s ease-in-out infinite;">
                             <div class="absolute -inset-3 bg-gradient-to-r from-primary via-accent to-secondary rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-300"></div>
                             <div class="relative rounded-full overflow-hidden flex items-center justify-center" style="width: 180px; height: 180px;">
                                 <img 
                                     src="src/assets/images/favicon.png" 
                                     alt="Ivan van der Schuit" 
-                                    class="w-full h-full rounded-full border-2 border-accent/50 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                                    class="profile-image w-full h-full rounded-full border-2 border-accent/50 transition-all duration-300 group-hover:scale-110"
                                     style="width: 180px; height: 180px; object-fit: cover;"
                                 >
                             </div>
@@ -1261,7 +1315,10 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-1">Instagram</h3>
-                                <a href="https://www.instagram.com/ivannl_/" target="_blank" class="text-gray-400 hover:text-primary">@ivannl_</a>
+                                <a href="https://www.instagram.com/ivannl_/" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>@ivannl_</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1273,7 +1330,10 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-1">Spotify</h3>
-                                <a href="https://open.spotify.com/artist/4I9Ky6xgFtzI13y535TNXP?si=H-GbxJa-QkGdmU6HXADjDA" target="_blank" class="text-gray-400 hover:text-primary">Ivan (Tricion)</a>
+                                <a href="https://open.spotify.com/artist/4I9Ky6xgFtzI13y535TNXP?si=H-GbxJa-QkGdmU6HXADjDA" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>Ivan (Tricion)</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1285,7 +1345,10 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-1">Payhip Store</h3>
-                                <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-gray-400 hover:text-primary">TricionCommerce</a>
+                                <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>TricionCommerce</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1297,7 +1360,10 @@
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-1">Fiverr</h3>
-                                <a href="https://www.fiverr.com/ivannl_" target="_blank" class="text-gray-400 hover:text-primary">ivannl_</a>
+                                <a href="https://www.fiverr.com/ivannl_" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>ivannl_</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1308,7 +1374,10 @@
                             Whether you need a custom PC built, help with technical issues, or are interested in music production services, I'm here to help!
                         </p>
                         <p class="text-gray-400 mb-4">
-                            Visit my <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-primary hover:underline">Payhip store</a> where you can purchase custom edits, ghost production services, merchandise, and marketing solutions.
+                            Visit my <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-primary hover:underline flex items-center inline-flex">
+                                <span>Payhip store</span>&nbsp;
+                                <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                            </a> where you can purchase custom edits, ghost production services, merchandise, and marketing solutions.
                         </p>
                         <p class="text-gray-400">
                             Send me a message and I can provide my phone number for more direct communication and faster response times.
@@ -1353,6 +1422,7 @@
             </div>
             <div class="mt-8 border-t border-gray-800 pt-8 text-center text-gray-500">
                 <p>© 2025 Ivan van der Schuit. All rights reserved.</p>
+                <p class="mt-2 text-sm">Owned by Tricion. Profile picture by Beau Huisman.</p>
             </div>
         </div>
     </footer>
@@ -1382,33 +1452,53 @@
             // Mobile menu toggle
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
+            const body = document.body;
             
             if (mobileMenuBtn && mobileMenu) {
-                mobileMenuBtn.addEventListener('click', function() {
-                    const expanded = this.getAttribute('aria-expanded') === 'true' || false;
-                    this.setAttribute('aria-expanded', !expanded);
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    const isOpen = mobileMenu.classList.contains('active');
                     
-                    // Change icon based on state
+                    // Toggle menu
+                    mobileMenu.classList.toggle('active');
+                    body.classList.toggle('mobile-menu-open');
+                    
+                    // Toggle icon
                     const icon = this.querySelector('i');
-                    if (expanded) {
-                        icon.classList.remove('fa-times');
-                        icon.classList.add('fa-bars');
-                    } else {
+                    if (!isOpen) {
                         icon.classList.remove('fa-bars');
                         icon.classList.add('fa-times');
+                    } else {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
                     }
-                    
-                    mobileMenu.classList.toggle('hidden');
+                });
+
+                // Close menu when clicking links
+                const menuLinks = mobileMenu.querySelectorAll('a');
+                menuLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        mobileMenu.classList.remove('active');
+                        body.classList.remove('mobile-menu-open');
+                        const icon = mobileMenuBtn.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    });
+                });
+
+                // Close menu when clicking outside
+                document.addEventListener('click', function(e) {
+                    if (mobileMenu.classList.contains('active') && 
+                        !mobileMenu.contains(e.target) && 
+                        !mobileMenuBtn.contains(e.target)) {
+                        mobileMenu.classList.remove('active');
+                        body.classList.remove('mobile-menu-open');
+                        const icon = mobileMenuBtn.querySelector('i');
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    }
                 });
             }
-            
-            // Close mobile menu when clicking a link
-            const mobileLinks = document.querySelectorAll('#mobile-menu a');
-            mobileLinks.forEach(link => {
-                link.addEventListener('click', function() {
-                    mobileMenu.classList.add('hidden');
-                });
-            });
             
             // Typed.js initialization
             const typedElement = document.querySelector('.typed-text');
@@ -1596,6 +1686,54 @@
                 }, 1000);
             });
         });
+    </script>
+    <!-- Add this script right before the closing body tag -->
+    <script>
+        // Mobile menu functionality
+        console.log('Mobile menu init script running');
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        
+        if (mobileMenuBtn && mobileMenu) {
+            console.log('Mobile menu elements found');
+            mobileMenuBtn.addEventListener('click', function() {
+                console.log('Mobile menu button clicked');
+                mobileMenu.classList.toggle('active');
+                
+                // Toggle icon
+                const icon = this.querySelector('i');
+                if (mobileMenu.classList.contains('active')) {
+                    icon.classList.remove('fa-bars');
+                    icon.classList.add('fa-times');
+                } else {
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+            
+            // Close menu when clicking links
+            const menuLinks = mobileMenu.querySelectorAll('a');
+            menuLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                });
+            });
+            
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (mobileMenu.classList.contains('active') && 
+                    !mobileMenu.contains(e.target) && 
+                    !mobileMenuBtn.contains(e.target)) {
+                    mobileMenu.classList.remove('active');
+                    const icon = mobileMenuBtn.querySelector('i');
+                    icon.classList.remove('fa-times');
+                    icon.classList.add('fa-bars');
+                }
+            });
+        }
     </script>
 </body>
 </html> 
