@@ -12,6 +12,12 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://ivan.dev">
     
+    <!-- Disable any other typing implementations -->
+    <script>
+        window.typedInitialized = false; // Will be set to true when our implementation runs
+        window.preventOtherTypedInit = true; // Flag for other scripts to check
+    </script>
+    
     <!-- Favicon -->
     <link rel="icon" href="src/assets/images/favicon.png">
     
@@ -587,6 +593,14 @@
                 padding-bottom: 4rem;
             }
         }
+
+        /* Add a minimum width to prevent layout shifts */
+        .typed-container {
+            min-width: 300px; /* Accommodates "Music Producer" */
+            min-height: 1.8em; /* Consistent height */
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body class="bg-dark text-light font-sans">
@@ -654,7 +668,7 @@
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
                         Ivan van der Schuit
                     </h1>
-                    <div class="text-lg md:text-xl text-gray-300 mb-6 flex items-center justify-center">
+                    <div class="text-lg md:text-xl text-gray-300 mb-6 flex items-center justify-center typed-container">
                         <span class="mr-2">I'm a</span>
                         <span class="typed-text animated-text" data-typed-items='["PC Builder", "IT Specialist", "Music Producer"]'></span>
                     </div>
@@ -1398,13 +1412,37 @@
             
             // Typed.js initialization
             const typedElement = document.querySelector('.typed-text');
-            if (typedElement) {
+            if (typedElement && !window.typedInitialized) {  // Check if already initialized
+                window.typedInitialized = true;  // Set flag to prevent double initialization
                 const typed = new Typed(typedElement, {
                     strings: JSON.parse(typedElement.getAttribute('data-typed-items')),
                     typeSpeed: 100,
                     backSpeed: 50,
-                    backDelay: 2000,
-                    loop: true
+                    backDelay: 2000,  // Increased delay between words
+                    startDelay: 300,  // Slight delay before starting
+                    loop: true,
+                    loopCount: Infinity,
+                    showCursor: true,
+                    cursorChar: '|',
+                    smartBackspace: true, // Only backspace what doesn't match the previous string
+                    shuffle: false,       // Don't randomize the order
+                    fadeOut: false,       // Don't fade out
+                    fadeOutClass: 'typed-fade-out',
+                    fadeOutDelay: 500,
+                    autoInsertCss: true,
+                    bindInputFocusEvents: false,
+                    attr: null,
+                    contentType: 'html',
+                    onBegin: function(self) {
+                        // Prevent other scripts from interfering
+                        window.typedInitialized = true;
+                    },
+                    onComplete: function(self) {
+                        // Ensure complete words are displayed before moving on
+                        setTimeout(function() {
+                            self.reset();
+                        }, self.backDelay);
+                    }
                 });
             }
             
