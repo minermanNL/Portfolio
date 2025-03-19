@@ -101,7 +101,8 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Typing effect for hero section
   const typedElement = document.querySelector('.typed-text');
-  if (typedElement) {
+  if (typedElement && !window.preventOtherTypedInit && !window.typedInitialized) {
+    // Only run if our custom implementation isn't active
     const phrases = JSON.parse(typedElement.getAttribute('data-typed-items'));
     let currentPhraseIndex = 0;
     let currentCharIndex = 0;

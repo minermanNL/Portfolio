@@ -4,7 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ivan van der Schuit – PC Builder, IT Support, Music Producer</title>
-    <meta name="description" content="Explore my resume, projects, and contact information.">
+    <meta name="description" content="Ivan van der Schuit - Skilled PC Builder, IT Support Specialist and Music Producer with 5M+ streams. Building custom PCs and creating viral music.">
+    <meta name="keywords" content="PC Builder, IT Support, Music Producer, Phonk, Custom PC, Tricion, Ivan van der Schuit">
+    <meta name="author" content="Ivan van der Schuit">
+    <meta property="og:title" content="Ivan van der Schuit – PC Builder, IT Support, Music Producer">
+    <meta property="og:description" content="Portfolio of Ivan van der Schuit - Professional IT Specialist and Music Producer with millions of streams.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ivan.dev">
+    
+    <!-- Disable any other typing implementations -->
+    <script>
+        window.typedInitialized = false; // Will be set to true when our implementation runs
+        window.preventOtherTypedInit = true; // Flag for other scripts to check
+    </script>
     
     <!-- Favicon -->
     <link rel="icon" href="src/assets/images/favicon.png">
@@ -22,6 +34,9 @@
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
 
     <!-- Custom Styles -->
     <style>
@@ -142,6 +157,61 @@
                 0 20px 40px rgba(0, 0, 0, 0.3),
                 0 0 20px rgba(79, 70, 229, 0.2),
                 inset 0 0 20px rgba(79, 70, 229, 0.1);
+        }
+
+        .card-icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.9; }
+        }
+
+        .interactive-badge {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .interactive-badge:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(79, 70, 229, 0.2);
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 30, 30, 0.9);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            bottom: 130%;
         }
 
         .nav-link {
@@ -414,6 +484,123 @@
         .bg-section-darker {
             background-color: #080808;
         }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(79, 70, 229, 0.8);
+            color: white;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .back-to-top:hover {
+            background: rgba(236, 72, 153, 0.8);
+            transform: translateY(-5px);
+        }
+
+        /* Add these dark mode styles to the style section */
+        :root {
+            --primary: #4F46E5;
+            --secondary: #EC4899;
+            --accent: #06B6D4;
+            --background: #121212;
+            --darker-bg: #0f0f0f;
+            --darkest-bg: #080808;
+            --text: #ffffff;
+            --text-gray: #9ca3af;
+            --card-bg: rgba(30, 30, 30, 0.7);
+        }
+
+        .dark-mode {
+            --primary: #818CF8;
+            --secondary: #F472B6;
+            --accent: #22D3EE;
+            --background: #0A0A0A;
+            --darker-bg: #070707;
+            --darkest-bg: #050505;
+            --text: #F3F4F6;
+            --text-gray: #9CA3AF;
+            --card-bg: rgba(20, 20, 20, 0.8);
+        }
+
+        .dark-toggle {
+            position: fixed;
+            top: 1.5rem;
+            right: 1.5rem;
+            z-index: 999;
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text);
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+        }
+
+        .dark-toggle:hover {
+            transform: rotate(30deg);
+            background: rgba(var(--primary), 0.2);
+        }
+
+        /* Add responsive optimization styles */
+        @media (max-width: 640px) {
+            .section-title {
+                font-size: 2rem;
+                margin-bottom: 2rem;
+            }
+            
+            .hero-btn {
+                min-width: 130px;
+                height: 42px;
+                padding: 0.5rem 1.25rem;
+                font-size: 0.875rem;
+            }
+            
+            .feature-card {
+                padding: 1.25rem;
+            }
+            
+            .section-spacing {
+                margin-top: 30vh;
+                padding-top: 4rem;
+                padding-bottom: 4rem;
+            }
+        }
+
+        /* Add a minimum width to prevent layout shifts */
+        .typed-container {
+            min-width: 300px; /* Accommodates "Music Producer" */
+            min-height: 1.8em; /* Consistent height */
+            display: flex;
+            align-items: center;
+        }
     </style>
 </head>
 <body class="bg-dark text-light font-sans">
@@ -434,20 +621,20 @@
             </nav>
             
             <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="md:hidden text-light focus:outline-none">
+            <button id="mobile-menu-btn" class="md:hidden text-light focus:outline-none p-2 rounded hover:bg-primary/20 transition-colors" aria-label="Toggle mobile menu" aria-expanded="false">
                 <i class="fas fa-bars text-xl"></i>
             </button>
         </div>
         
         <!-- Mobile Navigation -->
-        <div id="mobile-menu" class="md:hidden glass-effect hidden">
-            <nav class="container mx-auto px-4 py-3">
-                <ul class="space-y-3">
-                    <li><a href="#about" class="block nav-link">About</a></li>
-                    <li><a href="#experience" class="block nav-link">Experience</a></li>
-                    <li><a href="#education" class="block nav-link">Education</a></li>
-                    <li><a href="#skills" class="block nav-link">Skills</a></li>
-                    <li><a href="#contact" class="block nav-link">Contact</a></li>
+        <div id="mobile-menu" class="md:hidden glass-effect hidden animate__animated animate__fadeIn">
+            <nav class="container mx-auto px-4 py-5">
+                <ul class="space-y-4">
+                    <li><a href="#about" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">About</a></li>
+                    <li><a href="#experience" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">Experience</a></li>
+                    <li><a href="#education" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">Education</a></li>
+                    <li><a href="#skills" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">Skills</a></li>
+                    <li><a href="#contact" class="block nav-link py-2 px-4 rounded hover:bg-primary/10 transition-colors">Contact</a></li>
                 </ul>
             </nav>
         </div>
@@ -481,12 +668,12 @@
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
                         Ivan van der Schuit
                     </h1>
-                    <div class="text-lg md:text-xl text-gray-300 mb-6 flex items-center justify-center">
+                    <div class="text-lg md:text-xl text-gray-300 mb-6 flex items-center justify-center typed-container">
                         <span class="mr-2">I'm a</span>
                         <span class="typed-text animated-text" data-typed-items='["PC Builder", "IT Specialist", "Music Producer"]'></span>
                     </div>
                     <p class="text-gray-300 mb-8 max-w-lg mx-auto">
-                        Passionate about technology and creative solutions. I combine technical expertise with a customer-first approach.
+                        Bridging technology and creativity with expertise in custom PC solutions and viral music production. Creating impactful digital experiences through technical precision and artistic vision.
                     </p>
                     <div class="flex flex-wrap justify-center gap-4">
                         <a href="#contact" class="hero-btn hero-btn-primary">
@@ -494,6 +681,9 @@
                         </a>
                         <a href="#about" class="hero-btn hero-btn-secondary">
                             About Me <span class="btn-arrow">→</span>
+                        </a>
+                        <a href="https://tricion.wixsite.com/pcbuilds/online-store" target="_blank" class="hero-btn hero-btn-secondary">
+                            View PC Builds <span class="btn-arrow">→</span>
                         </a>
                     </div>
                 </div>
@@ -554,8 +744,14 @@
             <div class="space-y-8">
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                        <h3 class="text-xl font-semibold">IT Migration Technician - Student aan Bedrijf B.V.</h3>
-                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                        <div class="flex items-center">
+                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-laptop-code text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold">IT Migration Technician - Student aan Bedrijf B.V.</h3>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                            <i class="far fa-calendar-alt mr-2"></i>
                             <span class="bg-primary/10 text-primary px-2 py-1 rounded">Mar 2025 - Present</span>
                         </div>
                     </div>
@@ -572,8 +768,14 @@
 
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="150">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                        <h3 class="text-xl font-semibold">IT Support Technician - Studentaanhuis</h3>
-                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                        <div class="flex items-center">
+                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-headset text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold">IT Support Technician - Studentaanhuis</h3>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                            <i class="far fa-calendar-alt mr-2"></i>
                             <span class="bg-primary/10 text-primary px-2 py-1 rounded">Nov 2024 - Feb 2025</span>
                         </div>
                     </div>
@@ -589,20 +791,32 @@
 
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                        <h3 class="text-xl font-semibold">Server - Van der Valk Hotel Gorinchem</h3>
-                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                        <div class="flex items-center">
+                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-utensils text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold">Server - Van der Valk Hotel Gorinchem</h3>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                            <i class="far fa-calendar-alt mr-2"></i>
                             <span class="bg-primary/10 text-primary px-2 py-1 rounded">Oct 2023 - May 2024</span>
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">
-                        Part-time server position in Gorinchem, South Holland
+                        Part-time server role at a hotel restaurant, providing efficient service and assisting guests professionally.
                     </p>
                 </div>
 
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="250">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                        <h3 class="text-xl font-semibold">Computer Technician</h3>
-                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                        <div class="flex items-center">
+                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-microchip text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold">Computer Technician</h3>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                            <i class="far fa-calendar-alt mr-2"></i>
                             <span class="bg-primary/10 text-primary px-2 py-1 rounded">Jun 2019 - Present</span>
                         </div>
                     </div>
@@ -623,8 +837,14 @@
                 <div class="space-y-8">
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <h3 class="text-xl font-semibold">Music Producer</h3>
-                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                            <div class="flex items-center">
+                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-music text-secondary text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold">Music Producer</h3>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                                <i class="far fa-calendar-alt mr-2"></i>
                                 <span class="bg-primary/10 text-primary px-2 py-1 rounded">Oct 2020 - Present</span>
                             </div>
                         </div>
@@ -640,8 +860,14 @@
                     
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="150">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <h3 class="text-xl font-semibold">Music Production for Clients</h3>
-                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                            <div class="flex items-center">
+                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-headphones text-secondary text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold">Music Production for Clients</h3>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                                <i class="fas fa-tag mr-2"></i>
                                 <span class="bg-primary/10 text-primary px-2 py-1 rounded">Ghost Production & Custom Beats</span>
                             </div>
                         </div>
@@ -657,8 +883,14 @@
                     
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <h3 class="text-xl font-semibold">TikTok & Viral Music Placements</h3>
-                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                            <div class="flex items-center">
+                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fab fa-tiktok text-secondary text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold">TikTok & Viral Music Placements</h3>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                                <i class="fas fa-bullhorn mr-2"></i>
                                 <span class="bg-primary/10 text-primary px-2 py-1 rounded">Social Media Music Marketing</span>
                             </div>
                         </div>
@@ -674,18 +906,25 @@
                     
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="250">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <h3 class="text-xl font-semibold">AI MIDI Generator SaaS Project</h3>
-                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                            <div class="flex items-center">
+                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-brain text-secondary text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold">AI MIDI Generator SaaS Project</h3>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                                <i class="fas fa-code-branch mr-2"></i>
                                 <span class="bg-primary/10 text-primary px-2 py-1 rounded">In Development</span>
                             </div>
                         </div>
                         <p class="text-gray-400 mb-4">
-                            Developing an AI-driven music creation tool.
+                            Creating an innovative AI-powered platform that revolutionizes music composition workflows for producers across genres.
                         </p>
                         <ul class="list-disc list-inside text-gray-400 space-y-2">
-                            <li>Developing an AI-driven MIDI generator to help musicians and producers streamline the composition process</li>
-                            <li>Aimed at providing customizable, genre-specific MIDI files for various types of music production</li>
-                            <li>Working on integrating machine learning models for creating unique musical patterns</li>
+                            <li>Developing neural network models trained on thousands of MIDI patterns to generate genre-specific compositions</li>
+                            <li>Creating an intuitive web interface allowing producers to customize parameters like tempo, key, and mood</li>
+                            <li>Implementing export functionality for direct integration with major DAWs like FL Studio and Ableton</li>
+                            <li>Building a subscription-based platform with tiered access to different generation capabilities</li>
                         </ul>
                     </div>
                 </div>
@@ -814,6 +1053,15 @@
                                 <div class="bg-primary h-2 rounded-full" style="width: 85%"></div>
                             </div>
                         </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Networking</span>
+                                <span>50%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 50%"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -825,20 +1073,20 @@
                     <div class="space-y-3">
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="font-medium">Music Production</span>
-                                <span>90%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-secondary h-2 rounded-full" style="width: 90%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
                                 <span class="font-medium">FL Studio</span>
                                 <span>95%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
                                 <div class="bg-secondary h-2 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Music Production</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: 90%"></div>
                             </div>
                         </div>
                         <div>
@@ -853,19 +1101,19 @@
                         <div>
                             <div class="flex justify-between mb-1">
                                 <span class="font-medium">Sound Design</span>
-                                <span>85%</span>
+                                <span>55%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-secondary h-2 rounded-full" style="width: 85%"></div>
+                                <div class="bg-secondary h-2 rounded-full" style="width: 55%"></div>
                             </div>
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
                                 <span class="font-medium">Music Theory</span>
-                                <span>70%</span>
+                                <span>50%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-secondary h-2 rounded-full" style="width: 70%"></div>
+                                <div class="bg-secondary h-2 rounded-full" style="width: 50%"></div>
                             </div>
                         </div>
                     </div>
@@ -888,20 +1136,11 @@
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="font-medium">Project Management</span>
+                                <span class="font-medium">Networking</span>
                                 <span>85%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
                                 <div class="bg-accent h-2 rounded-full" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Marketing Strategy</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-accent h-2 rounded-full" style="width: 75%"></div>
                             </div>
                         </div>
                         <div>
@@ -915,11 +1154,20 @@
                         </div>
                         <div>
                             <div class="flex justify-between mb-1">
-                                <span class="font-medium">Business Development</span>
-                                <span>65%</span>
+                                <span class="font-medium">Marketing Strategy</span>
+                                <span>75%</span>
                             </div>
                             <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-accent h-2 rounded-full" style="width: 65%"></div>
+                                <div class="bg-accent h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Project Management</span>
+                                <span>70%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-accent h-2 rounded-full" style="width: 70%"></div>
                             </div>
                         </div>
                     </div>
@@ -929,25 +1177,43 @@
             <!-- Keywords/Tags -->
             <div class="mt-12" data-aos="fade-up">
                 <h3 class="text-xl font-semibold mb-6">Additional Skills & Tools</h3>
-                <div class="flex flex-wrap gap-2">
+                <div class="flex flex-wrap gap-2 mb-8">
                     <span class="skill-badge">Custom PC Building</span>
                     <span class="skill-badge">Hardware Testing</span>
                     <span class="skill-badge">System Integration</span>
                     <span class="skill-badge">Microsoft 365</span>
                     <span class="skill-badge">Windows OS</span>
+                    <span class="skill-badge">Network Configuration</span>
+                    <span class="skill-badge">Network Troubleshooting</span>
+                    <span class="skill-badge">Network Management</span>
                     <span class="skill-badge">FL Studio</span>
                     <span class="skill-badge">Ghost Production</span>
                     <span class="skill-badge">Stem Preparation</span>
+                    <span class="skill-badge">Mixing & Mastering</span>
+                    <span class="skill-badge">Audio Production</span>
+                    <span class="skill-badge">Beat Making</span>
+                    <span class="skill-badge">Sound Design</span>
                     <span class="skill-badge">Project File Management</span>
-                    <span class="skill-badge">Contract Management</span>
                     <span class="skill-badge">Release Strategy</span>
                     <span class="skill-badge">Marketing Consultation</span>
-                    <span class="skill-badge">Audio Production</span>
-                    <span class="skill-badge">Sound Design</span>
-                    <span class="skill-badge">Beat Making</span>
-                    <span class="skill-badge">Mixing & Mastering</span>
+                    <span class="skill-badge">Contract Management</span>
                     <span class="skill-badge">Client Relations</span>
-                    <a href="https://tricion.wixsite.com/pcbuilds/online-store" target="_blank" class="skill-badge hover:bg-primary/20 transition-all duration-300">View PC Build Portfolio →</a>
+                </div>
+                <div class="text-center">
+                    <a href="https://tricion.wixsite.com/pcbuilds/online-store" target="_blank" class="btn-primary py-3 px-6 rounded-xl inline-block font-semibold hover:shadow-glow">
+                        View My PC Build Portfolio <i class="fas fa-arrow-right ml-2"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Skills Filter -->
+            <div class="mt-12 mb-12 text-center" data-aos="fade-up">
+                <h3 class="text-xl font-semibold mb-6">Filter Skills By Category</h3>
+                <div class="flex flex-wrap justify-center gap-3 mb-6">
+                    <button class="skill-filter-btn active px-4 py-2 rounded-full bg-primary/20 border border-primary/30 hover:bg-primary/30 transition-all" data-filter="all">All Skills</button>
+                    <button class="skill-filter-btn px-4 py-2 rounded-full bg-primary/10 border border-primary/20 hover:bg-primary/30 transition-all" data-filter="technical">Technical</button>
+                    <button class="skill-filter-btn px-4 py-2 rounded-full bg-secondary/10 border border-secondary/20 hover:bg-secondary/30 transition-all" data-filter="music">Music</button>
+                    <button class="skill-filter-btn px-4 py-2 rounded-full bg-accent/10 border border-accent/20 hover:bg-accent/30 transition-all" data-filter="professional">Professional</button>
                 </div>
             </div>
         </div>
@@ -976,11 +1242,62 @@
                     <div class="glass-effect p-6 rounded-xl hover-scale">
                         <div class="flex items-start">
                             <div class="bg-primary/10 p-3 rounded-full mr-4">
-                                <i class="fab fa-linkedin text-primary"></i>
+                                <i class="fab fa-linkedin text-primary animate__animated animate__pulse animate__infinite animate__slower"></i>
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-1">LinkedIn</h3>
-                                <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" class="text-gray-400 hover:text-primary">ivan-van-der-schuit-b7ba0324a</a>
+                                <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>Connect with me professionally</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fab fa-instagram text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Instagram</h3>
+                                <a href="https://www.instagram.com/ivannl_/" target="_blank" class="text-gray-400 hover:text-primary">@ivannl_</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fab fa-spotify text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Spotify</h3>
+                                <a href="https://open.spotify.com/artist/4I9Ky6xgFtzI13y535TNXP?si=H-GbxJa-QkGdmU6HXADjDA" target="_blank" class="text-gray-400 hover:text-primary">Ivan (Tricion)</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Payhip Store</h3>
+                                <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-gray-400 hover:text-primary">TricionCommerce</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fas fa-store text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Fiverr</h3>
+                                <a href="https://www.fiverr.com/ivannl_" target="_blank" class="text-gray-400 hover:text-primary">ivannl_</a>
                             </div>
                         </div>
                     </div>
@@ -990,8 +1307,11 @@
                         <p class="text-gray-400 mb-4">
                             Whether you need a custom PC built, help with technical issues, or are interested in music production services, I'm here to help!
                         </p>
+                        <p class="text-gray-400 mb-4">
+                            Visit my <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-primary hover:underline">Payhip store</a> where you can purchase custom edits, ghost production services, merchandise, and marketing solutions.
+                        </p>
                         <p class="text-gray-400">
-                            Send me a message or give me a call, and I'll get back to you as soon as possible.
+                            Send me a message and I can provide my phone number for more direct communication and faster response times.
                         </p>
                     </div>
                 </div>
@@ -1008,7 +1328,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-6 md:mb-0">
                     <h2 class="text-2xl font-bold mb-2">Ivan<span class="text-primary">.dev</span></h2>
-                    <p class="text-gray-400">PC Builder | IT Support | Music Producer</p>
+                    <p class="text-gray-400">PC Builder | IT Professional | Music Producer</p>
                 </div>
                 <div class="flex space-x-4">
                     <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
@@ -1017,8 +1337,17 @@
                     <a href="mailto:tricionmedia@gmail.com" class="text-gray-400 hover:text-primary transition-colors">
                         <i class="fas fa-envelope text-xl"></i>
                     </a>
-                    <a href="#contact" class="text-gray-400 hover:text-primary transition-colors">
-                        <i class="fas fa-phone text-xl"></i>
+                    <a href="https://www.instagram.com/ivannl_/" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="https://open.spotify.com/artist/4I9Ky6xgFtzI13y535TNXP?si=H-GbxJa-QkGdmU6HXADjDA" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-spotify text-xl"></i>
+                    </a>
+                    <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </a>
+                    <a href="https://www.fiverr.com/ivannl_" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fas fa-store text-xl"></i>
                     </a>
                 </div>
             </div>
@@ -1028,10 +1357,245 @@
         </div>
     </footer>
 
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
     <!-- AOS Library -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     
     <!-- Main JavaScript -->
     <script src="src/js/main.js"></script>
+    
+    <!-- Typed.js - For the animated text in hero section -->
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            // Initialize AOS
+            AOS.init({
+                duration: 800,
+                easing: 'ease-in-out',
+                once: true
+            });
+            
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function() {
+                    const expanded = this.getAttribute('aria-expanded') === 'true' || false;
+                    this.setAttribute('aria-expanded', !expanded);
+                    
+                    // Change icon based on state
+                    const icon = this.querySelector('i');
+                    if (expanded) {
+                        icon.classList.remove('fa-times');
+                        icon.classList.add('fa-bars');
+                    } else {
+                        icon.classList.remove('fa-bars');
+                        icon.classList.add('fa-times');
+                    }
+                    
+                    mobileMenu.classList.toggle('hidden');
+                });
+            }
+            
+            // Close mobile menu when clicking a link
+            const mobileLinks = document.querySelectorAll('#mobile-menu a');
+            mobileLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    mobileMenu.classList.add('hidden');
+                });
+            });
+            
+            // Typed.js initialization
+            const typedElement = document.querySelector('.typed-text');
+            if (typedElement && !window.typedInitialized) {  // Check if already initialized
+                window.typedInitialized = true;  // Set flag to prevent double initialization
+                const typed = new Typed(typedElement, {
+                    strings: JSON.parse(typedElement.getAttribute('data-typed-items')),
+                    typeSpeed: 100,
+                    backSpeed: 50,
+                    backDelay: 2000,  // Increased delay between words
+                    startDelay: 300,  // Slight delay before starting
+                    loop: true,
+                    loopCount: Infinity,
+                    showCursor: true,
+                    cursorChar: '|',
+                    smartBackspace: true, // Only backspace what doesn't match the previous string
+                    shuffle: false,       // Don't randomize the order
+                    fadeOut: false,       // Don't fade out
+                    fadeOutClass: 'typed-fade-out',
+                    fadeOutDelay: 500,
+                    autoInsertCss: true,
+                    bindInputFocusEvents: false,
+                    attr: null,
+                    contentType: 'html',
+                    onBegin: function(self) {
+                        // Prevent other scripts from interfering
+                        window.typedInitialized = true;
+                    },
+                    onComplete: function(self) {
+                        // Ensure complete words are displayed before moving on
+                        setTimeout(function() {
+                            self.reset();
+                        }, self.backDelay);
+                    }
+                });
+            }
+            
+            // Smooth scrolling for anchor links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    if (targetId === '#') return;
+                    
+                    const targetElement = document.querySelector(targetId);
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            // Back to top button functionality
+            const backToTopButton = document.getElementById('back-to-top');
+            
+            if (backToTopButton) {
+                // Show/hide button based on scroll position
+                window.addEventListener('scroll', function() {
+                    if (window.pageYOffset > 300) {
+                        backToTopButton.classList.add('show');
+                    } else {
+                        backToTopButton.classList.remove('show');
+                    }
+                });
+                
+                // Scroll to top when clicked
+                backToTopButton.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            // Skills filtering system
+            const filterButtons = document.querySelectorAll('.skill-filter-btn');
+            const skillBadges = document.querySelectorAll('.skill-badge');
+
+            // Add data attributes to skill badges
+            skillBadges.forEach(badge => {
+                const text = badge.textContent.toLowerCase();
+                if (text.includes('pc') || text.includes('hardware') || text.includes('system') || text.includes('windows') || text.includes('network')) {
+                    badge.setAttribute('data-category', 'technical');
+                } else if (text.includes('fl studio') || text.includes('production') || text.includes('mix') || text.includes('audio') || text.includes('sound') || text.includes('beat')) {
+                    badge.setAttribute('data-category', 'music');
+                } else {
+                    badge.setAttribute('data-category', 'professional');
+                }
+            });
+
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // Remove active class from all buttons
+                    filterButtons.forEach(btn => btn.classList.remove('active', 'bg-primary/20', 'bg-secondary/20', 'bg-accent/20'));
+                    
+                    // Add active class to clicked button
+                    this.classList.add('active');
+                    
+                    // Get filter value
+                    const filterValue = this.getAttribute('data-filter');
+                    
+                    // Apply appropriate background based on category
+                    if (filterValue === 'technical') {
+                        this.classList.add('bg-primary/20');
+                    } else if (filterValue === 'music') {
+                        this.classList.add('bg-secondary/20');
+                    } else if (filterValue === 'professional') {
+                        this.classList.add('bg-accent/20');
+                    } else {
+                        this.classList.add('bg-primary/20');
+                    }
+                    
+                    // Filter skill badges
+                    skillBadges.forEach(badge => {
+                        if (filterValue === 'all' || badge.getAttribute('data-category') === filterValue) {
+                            badge.style.display = 'inline-block';
+                            badge.classList.add('animate__animated', 'animate__fadeIn');
+                            setTimeout(() => {
+                                badge.classList.remove('animate__animated', 'animate__fadeIn');
+                            }, 500);
+                        } else {
+                            badge.style.display = 'none';
+                        }
+                    });
+                });
+            });
+
+            // Add animation to page elements on scroll
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.feature-card, .skill-badge, .glass-effect');
+                
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        if (!element.classList.contains('animate__animated')) {
+                            element.classList.add('animate__animated', 'animate__fadeInUp');
+                        }
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Run once on page load
+
+            // Dark mode toggle
+            const darkToggle = document.getElementById('dark-toggle');
+            const htmlElement = document.documentElement;
+            const darkIcon = '<i class="fas fa-moon"></i>';
+            const lightIcon = '<i class="fas fa-sun"></i>';
+
+            // Check for saved theme preference or use system preference
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            // Set initial theme
+            if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+                htmlElement.classList.add('dark-mode');
+                darkToggle.innerHTML = lightIcon;
+            } else {
+                darkToggle.innerHTML = darkIcon;
+            }
+
+            // Toggle theme on button click
+            darkToggle.addEventListener('click', () => {
+                htmlElement.classList.toggle('dark-mode');
+                
+                // Update button icon
+                if (htmlElement.classList.contains('dark-mode')) {
+                    darkToggle.innerHTML = lightIcon;
+                    localStorage.setItem('theme', 'dark');
+                } else {
+                    darkToggle.innerHTML = darkIcon;
+                    localStorage.setItem('theme', 'light');
+                }
+                
+                // Add animation
+                darkToggle.classList.add('animate__animated', 'animate__rubberBand');
+                setTimeout(() => {
+                    darkToggle.classList.remove('animate__animated', 'animate__rubberBand');
+                }, 1000);
+            });
+        });
+    </script>
 </body>
 </html> 
