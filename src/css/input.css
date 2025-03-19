@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom CSS classes */
+@layer components {
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+  
+  .section-title {
+    @apply text-3xl md:text-4xl font-bold mb-8 text-white relative;
+  }
+  
+  .section-title::after {
+    @apply content-[''] absolute -bottom-2 left-0 h-1 w-16 bg-gradient-to-r from-primary to-secondary rounded-full;
+  }
+
+  .glass-card {
+    @apply relative bg-glass-gradient backdrop-blur-md border border-glass-light rounded-xl shadow-glass overflow-hidden;
+  }
+  
+  .card {
+    @apply glass-card p-6 hover:shadow-lg transition-all duration-300 hover:translate-y-[-4px];
+  }
+  
+  .btn {
+    @apply px-6 py-2 rounded-md transition-all duration-300 font-medium;
+  }
+  
+  .btn-primary {
+    @apply btn bg-primary text-white hover:bg-primary/80 hover:shadow-neon;
+  }
+  
+  .btn-secondary {
+    @apply btn bg-secondary text-white hover:bg-secondary/80 hover:shadow-neon-secondary;
+  }
+  
+  .btn-outline {
+    @apply btn border border-white/20 bg-glass-light text-white hover:bg-white/10 backdrop-blur-sm;
+  }
+  
+  .nav-link {
+    @apply text-white/70 hover:text-white transition-colors px-3 py-2 relative;
+  }
+  
+  .nav-link::after {
+    @apply content-[''] absolute h-[2px] w-0 left-0 -bottom-1 bg-gradient-to-r from-primary to-secondary transition-all duration-300 ease-in-out rounded-full opacity-0;
+  }
+  
+  .nav-link:hover::after {
+    @apply w-full opacity-100;
+  }
+  
+  .nav-link.active {
+    @apply text-white;
+  }
+  
+  .nav-link.active::after {
+    @apply w-full opacity-100;
+  }
+
+  .skill-badge {
+    @apply backdrop-blur-sm bg-primary/10 text-white px-3 py-1 rounded-full text-sm font-medium border border-primary/20 hover:border-primary/40 transition-all;
+  }
+
+  /* Glow effects */
+  .glow-border {
+    @apply relative;
+  }
+  
+  .glow-border::before {
+    @apply content-[''] absolute inset-0 rounded-xl p-[1.5px] bg-gradient-to-r from-primary via-secondary to-accent animate-gradient-x opacity-70;
+    z-index: -1;
+  }
+  
+  .hover-glow {
+    @apply transition-all duration-300;
+  }
+  
+  .hover-glow:hover {
+    @apply shadow-neon;
+  }
+
+  /* Animated background elements */
+  .floating-blob {
+    @apply absolute rounded-full opacity-20 blur-3xl animate-float;
+    background: radial-gradient(circle, var(--blob-color) 0%, transparent 70%);
+  }
+
+  /* Form elements */
+  .form-input {
+    @apply w-full px-4 py-2 bg-dark border border-white/10 rounded-md focus:outline-none focus:ring-2 focus:ring-primary/50 focus:border-primary text-white;
+  }
+  
+  /* Shimmer effect */
+  .shimmer {
+    @apply relative overflow-hidden;
+  }
+  
+  .shimmer::after {
+    @apply content-[''] absolute top-0 left-0 right-0 bottom-0 bg-gradient-to-r from-transparent via-white/5 to-transparent transform skew-x-[-20deg] animate-shimmer;
+  }
+} 

@@ -1,0 +1,1048 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ivan van der Schuit – PC Builder, IT Support, Music Producer</title>
+    <meta name="description" content="Explore my resume, projects, and contact information.">
+    
+    <!-- Favicon -->
+    <link rel="icon" href="src/assets/images/favicon.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- AOS CSS -->
+    <link href="https://unpkg.com/aos@2.3.4/dist/aos.css" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <link href="src/css/output.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #121212;
+            color: #ffffff;
+            background: linear-gradient(135deg, #121212, #1a1a1a);
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.15) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -1;
+            animation: backgroundPulse 15s ease-in-out infinite;
+        }
+
+        @keyframes backgroundPulse {
+            0%, 100% { opacity: 0.8; }
+            50% { opacity: 1; }
+        }
+        
+        .glass-effect {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .glass-effect:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(79, 70, 229, 0.2);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+        }
+
+        .glass-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 200%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: 0.5s;
+            pointer-events: none;
+        }
+
+        .glass-effect:hover::before {
+            left: 100%;
+        }
+
+        .hover-scale {
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 40px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-hover:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        .btn-hover::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent 50%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+        }
+
+        .btn-hover:hover::after {
+            opacity: 1;
+        }
+
+        .feature-card {
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            border-radius: 1.5rem;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(79, 70, 229, 0.2),
+                inset 0 0 20px rgba(79, 70, 229, 0.1);
+        }
+
+        .nav-link {
+            transition: all 0.3s ease;
+            position: relative;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: -2px;
+            left: 50%;
+            background: linear-gradient(90deg, #4F46E5, #EC4899);
+            transition: all 0.3s ease;
+            transform: translateX(-50%);
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .nav-link:hover {
+            color: #ffffff;
+        }
+
+        .skill-progress {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-progress::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, 
+                rgba(79, 70, 229, 0.3),
+                rgba(236, 72, 153, 0.3)
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .skill-progress:hover::after {
+            opacity: 1;
+        }
+
+        .skill-badge {
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+        }
+
+        .skill-badge:hover {
+            background: rgba(79, 70, 229, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .animate-float {
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .form-input {
+            background: rgba(30, 30, 30, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            border-color: rgba(79, 70, 229, 0.5);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+            color: white;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(79, 70, 229, 0.3);
+        }
+
+        @keyframes gradient-x {
+            0%, 100% {
+                background-size: 200% 200%;
+                background-position: left center;
+            }
+            50% {
+                background-size: 200% 200%;
+                background-position: right center;
+            }
+        }
+        
+        .animate-gradient-x {
+            animation: gradient-x 8s ease infinite;
+        }
+        
+        .shadow-glow {
+            box-shadow: 0 0 20px rgba(79, 70, 229, 0.5);
+        }
+        
+        .shadow-glow-light {
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+        
+        .hover\:shadow-glow:hover {
+            box-shadow: 0 0 25px rgba(79, 70, 229, 0.6);
+        }
+        
+        .hover\:shadow-glow-light:hover {
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            line-height: 1.2;
+            font-weight: 700;
+            text-align: center;
+            margin-bottom: 3rem;
+            background: linear-gradient(to right, #6200ee, #03dac6);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -0.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 4px;
+            background: linear-gradient(to right, #6200ee, #03dac6);
+            border-radius: 2px;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 3rem;
+            }
+        }
+
+        .name-glow {
+            text-shadow: 0 0 10px rgba(79, 70, 229, 0.5),
+                         0 0 20px rgba(79, 70, 229, 0.3),
+                         0 0 30px rgba(79, 70, 229, 0.2);
+            animation: pulsate 3s ease-in-out infinite;
+        }
+        
+        .text-glow-blue {
+            color: #4d94ff;
+            text-shadow: 0 0 10px rgba(77, 148, 255, 0.7),
+                         0 0 20px rgba(77, 148, 255, 0.5);
+        }
+        
+        @keyframes pulsate {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+        
+        .animated-text {
+            position: relative;
+            display: inline-block;
+            color: #4d94ff;
+            font-weight: 600;
+            text-shadow: 0 0 10px rgba(77, 148, 255, 0.5);
+        }
+        
+        .animated-text::after {
+            content: '';
+            position: absolute;
+            height: 2px;
+            width: 100%;
+            bottom: -2px;
+            left: 0;
+            background: linear-gradient(to right, transparent, #4d94ff, transparent);
+            animation: glow 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes glow {
+            0%, 100% { opacity: 0.5; transform: scaleX(0.8); }
+            50% { opacity: 1; transform: scaleX(1); }
+        }
+        
+        .hero-btn {
+            padding: 0.75rem 1.75rem;
+            border-radius: 9999px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 160px;
+            height: 48px;
+        }
+        
+        .hero-btn-primary {
+            background: linear-gradient(135deg, #4F46E5, #EC4899);
+            color: white;
+            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.25);
+        }
+        
+        .hero-btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 15px rgba(79, 70, 229, 0.4);
+        }
+        
+        .hero-btn-secondary {
+            background: rgba(30, 30, 30, 0.7);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            color: white;
+            border: 1px solid rgba(79, 70, 229, 0.3);
+        }
+        
+        .hero-btn-secondary:hover {
+            transform: translateY(-2px);
+            border-color: rgba(79, 70, 229, 0.8);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 0 0 10px rgba(79, 70, 229, 0.2);
+        }
+        
+        .btn-arrow {
+            display: inline-block;
+            margin-left: 8px;
+            transition: transform 0.3s ease;
+        }
+        
+        .hero-btn-secondary:hover .btn-arrow {
+            transform: translateX(4px);
+        }
+
+        @keyframes gentleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(5px); }
+        }
+
+        .section-spacing {
+            margin-top: 40vh;
+            padding-top: 6rem;
+            padding-bottom: 6rem;
+        }
+        
+        .bg-section-dark {
+            background-color: #0f0f0f;
+        }
+        
+        .bg-section-darker {
+            background-color: #080808;
+        }
+    </style>
+</head>
+<body class="bg-dark text-light font-sans">
+    <!-- Header/Navigation -->
+    <header class="fixed w-full glass-effect z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <a href="#hero" class="text-2xl font-bold text-light">Ivan<span class="text-primary">.dev</span></a>
+            
+            <!-- Desktop Navigation -->
+            <nav class="hidden md:block">
+                <ul class="flex space-x-1">
+                    <li><a href="#about" class="nav-link">About</a></li>
+                    <li><a href="#experience" class="nav-link">Experience</a></li>
+                    <li><a href="#education" class="nav-link">Education</a></li>
+                    <li><a href="#skills" class="nav-link">Skills</a></li>
+                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                </ul>
+            </nav>
+            
+            <!-- Mobile Menu Button -->
+            <button id="mobile-menu-btn" class="md:hidden text-light focus:outline-none">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+        </div>
+        
+        <!-- Mobile Navigation -->
+        <div id="mobile-menu" class="md:hidden glass-effect hidden">
+            <nav class="container mx-auto px-4 py-3">
+                <ul class="space-y-3">
+                    <li><a href="#about" class="block nav-link">About</a></li>
+                    <li><a href="#experience" class="block nav-link">Experience</a></li>
+                    <li><a href="#education" class="block nav-link">Education</a></li>
+                    <li><a href="#skills" class="block nav-link">Skills</a></li>
+                    <li><a href="#contact" class="block nav-link">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section id="hero" class="h-screen flex items-center justify-center pt-40 pb-20 relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/20 via-primary/10 to-accent/20"></div>
+            <div class="absolute inset-0" style="background: 
+                radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.2) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(79, 70, 229, 0.1) 0%, rgba(236, 72, 153, 0.05) 50%, transparent 100%);"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
+                <div data-aos="fade-up" data-aos-delay="200" class="flex flex-col items-center">
+                    <div class="mb-12 relative group flex justify-center">
+                        <div class="relative group" style="animation: gentleFloat 3s ease-in-out infinite;">
+                            <div class="absolute -inset-3 bg-gradient-to-r from-primary via-accent to-secondary rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-300"></div>
+                            <div class="relative rounded-full overflow-hidden flex items-center justify-center" style="width: 180px; height: 180px;">
+                                <img 
+                                    src="src/assets/images/favicon.png" 
+                                    alt="Ivan van der Schuit" 
+                                    class="w-full h-full rounded-full border-2 border-accent/50 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                                    style="width: 180px; height: 180px; object-fit: cover;"
+                                >
+                            </div>
+                        </div>
+                    </div>
+                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+                        Ivan van der Schuit
+                    </h1>
+                    <div class="text-lg md:text-xl text-gray-300 mb-6 flex items-center justify-center">
+                        <span class="mr-2">I'm a</span>
+                        <span class="typed-text animated-text" data-typed-items='["PC Builder", "IT Specialist", "Music Producer"]'></span>
+                    </div>
+                    <p class="text-gray-300 mb-8 max-w-lg mx-auto">
+                        Passionate about technology and creative solutions. I combine technical expertise with a customer-first approach.
+                    </p>
+                    <div class="flex flex-wrap justify-center gap-4">
+                        <a href="#contact" class="hero-btn hero-btn-primary">
+                            Get In Touch
+                        </a>
+                        <a href="#about" class="hero-btn hero-btn-secondary">
+                            About Me <span class="btn-arrow">→</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" class="section-spacing bg-section-darker relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="section-title" data-aos="fade-up">About Me</h2>
+            <div class="grid md:grid-cols-2 gap-12">
+                <div data-aos="fade-up" data-aos-delay="200">
+                    <p class="text-gray-400 mb-4">
+                        From a young age, I have been deeply fascinated by technology and music. This dual interest has significantly influenced my personal and professional development.
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        My journey began with building custom PCs for friends and family, which honed my technical skills and led to freelance opportunities in IT support and system integration. Simultaneously, I explored music production, experimenting with various genres and eventually establishing myself in the Phonk, Trap, and House music scenes.
+                    </p>
+                    <p class="text-gray-400 mb-4">
+                        Balancing my IT career with music production has been both challenging and rewarding. This balance has allowed me to develop a diverse skill set and adapt to various creative and technical demands.
+                    </p>
+                    <p class="text-gray-400">
+                        I am committed to continuous learning, regularly updating my knowledge in emerging technologies and music trends. Engaging with online communities and attending industry events has enriched my understanding and network in both fields.
+                    </p>
+                </div>
+                <div class="space-y-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="glass-effect p-6 rounded-xl hover-scale feature-card">
+                        <h3 class="text-xl font-semibold mb-2 text-light">PC Building & IT Support</h3>
+                        <p class="text-gray-400">Custom PC builds optimized for gaming, productivity, crypto mining, and creative work with comprehensive troubleshooting and maintenance services.</p>
+                    </div>
+                    <div class="glass-effect p-6 rounded-xl hover-scale feature-card">
+                        <h3 class="text-xl font-semibold mb-2 text-light">Enterprise IT Solutions</h3>
+                        <p class="text-gray-400">Experience with enterprise-level migrations, Microsoft 365 transitions, and providing first-line IT support for businesses.</p>
+                    </div>
+                    <div class="glass-effect p-6 rounded-xl hover-scale feature-card">
+                        <h3 class="text-xl font-semibold mb-2 text-light">Music Production</h3>
+                        <p class="text-gray-400">Creating and engineering music across various genres including Phonk, Trap, and House, with millions of streams worldwide and viral TikTok placements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="section-padding bg-dark relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-gradient-to-tl from-primary/10 via-transparent to-accent/10"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="section-title" data-aos="fade-up">Professional Experience</h2>
+            
+            <!-- IT Experience -->
+            <h3 class="text-2xl font-semibold text-center mb-8 text-light" data-aos="fade-up">PC & IT Projects</h3>
+            <div class="space-y-8">
+                <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">IT Migration Technician - Student aan Bedrijf B.V.</h3>
+                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Mar 2025 - Present</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        IT Project Assistant for Microsoft Migration at Amarant (Hybrid)
+                    </p>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2">
+                        <li>Assisted in Amarant's full-scale transition to Microsoft 365</li>
+                        <li>Replaced and configured hardware (laptops, desktops, tablets)</li>
+                        <li>Provided first-line IT support and troubleshooting for end users</li>
+                        <li>Ensured minimal downtime during system upgrades</li>
+                    </ul>
+                </div>
+
+                <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="150">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">IT Support Technician - Studentaanhuis</h3>
+                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Nov 2024 - Feb 2025</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Part-time IT support services in South Holland (Hybrid)
+                    </p>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2">
+                        <li>Diagnosed and fixed Windows OS issues, network problems, and hardware malfunctions</li>
+                        <li>Provided remote and on-site tech support for clients</li>
+                        <li>Achieved high customer satisfaction ratings</li>
+                    </ul>
+                </div>
+
+                <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">Server - Van der Valk Hotel Gorinchem</h3>
+                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Oct 2023 - May 2024</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Part-time server position in Gorinchem, South Holland
+                    </p>
+                </div>
+
+                <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="250">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                        <h3 class="text-xl font-semibold">Computer Technician</h3>
+                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Jun 2019 - Present</span>
+                        </div>
+                    </div>
+                    <p class="text-gray-400 mb-4">
+                        Freelance PC building and system optimization services
+                    </p>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2">
+                        <li>Built custom gaming PCs and workstations</li>
+                        <li>Provided hardware consulting and optimization services</li>
+                        <li>Specialized in water cooling and high-performance systems</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <!-- Music Experience -->
+            <div class="mt-32 mb-24">
+                <h3 class="text-2xl font-semibold text-center mb-16 text-light" data-aos="fade-up">Music Production & Business</h3>
+                <div class="space-y-8">
+                    <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Music Producer</h3>
+                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                                <span class="bg-primary/10 text-primary px-2 py-1 rounded">Oct 2020 - Present</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-4">
+                            Freelance Music Producer/DJ specializing in Phonk, Trap, House, and club beats
+                        </p>
+                        <ul class="list-disc list-inside text-gray-400 space-y-2">
+                            <li>Over 5 million streams worldwide on personal releases</li>
+                            <li>Created viral tracks for TikTok and social media</li>
+                            <li>Produced and sold custom beats for artists and brands</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="150">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">Music Production for Clients</h3>
+                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                                <span class="bg-primary/10 text-primary px-2 py-1 rounded">Ghost Production & Custom Beats</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-4">
+                            Providing freelance ghost production services for artists and brands.
+                        </p>
+                        <ul class="list-disc list-inside text-gray-400 space-y-2">
+                            <li>Sold and licensed custom beats and full tracks to artists and brands</li>
+                            <li>Delivered high-quality mixing & mastering for professional sound</li>
+                            <li>Worked on custom client projects in different sub-genres</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">TikTok & Viral Music Placements</h3>
+                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                                <span class="bg-primary/10 text-primary px-2 py-1 rounded">Social Media Music Marketing</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-4">
+                            Creating music for viral social media trends and placements.
+                        </p>
+                        <ul class="list-disc list-inside text-gray-400 space-y-2">
+                            <li>Created beats that were used in viral TikTok trends</li>
+                            <li>Tracks played in club mixes and DJ sets globally</li>
+                            <li>Built a network of artists and influencers for distribution</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="250">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
+                            <h3 class="text-xl font-semibold">AI MIDI Generator SaaS Project</h3>
+                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                                <span class="bg-primary/10 text-primary px-2 py-1 rounded">In Development</span>
+                            </div>
+                        </div>
+                        <p class="text-gray-400 mb-4">
+                            Developing an AI-driven music creation tool.
+                        </p>
+                        <ul class="list-disc list-inside text-gray-400 space-y-2">
+                            <li>Developing an AI-driven MIDI generator to help musicians and producers streamline the composition process</li>
+                            <li>Aimed at providing customizable, genre-specific MIDI files for various types of music production</li>
+                            <li>Working on integrating machine learning models for creating unique musical patterns</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Education Section -->
+    <section id="education" class="section-padding bg-darker relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="section-title" data-aos="fade-up">Education & Certifications</h2>
+            <div class="grid md:grid-cols-2 gap-8">
+                <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-primary/10 p-3 rounded-full mr-4">
+                            <i class="fas fa-graduation-cap text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">HBO Business IT Management</h3>
+                            <p class="text-gray-500">Hogeschool Rotterdam, 2024-2028</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">
+                        Currently pursuing a Bachelor's degree in Business IT Management, focusing on bridging technology and business solutions.
+                    </p>
+                </div>
+                
+                <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-secondary/10 p-3 rounded-full mr-4">
+                            <i class="fas fa-school text-secondary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">HAVO N&T Profile</h3>
+                            <p class="text-gray-500">Fortes Lyceum, Graduated 2023</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">
+                        Completed HAVO with Nature & Technology profile, providing a strong foundation in technical and analytical subjects.
+                    </p>
+                </div>
+
+                <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-accent/10 p-3 rounded-full mr-4">
+                            <i class="fas fa-car text-accent"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">Driver's License</h3>
+                            <p class="text-gray-500">Category B - Dutch Driver's License</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">
+                        Full Dutch driving license (Category B), enabling mobility for on-site technical support and client meetings.
+                    </p>
+                </div>
+                
+                <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="flex items-start mb-4">
+                        <div class="bg-primary/10 p-3 rounded-full mr-4">
+                            <i class="fas fa-certificate text-primary"></i>
+                        </div>
+                        <div>
+                            <h3 class="text-xl font-semibold">Professional Development</h3>
+                            <p class="text-gray-500">Ongoing</p>
+                        </div>
+                    </div>
+                    <p class="text-gray-400">
+                        Continuously expanding knowledge through hands-on experience in IT support, PC building, and music production.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills Section -->
+    <section id="skills" class="section-padding bg-dark relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-gradient-to-tr from-primary/10 via-transparent to-accent/10"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="section-title" data-aos="fade-up">Skills & Expertise</h2>
+            <div class="grid md:grid-cols-3 gap-8">
+                <div class="glass-effect p-6 rounded-xl hover-scale" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-laptop-code text-primary mr-3"></i>
+                        Technical Skills
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Custom PC Building</span>
+                                <span>98%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Hardware Troubleshooting</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">System Optimization</span>
+                                <span>92%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 92%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Microsoft 365</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-primary h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect p-6 rounded-xl hover-scale" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-music text-secondary mr-3"></i>
+                        Music Production Skills
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Music Production</span>
+                                <span>90%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: 90%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">FL Studio</span>
+                                <span>95%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: 95%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Mixing & Mastering</span>
+                                <span>88%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: 88%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Sound Design</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Music Theory</span>
+                                <span>70%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-secondary h-2 rounded-full" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="glass-effect p-6 rounded-xl hover-scale" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-xl font-semibold mb-4 flex items-center">
+                        <i class="fas fa-user-tie text-accent mr-3"></i>
+                        Professional Skills
+                    </h3>
+                    <div class="space-y-3">
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Customer Service</span>
+                                <span>98%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-accent h-2 rounded-full" style="width: 98%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Project Management</span>
+                                <span>85%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-accent h-2 rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Marketing Strategy</span>
+                                <span>75%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-accent h-2 rounded-full" style="width: 75%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Release Planning</span>
+                                <span>78%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-accent h-2 rounded-full" style="width: 78%"></div>
+                            </div>
+                        </div>
+                        <div>
+                            <div class="flex justify-between mb-1">
+                                <span class="font-medium">Business Development</span>
+                                <span>65%</span>
+                            </div>
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div class="bg-accent h-2 rounded-full" style="width: 65%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Keywords/Tags -->
+            <div class="mt-12" data-aos="fade-up">
+                <h3 class="text-xl font-semibold mb-6">Additional Skills & Tools</h3>
+                <div class="flex flex-wrap gap-2">
+                    <span class="skill-badge">Custom PC Building</span>
+                    <span class="skill-badge">Hardware Testing</span>
+                    <span class="skill-badge">System Integration</span>
+                    <span class="skill-badge">Microsoft 365</span>
+                    <span class="skill-badge">Windows OS</span>
+                    <span class="skill-badge">FL Studio</span>
+                    <span class="skill-badge">Ghost Production</span>
+                    <span class="skill-badge">Stem Preparation</span>
+                    <span class="skill-badge">Project File Management</span>
+                    <span class="skill-badge">Contract Management</span>
+                    <span class="skill-badge">Release Strategy</span>
+                    <span class="skill-badge">Marketing Consultation</span>
+                    <span class="skill-badge">Audio Production</span>
+                    <span class="skill-badge">Sound Design</span>
+                    <span class="skill-badge">Beat Making</span>
+                    <span class="skill-badge">Mixing & Mastering</span>
+                    <span class="skill-badge">Client Relations</span>
+                    <a href="https://tricion.wixsite.com/pcbuilds/online-store" target="_blank" class="skill-badge hover:bg-primary/20 transition-all duration-300">View PC Build Portfolio →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="section-padding bg-darker relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-gradient-to-br from-primary/10 via-transparent to-accent/10"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <h2 class="section-title" data-aos="fade-up">Get In Touch</h2>
+            <div class="max-w-3xl mx-auto">
+                <div class="space-y-6" data-aos="fade-up" data-aos-delay="200">
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fas fa-envelope text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Email</h3>
+                                <a href="mailto:tricionmedia@gmail.com" class="text-gray-400 hover:text-primary">tricionmedia@gmail.com</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fas fa-phone text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Phone</h3>
+                                <a href="tel:+31615577152" class="text-gray-400 hover:text-primary">+31 6 15577152</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fab fa-linkedin text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">LinkedIn</h3>
+                                <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" class="text-gray-400 hover:text-primary">ivan-van-der-schuit-b7ba0324a</a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-8 glass-effect p-6 rounded-xl hover-scale" data-aos="fade-up" data-aos-delay="300">
+                        <h3 class="text-lg font-semibold mb-3">Looking for professional assistance?</h3>
+                        <p class="text-gray-400 mb-4">
+                            Whether you need a custom PC built, help with technical issues, or are interested in music production services, I'm here to help!
+                        </p>
+                        <p class="text-gray-400">
+                            Send me a message or give me a call, and I'll get back to you as soon as possible.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-darker text-white py-12 relative overflow-hidden">
+        <div class="absolute inset-0">
+            <div class="absolute inset-0 bg-gradient-to-t from-primary/5 to-transparent"></div>
+        </div>
+        <div class="container mx-auto px-4 relative z-10">
+            <div class="flex flex-col md:flex-row justify-between items-center">
+                <div class="mb-6 md:mb-0">
+                    <h2 class="text-2xl font-bold mb-2">Ivan<span class="text-primary">.dev</span></h2>
+                    <p class="text-gray-400">PC Builder | IT Support | Music Producer</p>
+                </div>
+                <div class="flex space-x-4">
+                    <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-linkedin text-xl"></i>
+                    </a>
+                    <a href="mailto:tricionmedia@gmail.com" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fas fa-envelope text-xl"></i>
+                    </a>
+                    <a href="tel:+31615577152" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fas fa-phone text-xl"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="mt-8 border-t border-gray-800 pt-8 text-center text-gray-500">
+                <p>© 2025 Ivan van der Schuit. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- AOS Library -->
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    
+    <!-- Main JavaScript -->
+    <script src="src/js/main.js"></script>
+</body>
+</html> 
