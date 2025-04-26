@@ -4,10 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ivan van der Schuit – PC Builder, IT Support, Music Producer</title>
-    <meta name="description" content="Explore my resume, projects, and contact information.">
+    <meta name="description" content="Ivan van der Schuit - Skilled PC Builder, IT Support Specialist and Music Producer with 5M+ streams. Building custom PCs and creating viral music.">
+    <meta name="keywords" content="PC Builder, IT Support, Music Producer, Phonk, Custom PC, Tricion, Ivan van der Schuit">
+    <meta name="author" content="Ivan van der Schuit">
+    <meta property="og:title" content="Ivan van der Schuit – PC Builder, IT Support, Music Producer">
+    <meta property="og:description" content="Portfolio of Ivan van der Schuit - Professional IT Specialist and Music Producer with millions of streams.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ivan.dev">
+    <meta property="og:image" content="./src/assets/images/favicon.png">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ivan van der Schuit – PC Builder, IT Support, Music Producer">
+    <meta name="twitter:description" content="Portfolio of Ivan van der Schuit - Professional IT Specialist and Music Producer with millions of streams.">
+    <meta name="twitter:image" content="./src/assets/images/favicon.png">
+    <meta name="theme-color" content="#4F46E5">
+    
+    <!-- Schema.org markup for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Person",
+      "name": "Ivan van der Schuit",
+      "url": "https://ivan.dev",
+      "image": "./src/assets/images/favicon.png",
+      "jobTitle": ["PC Builder", "IT Support Specialist", "Music Producer"],
+      "sameAs": [
+        "https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a",
+        "https://www.instagram.com/ivannl_/",
+        "https://open.spotify.com/artist/4I9Ky6xgFtzI13y535TNXP"
+      ]
+    }
+    </script>
+    
+    <!-- Disable any other typing implementations -->
+    <script>
+        window.typedInitialized = false; // Will be set to true when our implementation runs
+        window.preventOtherTypedInit = true; // Flag for other scripts to check
+    </script>
     
     <!-- Favicon -->
-    <link rel="icon" href="src/assets/images/favicon.png">
+    <link rel="icon" href="./src/assets/images/favicon.png" type="image/png">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -23,8 +58,113 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+
     <!-- Custom Styles -->
     <style>
+        :root {
+            --primary: #64ffda;
+            --secondary: #bd93f9;
+            --accent: #ff79c6;
+            --dark: #282a36;
+            --darker: #191a21;
+            --text: #f8f8f2;
+            --text-muted: #b2b2b2;
+            --transition-all: all 0.3s ease-in-out;
+        }
+
+        /* Dark mode variables */
+        .dark-mode {
+            --primary: #64ffda;
+            --secondary: #bd93f9;
+            --accent: #ff79c6;
+            --dark: #121212;
+            --darker: #090909;
+            --text: #f8f8f2;
+            --text-muted: #b2b2b2;
+        }
+
+        /* Global styles */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--dark);
+            color: var(--text);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .section-padding {
+            padding: 6rem 0;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary), var(--accent));
+            border-radius: 4px;
+        }
+
+        /* Skill badge styling */
+        .skill-badge {
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            color: #ffffff;
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .skill-badge:hover {
+            background: rgba(79, 70, 229, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3), 0 0 15px rgba(79, 70, 229, 0.2);
+            color: #ffffff;
+        }
+        
+        /* Glass effect */
+        .glass-effect {
+            background: rgba(40, 42, 54, 0.7);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Hover scale effect */
+        .hover-scale {
+            transition: transform 0.3s ease;
+        }
+        
+        .hover-scale:hover {
+            transform: translateY(-5px);
+        }
+
         body {
             background-color: #121212;
             color: #ffffff;
@@ -144,6 +284,61 @@
                 inset 0 0 20px rgba(79, 70, 229, 0.1);
         }
 
+        .card-icon-pulse {
+            animation: iconPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes iconPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.9; }
+        }
+
+        .interactive-badge {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .interactive-badge:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(79, 70, 229, 0.3);
+        }
+
+        .interactive-badge:active {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(79, 70, 229, 0.2);
+        }
+
+        .tooltip {
+            position: relative;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(30, 30, 30, 0.9);
+            color: white;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            bottom: 130%;
+        }
+
         .nav-link {
             transition: all 0.3s ease;
             position: relative;
@@ -201,12 +396,18 @@
             padding: 0.5rem 1rem;
             border-radius: 9999px;
             transition: all 0.3s ease;
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .skill-badge:hover {
             background: rgba(79, 70, 229, 0.2);
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3), 0 0 15px rgba(79, 70, 229, 0.2);
+            color: #ffffff;
         }
 
         @keyframes float {
@@ -216,6 +417,28 @@
 
         .animate-float {
             animation: float 6s ease-in-out infinite;
+        }
+        
+        /* Respect user's motion preferences */
+        @media (prefers-reduced-motion) {
+            .animate-float, 
+            .hover-scale:hover,
+            .feature-card:hover,
+            .btn-hover:hover,
+            .glass-effect:hover,
+            .hero-btn-primary:hover,
+            .hero-btn-secondary:hover,
+            .back-to-top:hover,
+            .dark-toggle:hover {
+                animation: none;
+                transition: none;
+                transform: none;
+            }
+            
+            * {
+                animation-duration: 0.001s !important;
+                transition-duration: 0.001s !important;
+            }
         }
 
         .form-input {
@@ -414,9 +637,239 @@
         .bg-section-darker {
             background-color: #080808;
         }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: rgba(79, 70, 229, 0.8);
+            color: white;
+            width: 3rem;
+            height: 3rem;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+            backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(20px);
+        }
+        
+        .back-to-top.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .back-to-top:hover {
+            background: rgba(236, 72, 153, 0.8);
+            transform: translateY(-5px);
+        }
+
+        /* Add these dark mode styles to the style section */
+        :root {
+            --primary: #4F46E5;
+            --secondary: #EC4899;
+            --accent: #06B6D4;
+            --background: #121212;
+            --darker-bg: #0f0f0f;
+            --darkest-bg: #080808;
+            --text: #ffffff;
+            --text-gray: #9ca3af;
+            --card-bg: rgba(30, 30, 30, 0.7);
+        }
+
+        /* Remove dark mode toggle styles */
+        .dark-toggle {
+            display: none;
+        }
+
+        /* Mobile Menu Styles */
+        #mobile-menu {
+            position: fixed;
+            top: 72px; /* Adjust to match your header height */
+            left: 0;
+            width: 100%;
+            background-color: rgba(18, 18, 18, 0.98);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 40;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            padding: 1rem 0;
+            transform: translateY(-20px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            max-height: calc(100vh - 72px);
+            overflow-y: auto;
+        }
+
+        #mobile-menu.active {
+            transform: translateY(0);
+            opacity: 1;
+            visibility: visible;
+        }
+
+        #mobile-menu ul {
+            padding: 0.5rem 1rem;
+        }
+
+        #mobile-menu li {
+            margin-bottom: 0.5rem;
+        }
+
+        #mobile-menu a {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: white;
+            font-size: 1.1rem;
+            border-radius: 0.5rem;
+            transition: all 0.3s ease;
+        }
+
+        #mobile-menu a:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        @media (min-width: 768px) {
+            #mobile-menu {
+                display: none !important;
+            }
+        }
+        
+        /* Your existing styles... */
+
+        /* Mobile Optimizations */
+        @media (max-width: 767px) {
+            .section-title {
+                font-size: 1.5rem;
+                text-align: center;
+            }
+
+            .feature-card {
+                padding: 1.25rem !important;
+            }
+
+            .feature-card h3 {
+                font-size: 1.1rem !important;
+            }
+
+            .feature-card .flex-shrink-0 {
+                transform: scale(0.9);
+            }
+
+            .glass-effect {
+                border-radius: 1rem !important;
+            }
+
+            /* Tighter spacing on mobile */
+            .section-padding {
+                padding-top: 3rem;
+                padding-bottom: 3rem;
+            }
+
+            .space-y-8 > * {
+                margin-top: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            h2, h3 {
+                margin-bottom: 1rem !important;
+            }
+
+            /* Better list formatting */
+            .list-disc.list-inside {
+                padding-left: 0.5rem;
+            }
+
+            /* Adjusted button size */
+            .btn {
+                padding: 0.5rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            /* Skills section mobile optimizations */
+            .skill-badge {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem;
+                margin-bottom: 0.4rem;
+            }
+            
+            #skills .grid {
+                gap: 1rem !important;
+            }
+            
+            #skills h4 {
+                font-size: 1rem;
+                margin-bottom: 0.75rem !important;
+            }
+            
+            #skills .space-y-6 > div {
+                margin-top: 1rem !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            /* Fix for experience tabs white bar in mobile */
+            #experience h3.text-2xl {
+                display: block;
+                width: 100%;
+                text-align: center;
+            }
+            
+            #experience h3.text-2xl span {
+                display: none;
+            }
+            
+            #experience-selector {
+                background-color: rgba(30, 30, 30, 0.7);
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+        }
+
+        /* Mobile menu styles - Commenting out these duplicate rules */
+        /* 
+        #mobile-menu {
+            transform: translateY(0);
+            transition: all 0.3s ease;
+            max-height: 0;
+            overflow: hidden;
+        }
+        
+        #mobile-menu.active {
+            max-height: 300px;
+        }
+        
+        #mobile-menu a {
+            color: #fff;
+            font-weight: 500;
+        }
+        -->
+        
+        .bg-glass-dark {
+            background-color: rgba(20, 20, 20, 0.9);
+            backdrop-filter: blur(10px);
+        }
     </style>
+    
+    <!-- Rest of your head content -->
 </head>
 <body class="bg-dark text-light font-sans">
+    <!-- Page Loader -->
+    <div id="page-loader" class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-dark z-[9999]">
+        <div class="relative">
+            <div class="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
+            <div class="mt-4 text-center text-white font-medium">Loading...</div>
+        </div>
+    </div>
+    
     <!-- Header/Navigation -->
     <header class="fixed w-full glass-effect z-50">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
@@ -424,32 +877,32 @@
             
             <!-- Desktop Navigation -->
             <nav class="hidden md:block">
-                <ul class="flex space-x-1">
-                    <li><a href="#about" class="nav-link">About</a></li>
-                    <li><a href="#experience" class="nav-link">Experience</a></li>
-                    <li><a href="#education" class="nav-link">Education</a></li>
-                    <li><a href="#skills" class="nav-link">Skills</a></li>
-                    <li><a href="#contact" class="nav-link">Contact</a></li>
+                <ul class="flex space-x-6">
+                    <li><a href="#about" class="nav-link px-2">About</a></li>
+                    <li><a href="#experience" class="nav-link px-2">Experience</a></li>
+                    <li><a href="#education" class="nav-link px-2">Education</a></li>
+                    <li><a href="#skills" class="nav-link px-2">Skills</a></li>
+                    <li><a href="#contact" class="nav-link px-2">Contact</a></li>
                 </ul>
             </nav>
             
             <!-- Mobile Menu Button -->
-            <button id="mobile-menu-btn" class="md:hidden text-light focus:outline-none">
+            <button id="mobile-menu-btn" class="md:hidden flex items-center justify-center w-10 h-10 text-light focus:outline-none hover:bg-primary/20 transition-colors">
                 <i class="fas fa-bars text-xl"></i>
             </button>
         </div>
         
-        <!-- Mobile Navigation -->
-        <div id="mobile-menu" class="md:hidden glass-effect hidden">
-            <nav class="container mx-auto px-4 py-3">
-                <ul class="space-y-3">
-                    <li><a href="#about" class="block nav-link">About</a></li>
-                    <li><a href="#experience" class="block nav-link">Experience</a></li>
-                    <li><a href="#education" class="block nav-link">Education</a></li>
-                    <li><a href="#skills" class="block nav-link">Skills</a></li>
-                    <li><a href="#contact" class="block nav-link">Contact</a></li>
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="md:hidden hidden bg-glass-dark border-t border-white/10">
+            <div class="container mx-auto px-4 py-3">
+                <ul class="flex flex-col space-y-3">
+                    <li><a href="#about" class="block py-2 px-4 hover:bg-primary/10 transition-colors rounded-lg">About</a></li>
+                    <li><a href="#experience" class="block py-2 px-4 hover:bg-primary/10 transition-colors rounded-lg">Experience</a></li>
+                    <li><a href="#education" class="block py-2 px-4 hover:bg-primary/10 transition-colors rounded-lg">Education</a></li>
+                    <li><a href="#skills" class="block py-2 px-4 hover:bg-primary/10 transition-colors rounded-lg">Skills</a></li>
+                    <li><a href="#contact" class="block py-2 px-4 hover:bg-primary/10 transition-colors rounded-lg">Contact</a></li>
                 </ul>
-            </nav>
+            </div>
         </div>
     </header>
 
@@ -465,15 +918,16 @@
         <div class="container mx-auto px-4 relative z-10">
             <div class="flex flex-col items-center justify-center text-center max-w-4xl mx-auto">
                 <div data-aos="fade-up" data-aos-delay="200" class="flex flex-col items-center">
-                    <div class="mb-12 relative group flex justify-center">
-                        <div class="relative group" style="animation: gentleFloat 3s ease-in-out infinite;">
+                    <div class="mb-16 relative group flex justify-center">
+                        <div class="profile-image-container relative group" style="animation: gentleFloat 3s ease-in-out infinite;">
                             <div class="absolute -inset-3 bg-gradient-to-r from-primary via-accent to-secondary rounded-full blur-md opacity-75 group-hover:opacity-100 transition duration-300"></div>
                             <div class="relative rounded-full overflow-hidden flex items-center justify-center" style="width: 180px; height: 180px;">
                                 <img 
-                                    src="src/assets/images/favicon.png" 
+                                    src="./src/assets/images/favicon.png" 
                                     alt="Ivan van der Schuit" 
-                                    class="w-full h-full rounded-full border-2 border-accent/50 transition-all duration-300 group-hover:scale-110 group-hover:rotate-3"
+                                    class="profile-image w-full h-full rounded-full border-2 border-accent/50 transition-all duration-300 group-hover:scale-110"
                                     style="width: 180px; height: 180px; object-fit: cover;"
+                                    loading="lazy"
                                 >
                             </div>
                         </div>
@@ -481,16 +935,19 @@
                     <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
                         Ivan van der Schuit
                     </h1>
-                    <div class="text-lg md:text-xl text-gray-300 mb-6 flex items-center justify-center">
+                    <div class="text-lg md:text-xl text-gray-300 mb-6 flex items-center justify-center typed-container">
                         <span class="mr-2">I'm a</span>
-                        <span class="typed-text animated-text" data-typed-items='["PC Builder", "IT Specialist", "Music Producer"]'></span>
+                        <span class="typed-text animated-text" data-typed-items='["IT Specialist", "PC Builder", "Music Producer"]'></span>
                     </div>
                     <p class="text-gray-300 mb-8 max-w-lg mx-auto">
-                        Passionate about technology and creative solutions. I combine technical expertise with a customer-first approach.
+                        Business IT Management student with hands-on experience in enterprise migrations, technical support, and system optimization. Specializing in bridging technology and creative industries through innovative digital solutions.
                     </p>
                     <div class="flex flex-wrap justify-center gap-4">
                         <a href="#contact" class="hero-btn hero-btn-primary">
                             Get In Touch
+                        </a>
+                        <a href="https://drive.google.com/drive/folders/13cmxUodWl8TaEbNHMA6bYVOlv2cWxKEG?usp=sharing" target="_blank" class="hero-btn hero-btn-secondary">
+                            Download CV <i class="fas fa-download ml-2"></i>
                         </a>
                         <a href="#about" class="hero-btn hero-btn-secondary">
                             About Me <span class="btn-arrow">→</span>
@@ -547,15 +1004,45 @@
             <div class="absolute inset-0 bg-gradient-to-tl from-primary/10 via-transparent to-accent/10"></div>
         </div>
         <div class="container mx-auto px-4 relative z-10">
-            <h2 class="section-title" data-aos="fade-up">Professional Experience</h2>
+            <h2 class="section-title mb-16" data-aos="fade-up">Professional Experience</h2>
             
-            <!-- IT Experience -->
-            <h3 class="text-2xl font-semibold text-center mb-8 text-light" data-aos="fade-up">PC & IT Projects</h3>
-            <div class="space-y-8">
+            <!-- Tabs for Experience Categories (Desktop) -->
+            <div class="hidden md:flex justify-center mb-12">
+                <div class="inline-flex bg-glass-gradient backdrop-blur-md rounded-full p-1">
+                    <button class="experience-tab active px-6 py-2 rounded-full text-white transition duration-300" data-target="it-experience">
+                        <i class="fas fa-laptop-code mr-2"></i>PC & IT
+                    </button>
+                    <button class="experience-tab px-6 py-2 rounded-full text-white/70 transition duration-300" data-target="music-experience">
+                        <i class="fas fa-music mr-2"></i>Music Production
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Mobile Category Selection -->
+            <div class="md:hidden mb-8">
+                <select id="experience-selector" class="w-full bg-glass-gradient backdrop-blur-md text-white border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/50">
+                    <option value="it-experience">PC & IT Projects</option>
+                    <option value="music-experience">Music Production & Business</option>
+                </select>
+            </div>
+            
+            <!-- IT Experience Tab Content -->
+            <div id="it-experience" class="experience-content space-y-8">
+                <h3 class="text-2xl font-semibold text-center mb-8 text-light relative inline-block" data-aos="fade-up">
+                    PC & IT Projects
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-transparent"></span>
+                </h3>
+                
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                        <h3 class="text-xl font-semibold">IT Migration Technician - Student aan Bedrijf B.V.</h3>
-                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                        <div class="flex items-center">
+                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-laptop-code text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold">IT Migration Technician - Student aan Bedrijf B.V.</h3>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                            <i class="far fa-calendar-alt mr-2"></i>
                             <span class="bg-primary/10 text-primary px-2 py-1 rounded">Mar 2025 - Present</span>
                         </div>
                     </div>
@@ -563,17 +1050,28 @@
                         IT Project Assistant for Microsoft Migration at Amarant (Hybrid)
                     </p>
                     <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>Assisted in Amarant's full-scale transition to Microsoft 365</li>
-                        <li>Replaced and configured hardware (laptops, desktops, tablets)</li>
-                        <li>Provided first-line IT support and troubleshooting for end users</li>
-                        <li>Ensured minimal downtime during system upgrades</li>
+                        <li>Assisted in Amarant's full-scale transition to Microsoft 365, migrating user accounts and configuring devices for seamless integration</li>
+                        <li>Replaced and configured hardware units (laptops, desktops, tablets) for the organization</li>
+                        <li>Provided first-line IT support with quick resolution times</li>
+                        <li>Implemented efficient migration protocols that reduced system downtime during transition</li>
                     </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Microsoft 365</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">IT Support</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Migrations</span>
+                    </div>
                 </div>
 
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="150">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                        <h3 class="text-xl font-semibold">IT Support Technician - Studentaanhuis</h3>
-                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                        <div class="flex items-center">
+                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-headset text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold">IT Support Technician - Studentaanhuis</h3>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                            <i class="far fa-calendar-alt mr-2"></i>
                             <span class="bg-primary/10 text-primary px-2 py-1 rounded">Nov 2024 - Feb 2025</span>
                         </div>
                     </div>
@@ -582,27 +1080,48 @@
                     </p>
                     <ul class="list-disc list-inside text-gray-400 space-y-2">
                         <li>Diagnosed and fixed Windows OS issues, network problems, and hardware malfunctions</li>
-                        <li>Provided remote and on-site tech support for clients</li>
-                        <li>Achieved high customer satisfaction ratings</li>
+                        <li>Provided remote and on-site tech support for regular clients</li>
+                        <li>Achieved high customer satisfaction ratings across support tickets</li>
                     </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Tech Support</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Windows</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Troubleshooting</span>
+                    </div>
                 </div>
 
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="200">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                        <h3 class="text-xl font-semibold">Server - Van der Valk Hotel Gorinchem</h3>
-                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                        <div class="flex items-center">
+                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-utensils text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold">Server - Van der Valk Hotel Gorinchem</h3>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                            <i class="far fa-calendar-alt mr-2"></i>
                             <span class="bg-primary/10 text-primary px-2 py-1 rounded">Oct 2023 - May 2024</span>
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">
-                        Part-time server position in Gorinchem, South Holland
+                        Part-time server role at a hotel restaurant, providing efficient service and assisting guests professionally.
                     </p>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Customer Service</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Hospitality</span>
+                    </div>
                 </div>
 
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="250">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                        <h3 class="text-xl font-semibold">Computer Technician</h3>
-                        <div class="text-sm text-gray-500 mt-1 md:mt-0">
+                        <div class="flex items-center">
+                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-microchip text-primary text-xl"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold">Computer Technician</h3>
+                        </div>
+                        <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                            <i class="far fa-calendar-alt mr-2"></i>
                             <span class="bg-primary/10 text-primary px-2 py-1 rounded">Jun 2019 - Present</span>
                         </div>
                     </div>
@@ -611,21 +1130,35 @@
                     </p>
                     <ul class="list-disc list-inside text-gray-400 space-y-2">
                         <li>Built custom gaming PCs and workstations</li>
-                        <li>Provided hardware consulting and optimization services</li>
-                        <li>Specialized in water cooling and high-performance systems</li>
+                        <li>Provided hardware consulting and optimization services resulting in performance improvements</li>
+                        <li>Specialized in high-performance systems</li>
                     </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">PC Building</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Hardware</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">System Optimization</span>
+                    </div>
                 </div>
             </div>
             
-            <!-- Music Experience -->
-            <div class="mt-32 mb-24">
-                <h3 class="text-2xl font-semibold text-center mb-16 text-light" data-aos="fade-up">Music Production & Business</h3>
-                <div class="space-y-8">
+            <!-- Music Experience Tab Content -->
+            <div id="music-experience" class="experience-content space-y-8 hidden">
+                <h3 class="text-2xl font-semibold text-center mb-8 text-light relative inline-block" data-aos="fade-up">
+                    Music Production & Business
+                    <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-secondary to-transparent"></span>
+                </h3>
+                
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <h3 class="text-xl font-semibold">Music Producer</h3>
-                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
-                                <span class="bg-primary/10 text-primary px-2 py-1 rounded">Oct 2020 - Present</span>
+                            <div class="flex items-center">
+                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-music text-secondary text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold">Music Producer</h3>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                                <i class="far fa-calendar-alt mr-2"></i>
+                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Oct 2020 - Present</span>
                             </div>
                         </div>
                         <p class="text-gray-400 mb-4">
@@ -636,13 +1169,24 @@
                             <li>Created viral tracks for TikTok and social media</li>
                             <li>Produced and sold custom beats for artists and brands</li>
                         </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Phonk</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Trap</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">House</span>
+                    </div>
                     </div>
                     
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="150">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <h3 class="text-xl font-semibold">Music Production for Clients</h3>
-                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
-                                <span class="bg-primary/10 text-primary px-2 py-1 rounded">Ghost Production & Custom Beats</span>
+                            <div class="flex items-center">
+                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-headphones text-secondary text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold">Music Production for Clients</h3>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                                <i class="fas fa-tag mr-2"></i>
+                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Ghost Production & Custom Beats</span>
                             </div>
                         </div>
                         <p class="text-gray-400 mb-4">
@@ -653,13 +1197,24 @@
                             <li>Delivered high-quality mixing & mastering for professional sound</li>
                             <li>Worked on custom client projects in different sub-genres</li>
                         </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Mixing</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Mastering</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Custom Beats</span>
+                    </div>
                     </div>
                     
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="200">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <h3 class="text-xl font-semibold">TikTok & Viral Music Placements</h3>
-                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
-                                <span class="bg-primary/10 text-primary px-2 py-1 rounded">Social Media Music Marketing</span>
+                            <div class="flex items-center">
+                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fab fa-tiktok text-secondary text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold">TikTok & Viral Music Placements</h3>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                                <i class="fas fa-bullhorn mr-2"></i>
+                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Social Media Music Marketing</span>
                             </div>
                         </div>
                         <p class="text-gray-400 mb-4">
@@ -670,23 +1225,39 @@
                             <li>Tracks played in club mixes and DJ sets globally</li>
                             <li>Built a network of artists and influencers for distribution</li>
                         </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">TikTok</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Viral</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Social Media</span>
+                    </div>
                     </div>
                     
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="250">
                         <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <h3 class="text-xl font-semibold">AI MIDI Generator SaaS Project</h3>
-                            <div class="text-sm text-gray-500 mt-1 md:mt-0">
-                                <span class="bg-primary/10 text-primary px-2 py-1 rounded">In Development</span>
+                            <div class="flex items-center">
+                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                    <i class="fas fa-brain text-secondary text-xl"></i>
+                                </div>
+                                <h3 class="text-xl font-semibold">AI MIDI Generator SaaS Project</h3>
+                            </div>
+                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
+                                <i class="fas fa-code-branch mr-2"></i>
+                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">In Development</span>
                             </div>
                         </div>
                         <p class="text-gray-400 mb-4">
-                            Developing an AI-driven music creation tool.
+                            Creating an innovative AI-powered platform that revolutionizes music composition workflows for producers across genres.
                         </p>
                         <ul class="list-disc list-inside text-gray-400 space-y-2">
-                            <li>Developing an AI-driven MIDI generator to help musicians and producers streamline the composition process</li>
-                            <li>Aimed at providing customizable, genre-specific MIDI files for various types of music production</li>
-                            <li>Working on integrating machine learning models for creating unique musical patterns</li>
+                            <li>Developing neural network models trained on thousands of MIDI patterns to generate genre-specific compositions</li>
+                            <li>Creating an intuitive web interface allowing producers to customize parameters like tempo, key, and mood</li>
+                            <li>Implementing export functionality for direct integration with major DAWs like FL Studio and Ableton</li>
+                            <li>Building a subscription-based platform with tiered access to different generation capabilities</li>
                         </ul>
+                    <div class="mt-4 flex flex-wrap gap-2">
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">AI</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">MIDI</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">SaaS</span>
                     </div>
                 </div>
             </div>
@@ -771,183 +1342,149 @@
         </div>
         <div class="container mx-auto px-4 relative z-10">
             <h2 class="section-title" data-aos="fade-up">Skills & Expertise</h2>
-            <div class="grid md:grid-cols-3 gap-8">
-                <div class="glass-effect p-6 rounded-xl hover-scale" data-aos="fade-up" data-aos-delay="100">
-                    <h3 class="text-xl font-semibold mb-4 flex items-center">
-                        <i class="fas fa-laptop-code text-primary mr-3"></i>
+            
+            <!-- Main Skills Grid -->
+            <div class="grid md:grid-cols-3 gap-8 mb-16">
+                <!-- Technical Skills -->
+                <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                    <h3 class="text-xl font-semibold mb-6 text-primary flex items-center border-b border-primary/20 pb-3">
+                        <i class="fas fa-laptop-code mr-3 text-2xl"></i>
                         Technical Skills
                     </h3>
-                    <div class="space-y-3">
+                    <div class="space-y-6">
                         <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Custom PC Building</span>
-                                <span>98%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-primary h-2 rounded-full" style="width: 98%"></div>
+                            <h4 class="text-lg font-medium mb-4 flex items-center">
+                                <span class="w-2 h-2 bg-primary rounded-full mr-2"></span>
+                                Expert Level
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Custom PC Building</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Hardware Troubleshooting</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">System Optimization</span>
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Hardware Troubleshooting</span>
-                                <span>95%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-primary h-2 rounded-full" style="width: 95%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">System Optimization</span>
-                                <span>92%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-primary h-2 rounded-full" style="width: 92%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Microsoft 365</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-primary h-2 rounded-full" style="width: 85%"></div>
+                            <h4 class="text-lg font-medium mb-4 flex items-center">
+                                <span class="w-2 h-2 bg-primary rounded-full mr-2"></span>
+                                Advanced
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Microsoft 365</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">OS Configuration</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Technical Documentation</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="glass-effect p-6 rounded-xl hover-scale" data-aos="fade-up" data-aos-delay="200">
-                    <h3 class="text-xl font-semibold mb-4 flex items-center">
-                        <i class="fas fa-music text-secondary mr-3"></i>
-                        Music Production Skills
+                <!-- Digital Production Skills -->
+                <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                    <h3 class="text-xl font-semibold mb-6 text-secondary flex items-center border-b border-secondary/20 pb-3">
+                        <i class="fas fa-music mr-3 text-2xl"></i>
+                        Digital Production
                     </h3>
-                    <div class="space-y-3">
+                    <div class="space-y-6">
                         <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Music Production</span>
-                                <span>90%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-secondary h-2 rounded-full" style="width: 90%"></div>
+                            <h4 class="text-lg font-medium mb-4 flex items-center">
+                                <span class="w-2 h-2 bg-secondary rounded-full mr-2"></span>
+                                Expert Level
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">FL Studio</span>
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Digital Audio Production</span>
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">FL Studio</span>
-                                <span>95%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-secondary h-2 rounded-full" style="width: 95%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Mixing & Mastering</span>
-                                <span>88%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-secondary h-2 rounded-full" style="width: 88%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Sound Design</span>
-                                <span>85%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-secondary h-2 rounded-full" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Music Theory</span>
-                                <span>70%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-secondary h-2 rounded-full" style="width: 70%"></div>
+                            <h4 class="text-lg font-medium mb-4 flex items-center">
+                                <span class="w-2 h-2 bg-secondary rounded-full mr-2"></span>
+                                Advanced
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Mixing & Mastering</span>
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Sound Design</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <div class="glass-effect p-6 rounded-xl hover-scale" data-aos="fade-up" data-aos-delay="300">
-                    <h3 class="text-xl font-semibold mb-4 flex items-center">
-                        <i class="fas fa-user-tie text-accent mr-3"></i>
+                <!-- Professional Skills -->
+                <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+                    <h3 class="text-xl font-semibold mb-6 text-accent flex items-center border-b border-accent/20 pb-3">
+                        <i class="fas fa-user-tie mr-3 text-2xl"></i>
                         Professional Skills
                     </h3>
-                    <div class="space-y-3">
+                    <div class="space-y-6">
                         <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Customer Service</span>
-                                <span>98%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-accent h-2 rounded-full" style="width: 98%"></div>
+                            <h4 class="text-lg font-medium mb-4 flex items-center">
+                                <span class="w-2 h-2 bg-accent rounded-full mr-2"></span>
+                                Expert Level
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Project Management</span>
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Client Relations</span>
                             </div>
                         </div>
                         <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Project Management</span>
-                                <span>85%</span>
+                            <h4 class="text-lg font-medium mb-4 flex items-center">
+                                <span class="w-2 h-2 bg-accent rounded-full mr-2"></span>
+                                Advanced
+                            </h4>
+                            <div class="flex flex-wrap gap-2">
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Marketing Strategy</span>
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Release Planning</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-accent h-2 rounded-full" style="width: 85%"></div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Marketing Strategy</span>
-                                <span>75%</span>
-                            </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-accent h-2 rounded-full" style="width: 75%"></div>
                             </div>
                         </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Release Planning</span>
-                                <span>78%</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-accent h-2 rounded-full" style="width: 78%"></div>
                             </div>
+            
+            <!-- Additional Skills -->
+            <div class="py-16" data-aos="fade-up">
+                <!-- Removed Additional Expertise h3 title as requested -->
+                
+                <div class="grid md:grid-cols-3 gap-8 mt-12">
+                    <!-- Technical Tools -->
+                    <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
+                        <h4 class="text-xl font-semibold text-primary mb-4 flex items-center border-b border-primary/20 pb-3">
+                            <i class="fas fa-tools mr-3"></i>
+                            Technical
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Network Configuration</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Windows OS</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">System Integration</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Hardware Testing</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Desktop Support</span>
                         </div>
-                        <div>
-                            <div class="flex justify-between mb-1">
-                                <span class="font-medium">Business Development</span>
-                                <span>65%</span>
                             </div>
-                            <div class="w-full bg-gray-200 rounded-full h-2">
-                                <div class="bg-accent h-2 rounded-full" style="width: 65%"></div>
-                            </div>
-                        </div>
-                    </div>
+                    
+                    <!-- Digital Media -->
+                    <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
+                        <h4 class="text-xl font-semibold text-secondary mb-4 flex items-center border-b border-secondary/20 pb-3">
+                            <i class="fas fa-photo-video mr-3"></i>
+                            Digital Media
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Ghost Production</span>
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Stem Preparation</span>
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Beat Making</span>
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Audio Engineering</span>
                 </div>
             </div>
             
-            <!-- Keywords/Tags -->
-            <div class="mt-12" data-aos="fade-up">
-                <h3 class="text-xl font-semibold mb-6">Additional Skills & Tools</h3>
-                <div class="flex flex-wrap gap-2">
-                    <span class="skill-badge">Custom PC Building</span>
-                    <span class="skill-badge">Hardware Testing</span>
-                    <span class="skill-badge">System Integration</span>
-                    <span class="skill-badge">Microsoft 365</span>
-                    <span class="skill-badge">Windows OS</span>
-                    <span class="skill-badge">FL Studio</span>
-                    <span class="skill-badge">Ghost Production</span>
-                    <span class="skill-badge">Stem Preparation</span>
-                    <span class="skill-badge">Project File Management</span>
-                    <span class="skill-badge">Contract Management</span>
-                    <span class="skill-badge">Release Strategy</span>
-                    <span class="skill-badge">Marketing Consultation</span>
-                    <span class="skill-badge">Audio Production</span>
-                    <span class="skill-badge">Sound Design</span>
-                    <span class="skill-badge">Beat Making</span>
-                    <span class="skill-badge">Mixing & Mastering</span>
-                    <span class="skill-badge">Client Relations</span>
-                    <a href="https://tricion.wixsite.com/pcbuilds/online-store" target="_blank" class="skill-badge hover:bg-primary/20 transition-all duration-300">View PC Build Portfolio →</a>
+                    <!-- Business -->
+                    <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
+                        <h4 class="text-xl font-semibold text-accent mb-4 flex items-center border-b border-accent/20 pb-3">
+                            <i class="fas fa-chart-line mr-3"></i>
+                            Business & Professional
+                        </h4>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Contract Management</span>
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Release Strategy</span>
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Marketing Consultation</span>
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Client Communication</span>
+                </div>
+                </div>
                 </div>
             </div>
         </div>
@@ -976,22 +1513,74 @@
                     <div class="glass-effect p-6 rounded-xl hover-scale">
                         <div class="flex items-start">
                             <div class="bg-primary/10 p-3 rounded-full mr-4">
-                                <i class="fas fa-phone text-primary"></i>
-                            </div>
-                            <div>
-                                <h3 class="text-lg font-semibold mb-1">Phone</h3>
-                                <a href="tel:+31615577152" class="text-gray-400 hover:text-primary">+31 6 15577152</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="glass-effect p-6 rounded-xl hover-scale">
-                        <div class="flex items-start">
-                            <div class="bg-primary/10 p-3 rounded-full mr-4">
-                                <i class="fab fa-linkedin text-primary"></i>
+                                <i class="fab fa-linkedin text-primary animate__animated animate__pulse animate__infinite animate__slower"></i>
                             </div>
                             <div>
                                 <h3 class="text-lg font-semibold mb-1">LinkedIn</h3>
-                                <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" class="text-gray-400 hover:text-primary">ivan-van-der-schuit-b7ba0324a</a>
+                                <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>Connect with me professionally</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fab fa-instagram text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Instagram</h3>
+                                <a href="https://www.instagram.com/ivannl_/" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>@ivannl_</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fab fa-spotify text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Spotify</h3>
+                                <a href="https://open.spotify.com/artist/4I9Ky6xgFtzI13y535TNXP?si=H-GbxJa-QkGdmU6HXADjDA" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>Ivan (Tricion)</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fas fa-shopping-cart text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Payhip Store</h3>
+                                <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>TricionCommerce</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fas fa-store text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Fiverr</h3>
+                                <a href="https://www.fiverr.com/ivannl_" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>ivannl_</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -1001,8 +1590,14 @@
                         <p class="text-gray-400 mb-4">
                             Whether you need a custom PC built, help with technical issues, or are interested in music production services, I'm here to help!
                         </p>
+                        <p class="text-gray-400 mb-4">
+                            Visit my <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-primary hover:underline flex items-center inline-flex">
+                                <span>Payhip store</span>&nbsp;
+                                <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                            </a> where you can purchase custom edits, ghost production services, merchandise, and marketing solutions.
+                        </p>
                         <p class="text-gray-400">
-                            Send me a message or give me a call, and I'll get back to you as soon as possible.
+                            Send me a message and I can provide my phone number for more direct communication and faster response times.
                         </p>
                     </div>
                 </div>
@@ -1019,7 +1614,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-6 md:mb-0">
                     <h2 class="text-2xl font-bold mb-2">Ivan<span class="text-primary">.dev</span></h2>
-                    <p class="text-gray-400">PC Builder | IT Support | Music Producer</p>
+                    <p class="text-gray-400">PC Builder | IT Professional | Music Producer</p>
                 </div>
                 <div class="flex space-x-4">
                     <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
@@ -1028,21 +1623,62 @@
                     <a href="mailto:tricionmedia@gmail.com" class="text-gray-400 hover:text-primary transition-colors">
                         <i class="fas fa-envelope text-xl"></i>
                     </a>
-                    <a href="tel:+31615577152" class="text-gray-400 hover:text-primary transition-colors">
-                        <i class="fas fa-phone text-xl"></i>
+                    <a href="https://www.instagram.com/ivannl_/" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-instagram text-xl"></i>
+                    </a>
+                    <a href="https://open.spotify.com/artist/4I9Ky6xgFtzI13y535TNXP?si=H-GbxJa-QkGdmU6HXADjDA" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fab fa-spotify text-xl"></i>
+                    </a>
+                    <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fas fa-shopping-cart text-xl"></i>
+                    </a>
+                    <a href="https://www.fiverr.com/ivannl_" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fas fa-store text-xl"></i>
                     </a>
                 </div>
             </div>
             <div class="mt-8 border-t border-gray-800 pt-8 text-center text-gray-500">
                 <p>© 2025 Ivan van der Schuit. All rights reserved.</p>
+                <p class="mt-2 text-sm">Owned by Tricion.</p>
             </div>
         </div>
     </footer>
 
-    <!-- AOS Library -->
+    <!-- Back to Top Button -->
+    <button id="back-to-top" class="back-to-top" aria-label="Back to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- JavaScript Libraries -->
     <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/typed.js@2.0.12"></script>
     
-    <!-- Main JavaScript -->
+    <!-- Custom Scripts -->
     <script src="src/js/main.js"></script>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ... existing code (all your scripts except mobile menu) ...
+
+            // Add animation to page elements on scroll
+            const animateOnScroll = function() {
+                const elements = document.querySelectorAll('.feature-card, .skill-badge, .glass-effect');
+                
+                elements.forEach(element => {
+                    const elementTop = element.getBoundingClientRect().top;
+                    const elementVisible = 150;
+                    
+                    if (elementTop < window.innerHeight - elementVisible) {
+                        if (!element.classList.contains('animate__animated')) {
+                            element.classList.add('animate__animated', 'animate__fadeInUp');
+                        }
+                    }
+                });
+            };
+
+            window.addEventListener('scroll', animateOnScroll);
+            animateOnScroll(); // Run once on page load
+        });
+    </script>
 </body>
 </html> 
