@@ -1,116 +1,86 @@
-# Ivan van der Schuit - Personal Portfolio
+# Ivan van der Schuit Portfolio Website
 
-A modern, responsive portfolio website showcasing my work in IT, PC Building, and Music Production.
+A modern, responsive portfolio website for Ivan van der Schuit showcasing IT expertise and music production accomplishments.
 
-## Features
+## 🚀 Features
 
-- 🎨 Modern glass-morphism design
-- 📱 Fully responsive layout
-- ⚡ Optimized performance
-- 🌟 Smooth animations
-- 🎵 Music production showcase
-- 💼 Professional experience timeline
-- 🛠 Skills & expertise visualization
+- Responsive design for all device sizes
+- Animated section transitions with AOS library
+- Interactive navigation with smooth scrolling
+- Dark/Light mode toggle with user preference persistence
+- Typed.js implementation for animated text
+- Skills filtering system
+- Image lazy loading for improved performance
+- Accessibility optimizations including reduced motion preferences
+- SEO-friendly with proper meta tags and Schema.org markup
 
-## Quick Start
+## 📋 Technologies Used
 
-1. Clone this repository:
+- HTML5, CSS3, JavaScript
+- Tailwind CSS for styling
+- Font Awesome icons
+- Animate.css for animations
+- AOS (Animate on Scroll) library
+- Typed.js for text animation
+
+## 🛠️ Setup & Development
+
+To set up the project locally:
+
+1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/portfolio.git
-cd portfolio
+git clone https://github.com/yourusername/portfolio-website.git
 ```
 
-2. Run the development server:
-- Windows: Double-click `run.bat`
-- Manual: Use any HTTP server (see options below)
+2. Open the project in your code editor
 
-## Development Server Options
-
-1. **Python (Recommended)**:
+3. Launch with a local server:
+- You can use the Live Server extension in VS Code
+- Or use a simple Python HTTP server:
 ```bash
-# Python 3
-python -m http.server 3000
-
-# Python 2
-python -m SimpleHTTPServer 3000
+python -m http.server
 ```
 
-2. **Node.js**:
-```bash
-# Using npx
-npx http-server -p 3000
+## 🔧 Customization
 
-# Or install globally
-npm install -g http-server
-http-server -p 3000
-```
+To customize this template for your own use:
 
-3. **PHP**:
-```bash
-php -S localhost:3000
-```
+1. Replace personal information in the HTML files
+2. Update the profile image in `src/assets/images/`
+3. Modify the color scheme in the CSS variables
+4. Update social media links and project details
 
-## Free Hosting Options
+## 📱 Mobile Menu
 
-1. **GitHub Pages** (Recommended):
-   - Fork this repository
-   - Go to Settings > Pages
-   - Select your main branch
-   - Your site will be live at `https://yourusername.github.io/portfolio`
+The site includes a responsive mobile menu that appears on smaller screens:
+- Accessible via the hamburger icon in the top right
+- Smooth transitions between states
+- Close on navigation item selection or outside click
 
-2. **Netlify**:
-   - Sign up at [netlify.com](https://www.netlify.com)
-   - Connect your GitHub repository
-   - Your site will be automatically deployed
-   - Get a free SSL certificate and custom domain support
+## 🎨 Dark Mode
 
-3. **Vercel**:
-   - Sign up at [vercel.com](https://vercel.com)
-   - Import your GitHub repository
-   - Automatic deployments with each push
-   - Free SSL and great performance
+The site supports dark mode:
+- Toggle via the moon/sun icon
+- Preference is saved in localStorage
+- Respects system preference by default
 
-4. **Cloudflare Pages**:
-   - Sign up at [pages.cloudflare.com](https://pages.cloudflare.com)
-   - Connect your repository
-   - Get CDN benefits and free SSL
+## 🔍 SEO
 
-## Customization
+The site is optimized for search engines with:
+- Proper meta tags
+- Open Graph data for social sharing
+- Twitter card support
+- Schema.org structured data
 
-1. Update personal information in `index.html`
-2. Replace images in `src/assets/images/`
-3. Modify styles in the `<style>` section or create separate CSS files
-4. Update content in each section as needed
-
-## Performance Optimization
-
-- Images are optimized for web
-- CSS is minified
-- Animations are hardware-accelerated
-- Lazy loading implemented for images
-- Efficient glass effect rendering
-
-## Browser Support
-
-- Chrome (latest)
-- Firefox (latest)
-- Safari (latest)
-- Edge (latest)
-- Opera (latest)
-
-## Contributing
-
-Feel free to fork this project and customize it for your own use. If you find any bugs or have suggestions, please open an issue.
-
-## License
+## 📝 License
 
 This project is open source and available under the [MIT License](LICENSE).
 
-## Contact
+## 📞 Contact
 
-- Email: tricionmedia@gmail.com
-- LinkedIn: [ivan-van-der-schuit](https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a)
-- Phone: +31 6 15577152 
+For questions, suggestions, or inquiries, please contact:
+- Email: [tricionmedia@gmail.com](mailto:tricionmedia@gmail.com)
+- LinkedIn: [Ivan van der Schuit](https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a)
 
 ## Project Structure
 
