@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -10,9 +10,10 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { generateMelodyFromPrompt, GenerateMelodyFromPromptOutput } from '@/ai/flows/generate-melody-from-prompt';
-import { Sparkles, Download, FileAudio, Loader2 } from 'lucide-react';
+import { Sparkles, Download, FileAudio, Loader2, TimerIcon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
+import { parseTextToMidi } from '@/parseTextToMidi'; // Corrected import path
 
 const melodyGenerationSchema = z.object({
   prompt: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(500, { message: 'Prompt cannot exceed 500 characters.' }),
@@ -24,6 +25,8 @@ export function MelodyGenerationClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [melodyResult, setMelodyResult] = useState<GenerateMelodyFromPromptOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [timer, setTimer] = useState(240); // Timer state for visual countdown, set to 240 seconds (4 minutes)
+  const timerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store timer interval ID
   const { toast } = useToast();
 
   const form = useForm<MelodyGenerationFormValues>({
@@ -33,10 +36,43 @@ export function MelodyGenerationClient() {
     },
   });
 
+  // Effect to handle the countdown timer
+  useEffect(() => {
+    if (isLoading) {
+      setTimer(240); // Reset timer to 240 seconds when loading starts
+      timerRef.current = setInterval(() => {
+        setTimer((prevTimer) => {
+          if (prevTimer <= 1) {
+            clearInterval(timerRef.current!); // Stop timer at 0
+            return 0;
+          }
+          return prevTimer - 1;
+        });
+      }, 1000);
+    } else {
+      // Clear interval when loading stops
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+        timerRef.current = null;
+      }
+      // Optionally reset timer display if needed when not loading
+      // setTimer(240); // Could reset to 240 here if you want it to show 240 when idle
+    }
+
+    // Cleanup on component unmount
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isLoading]); // Depend on isLoading state
+
   const onSubmit = async (data: MelodyGenerationFormValues) => {
     setIsLoading(true);
     setMelodyResult(null);
     setError(null);
+    // Timer starts automatically due to useEffect when isLoading becomes true
+
     try {
       const result = await generateMelodyFromPrompt({ prompt: data.prompt });
       if (result && result.midiData) {
@@ -46,44 +82,67 @@ export function MelodyGenerationClient() {
           description: 'Your AI-powered melody is ready.',
         });
       } else {
-        throw new Error("Failed to generate melody or received empty data.");
+        // Handle cases where result is null, undefined, or midiData is missing
+        throw new Error(result?.description || "Failed to generate melody or received empty data.");
       }
     } catch (err: any) {
-      const errorMessage = err.message || 'An unknown error occurred during melody generation.';
+      // Check if the error is likely a timeout from the server action
+      const isTimeout = err.message?.includes('504') || err.message?.includes('timed out') || err.message?.includes('deadline exceeded');
+      const errorMessage = isTimeout 
+        ? 'Melody generation is taking longer than expected. Please wait or try again. Check server logs for more details if this persists.' 
+        : err.message || 'An unknown error occurred during melody generation.';
+        
       setError(errorMessage);
       toast({
-        title: 'Generation Failed',
+        title: isTimeout ? 'Generation Still Processing?' : 'Generation Failed',
         description: errorMessage,
         variant: 'destructive',
       });
     } finally {
       setIsLoading(false);
+      // Timer cleanup is handled by the useEffect when isLoading becomes false
     }
   };
 
   const handleDownloadMidi = () => {
     if (melodyResult?.midiData) {
-      // This is a placeholder. In a real app, midiData would be a URL or actual MIDI file content.
-      // If it's base64 encoded MIDI:
-      // const byteCharacters = atob(melodyResult.midiData);
-      // const byteNumbers = new Array(byteCharacters.length);
-      // for (let i = 0; i < byteCharacters.length; i++) {
-      //   byteNumbers[i] = byteCharacters.charCodeAt(i);
-      // }
-      // const byteArray = new Uint8Array(byteNumbers);
-      // const blob = new Blob([byteArray], {type: 'audio/midi'});
-      // const url = URL.createObjectURL(blob);
-      // const a = document.createElement('a');
-      // a.href = url;
-      // a.download = 'generated_melody.mid';
-      // document.body.appendChild(a);
-      // a.click();
-      // document.body.removeChild(a);
-      // URL.revokeObjectURL(url);
-      
-      // For now, just log it or show a message
-      console.log("MIDI Data (simulated download):", melodyResult.midiData);
-      toast({ title: "Download Simulated", description: "MIDI data logged to console. Implement actual download."});
+      try {
+        // Use the imported parsing function
+        const midiBytes = parseTextToMidi(melodyResult.midiData);
+
+        // Create a Blob from the MIDI bytes
+        const blob = new Blob([midiBytes], {type: 'audio/midi'});
+
+        // Create a download URL
+        const url = URL.createObjectURL(blob);
+
+        // Create a temporary anchor element and trigger download
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'generated_melody.mid'; // Suggested filename
+        document.body.appendChild(a);
+        a.click();
+
+        // Clean up
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+
+        toast({ title: "Download Started", description: "Your MIDI file should be downloading."});
+
+      } catch (e: any) {
+        console.error("Error downloading MIDI:", e);
+        toast({
+          title: 'Download Failed',
+          description: `Could not process MIDI data: ${e.message}`,
+          variant: 'destructive',
+        });
+      }
+    } else {
+       toast({
+          title: 'Download Failed',
+          description: 'No melody data available to download.',
+          variant: 'destructive',
+        });
     }
   };
 
@@ -111,10 +170,18 @@ export function MelodyGenerationClient() {
             </div>
             <Button type="submit" className="w-full md:w-auto bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-3 px-6" disabled={isLoading}>
               {isLoading ? (
-                <>
+                <span className="flex items-center">
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   Generating...
-                </>
+                  {timer >= 0 && ( // Display timer while counting down or at 0
+                    <span className="ml-2 flex items-center text-sm">
+                       <TimerIcon className="mr-1 h-4 w-4" /> {timer === 0 ? '<1' : timer}s
+                    </span>
+                  )}
+                   {timer < 0 && ( // Should not happen with current logic, but for safety
+                    <span className="ml-2 text-sm">Still working...</span>
+                   )}
+                </span>
               ) : (
                 <>
                   <Sparkles className="mr-2 h-5 w-5" />
@@ -146,13 +213,16 @@ export function MelodyGenerationClient() {
             {/* Placeholder for MIDI player or visualizer */}
             <div className="p-4 border rounded-md bg-secondary/50 text-center">
               <p className="text-muted-foreground">MIDI player/visualizer would appear here.</p>
-              <p className="text-sm text-muted-foreground mt-1">(MIDI Data: {melodyResult.midiData.substring(0,50)}...)</p>
+              {/* Removed console log and added truncated MIDI data preview */}
+               {melodyResult.midiData && (
+                 <p className="text-sm text-muted-foreground mt-1 truncate">MIDI Data: {melodyResult.midiData.substring(0, 200)}...</p>
+               )}
             </div>
           </CardContent>
           <CardFooter>
             <Button onClick={handleDownloadMidi} variant="outline">
               <Download className="mr-2 h-5 w-5" />
-              Download MIDI (Simulated)
+              Download MIDI
             </Button>
           </CardFooter>
         </Card>
@@ -170,7 +240,8 @@ export function MelodyGenerationClient() {
           </CardContent>
         </Card>
       )}
-       {isLoading && <div className="flex justify-center py-8"><LoadingSpinner size={48} /></div>}
+       {/* Display loading spinner below form when loading and no result/error yet */}
+      {isLoading && !melodyResult && !error && <div className="flex justify-center py-8"><LoadingSpinner size={48} /></div>}
     </div>
   );
 }
