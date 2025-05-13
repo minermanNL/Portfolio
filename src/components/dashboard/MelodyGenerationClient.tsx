@@ -108,10 +108,8 @@ export function MelodyGenerationClient() {
     if (melodyResult?.midiData) {
       try {
         // Use the imported parsing function
-        const midiBytes = parseTextToMidi(melodyResult.midiData);
-
         // Create a Blob from the MIDI bytes
-        const blob = new Blob([midiBytes], {type: 'audio/midi'});
+        const blob = new Blob([parseTextToMidi(melodyResult.midiData)], {type: 'audio/midi'});
 
         // Create a download URL
         const url = URL.createObjectURL(blob);

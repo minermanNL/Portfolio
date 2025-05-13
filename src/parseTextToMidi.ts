@@ -158,7 +158,7 @@ export function parseTextToMidi(inputText: string): Buffer {
          });
     });
 
-    const midi = new Midi({ ppq: currentResolution });
+    const midi = new Midi(); // Create an empty MIDI object
     midi.header.setTempo(tempoBpm);
 
     const tracks: Map<number, ReturnType<typeof midi.addTrack>> = new Map();
@@ -169,7 +169,8 @@ export function parseTextToMidi(inputText: string): Buffer {
             track.channel = note.channel;
             tracks.set(note.channel, track);
         }
-        const ticksPerSecond = midi.header.ppq * (tempoBpm / 60);
+        // Use currentResolution from the parsed input for timing calculations
+        const ticksPerSecond = currentResolution * (tempoBpm / 60);
         const startTimeSeconds = note.startTick / ticksPerSecond;
         const durationSeconds = note.durationTicks / ticksPerSecond;
         try {
@@ -181,8 +182,8 @@ export function parseTextToMidi(inputText: string): Buffer {
         }
     }
 
-    const totalDurationSeconds = sequenceLengthTicks / (midi.header.ppq * (tempoBpm / 60));
-    midi.duration = totalDurationSeconds;
+    // const totalDurationSeconds = sequenceLengthTicks / (currentResolution * (tempoBpm / 60)); // DELETED: This line caused the error
+    // midi.duration = totalDurationSeconds; // DELETED: This line caused the error
 
     const midiBytesArray = midi.toArray();
     return Buffer.from(midiBytesArray);
