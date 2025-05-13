@@ -124,7 +124,11 @@ const generateMelodyFromPromptFlow = ai.defineFlow(
   },
   async input => {
     // Execute the prompt by calling the prompt object directly with a 4-minute timeout
-    const result = await prompt(input, { model: 'googleai/gemini-2.5-flash-preview-04-17', timeout: 240000 });
+    const result = await prompt(input, { model: 'googleai/gemini-2.5-flash-preview-04-17', timeout: 240000,
+      generation_config: {
+        thinking_budget: 0, // Set thinking budget to 0 for fastest response
+      },
+     });
 
     // Assuming the result structure has an 'output' property containing the parsed schema output
     const output = result.output;
