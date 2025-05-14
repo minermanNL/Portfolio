@@ -127,16 +127,6 @@ export default function HomePage() {
                   Create original melodies in seconds using advanced AI models. Perfect for inspiration or complete compositions.
                 </p>
               </div>
-              {/* Feature Card 2 */} 
-              <div className="feature-card glass-effect rounded-xl p-6" style={{ background: 'linear-gradient(135deg, hsla(var(--secondary) / 0.1), hsla(var(--secondary) / 0.05))' }}>
-                <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-secondary/20">
-                  <Blocks className="h-6 w-6 text-secondary" />
-                </div>
-                <h3 className="text-xl font-semibold text-white mb-2">DAW Integration</h3>
-                <p className="text-gray-300 text-sm">
-                  Seamlessly integrate with your favorite DAW as a VST plugin. Compatible with FL Studio, Ableton, Logic Pro, and more.
-                </p>
-              </div>
               {/* Feature Card 3 */} 
               <div className="feature-card glass-effect rounded-xl p-6" style={{ background: 'linear-gradient(135deg, hsla(var(--primary) / 0.05), hsla(var(--secondary) / 0.1))' }}>
                 <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary/20 to-secondary/20">
@@ -169,19 +159,34 @@ export default function HomePage() {
                 </div>
                 <ul className="space-y-3 mb-8 text-sm">
                   <li className="flex items-center gap-2 text-gray-300">
-                    <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
-                    <span>Unlimited MIDI Generation</span>
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>100 monthly generations</span>
                   </li>
                   <li className="flex items-center gap-2 text-gray-300">
-                    <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
-                    <span>Basic DAW Integration</span>
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>500 max melody storage</span>
                   </li>
                   <li className="flex items-center gap-2 text-gray-300">
-                    <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
-                    <span>Standard Support</span>
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>2 concurrent generations</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-gray-300">
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>5 max API keys</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-gray-300">
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>Advanced features</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-gray-300 opacity-50">
+ <CheckCircle className="h-4 w-4 text-gray-600 material-icons-check" />
+ <span>API access</span>
                   </li>
                 </ul>
                 <div className="flex flex-col gap-3">
+                  <Button variant="outline" className="w-full border-primary text-white rounded-full font-semibold hover:bg-primary/10 transition-all relative group btn-hover" asChild>
+                    <Link href="/signup?plan=free">Start for Free</Link>
+                  </Button>
                   <Button className="w-full bg-secondary text-black rounded-full font-semibold hover:bg-opacity-90 transition-all btn-hover" asChild>
                     <Link href="/signup?plan=basic-monthly">Start Monthly</Link>
                   </Button>
@@ -213,20 +218,36 @@ export default function HomePage() {
                 </div>
                 <ul className="space-y-3 mb-8 text-sm">
                   <li className="flex items-center gap-2 text-gray-300">
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>1000 monthly generations</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-gray-300">
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>5000 max melody storage</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-gray-300">
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>5 concurrent generations</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-gray-300">
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>20 max API keys</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-gray-300">
+ <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
+ <span>Advanced features</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-gray-300">
                     <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
                     <span>Everything in Basic</span>
                   </li>
                   <li className="flex items-center gap-2 text-gray-300">
                     <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
-                    <span>Advanced DAW Integration</span>
+ <span>API access</span>
                   </li>
                   <li className="flex items-center gap-2 text-gray-300">
                     <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
                     <span>Priority Support</span>
-                  </li>
-                  <li className="flex items-center gap-2 text-gray-300">
-                    <CheckCircle className="h-4 w-4 text-secondary material-icons-check" />
-                    <span>Custom Style Training</span>
                   </li>
                 </ul>
                 <div className="flex flex-col gap-3">
@@ -317,7 +338,7 @@ export default function HomePage() {
                 <li><Link href="/dashboard/generate" className="text-gray-400 hover:text-secondary transition-colors">Generator</Link></li>
                 <li><Link href="#vocal-gen" className="text-gray-400 hover:text-secondary transition-colors">Vocal Gen</Link></li>
                 <li><Link href="#pricing" className="text-gray-400 hover:text-secondary transition-colors">Pricing</Link></li>
-                <li><Link href="#" className="text-gray-400 hover:text-secondary transition-colors opacity-50 cursor-not-allowed">Download VST</Link></li>
+                {/* <li><Link href="#" className="text-gray-400 hover:text-secondary transition-colors opacity-50 cursor-not-allowed">Download VST</Link></li> */}
               </ul>
             </div>
             {/* Contact */} 

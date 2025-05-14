@@ -1,11 +1,11 @@
+"use client";
+
 import { LoginForm } from '@/components/auth/LoginForm';
 import type { Metadata } from 'next';
-
-export const metadata: Metadata = {
-  title: 'Login - Tricion Studio',
-  description: 'Log in to your Tricion Studio account.',
-};
+import { useSearchParams } from 'next/navigation';
 
 export default function LoginPage() {
-  return <LoginForm />;
+  const searchParams = useSearchParams();
+  const plan = searchParams.get('plan');
+  return <LoginForm plan={plan} />;
 }

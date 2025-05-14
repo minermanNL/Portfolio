@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AuthFormWrapper } from './AuthFormWrapper';
 import { useAuthSession } from '@/hooks/useAuthSession';
 import { Mail, Lock, LogIn as LogInIcon } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const loginSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
@@ -22,9 +22,11 @@ type LoginFormValues = z.infer<typeof loginSchema>;
 
 export function LoginForm() {
   const { supabase } = useAuthSession();
+  const searchParams = useSearchParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const plan = searchParams.get('plan');
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -68,9 +70,18 @@ export function LoginForm() {
 
   return (
     <AuthFormWrapper
-      title="Welcome Back!"
+      title={plan ? `Log In to Subscribe to ${plan}` : "Welcome Back!"}
       description="Log in to continue to Tricion Studio."
-      footerText="Don't have an account?"
+      footerText={
+        plan
+          ? `Don't have an account and want to subscribe to ${plan}?`
+          : "Don't have an account?"
+      }
+      footerLinkHref={
+        plan
+          ? `/signup?plan=${plan}`
+          : "/signup"
+      }
       footerLinkText="Sign Up"
       footerLinkHref="/signup"
     >

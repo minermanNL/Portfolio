@@ -26,16 +26,54 @@ export interface UserProfile {
   website?: string | null;
 }
 
-export type SubscriptionStatus = 'active' | 'inactive' | 'canceled' | 'past_due' | 'incomplete' | 'trialing' | null;
+export type SubscriptionStatus = 'active' | 'canceled' | 'incomplete' | 'incomplete_expired' | 'past_due' | 'trialing' | 'unpaid';
+
+export interface Price {
+  id: string;
+  product_id: string;
+  active: boolean;
+  currency: string;
+  unit_amount: number | null;
+  type: 'one_time' | 'recurring';
+  interval: 'day' | 'week' | 'month' | 'year' | null;
+  interval_count: number;
+  trial_period_days: number | null;
+}
+
+export interface Product {
+  id: string;
+  active: boolean;
+  name: string;
+  description: string | null;
+  image: string | null;
+  metadata: Record<string, any> | null;
+}
 
 export interface Subscription {
   id: string;
   user_id: string;
   status: SubscriptionStatus;
-  stripe_customer_id?: string | null;
-  stripe_subscription_id?: string | null;
-  plan_name?: string | null;
-  created_at: string;
-  current_period_end?: string | null; // Date string
-  manage_url?: string; // URL to Stripe portal
+  price_id: string;
+  quantity: number | null;
+  cancel_at_period_end: boolean;
+  created: string;
+  current_period_start: string;
+  current_period_end: string;
+  ended_at: string | null;
+  cancel_at: string | null;
+  canceled_at: string | null;
+  trial_start: string | null;
+  trial_end: string | null;
+  manage_url: string | null;
+  prices: Price;
+  products: Product;
+}
+
+export interface Tier {
+  tier: string;
+  monthly_generations: number;
+  max_melody_storage: number;
+  concurrent_generations: number;
+  max_api_keys: number;
+  advanced_features: boolean;
 }

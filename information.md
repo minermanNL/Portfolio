@@ -63,15 +63,17 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
 ## Detailed Explanation of Features:
 
 ### User Authentication:
-
 *   Located in `src/app/(auth)/` and `src/components/auth/`.
 *   Provides forms for user sign-up (`SignupForm.tsx`) and login (`LoginForm.tsx`).
 *   Uses Firebase Authentication for managing user accounts.
 *   `AuthSessionProvider.tsx` likely manages the user's session state.
 *   `useAuthSession.ts` is probably a custom hook to access authentication state.
+*   Handles user login, signup, and session management.
+*   Ensures secure access to the application.
 
 ### User Profile:
-
+*   Allows users to view and update their profile information.
+*   Displays user-specific data.
 *   Located in `src/app/dashboard/profile/page.tsx` and `src/components/dashboard/ProfileClient.tsx`.
 *   Fetches user information from the backend (likely Firestore via Firebase).
 *   Allows users to view and potentially update their profile details.
@@ -82,6 +84,8 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
 *   Displays a list of melodies, likely stored in Firestore.
 *   `MelodyCard.tsx` is probably used to display individual melodies.
 *   May include search and filtering capabilities (not explicitly shown but mentioned in the blueprint).
+*   Provides an organized view of generated and saved melodies.
+*   Allows users to easily find and access their musical creations.
 
 ### AI Melody Generation:
 
@@ -92,11 +96,29 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
 *   The generated output could be MIDI files or even vocal tracks.
 *   `src/ai/flows/summarize-melody-details.ts` might be used to create descriptions or tags for generated melodies.
 
+#### Basic Tier
+*   **Monthly Generations:** 100
+*   **Max Melody Storage:** 500
+*   **Concurrent Generations:** 2
+*   **Max API Keys:** 5
+*   **Advanced Features:** True
+*   **API Access:** False
+
+#### Pro Tier
+*   **Monthly Generations:** 1000
+*   **Max Melody Storage:** 5000
+*   **Concurrent Generations:** 5
+*   **Max API Keys:** 20
+*   **Advanced Features:** True
+*   **API Access:** True
+
 ### Subscription Management:
 
 *   Located in `src/app/dashboard/subscription/page.tsx` and `src/components/dashboard/SubscriptionClient.tsx`.
 *   Displays the user's current subscription status.
 *   Provides a link to Stripe for users to manage their subscription details and payments.
+*   Integrates with Stripe for secure payment processing and subscription management.
+*   Provides different tiers with varying limits on generations, storage, and features.
 
 ### UI Components:
 

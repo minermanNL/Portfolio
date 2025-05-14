@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { useAuthSession } from '@/hooks/useAuthSession';
@@ -9,49 +10,20 @@ import type { Subscription, SubscriptionStatus } from '@/types';
 import { CreditCard, AlertTriangle, CheckCircle2, ExternalLink, Loader2, CalendarDays, Info } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
-
-// MOCK API Functions - Replace with actual backend calls
-const fetchSubscriptionDetails = async (userId: string): Promise<Subscription | null> => {
-  console.log("Fetching subscription for user:", userId);
-  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate API delay
-  
-  // Simulate different states for testing
-  const mockScenario = Math.random();
-  if (mockScenario < 0.6) { // Active subscription
-    return {
-      id: 'sub_mock_123',
-      user_id: userId,
-      status: 'active',
-      plan_name: 'Pro Monthly',
-      created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 45).toISOString(), // 45 days ago
-      current_period_end: new Date(Date.now() + 1000 * 60 * 60 * 24 * 15).toISOString(), // 15 days from now
-      manage_url: 'https://billing.stripe.com/p/session/mock_manage_session_id', // Example Stripe portal link
-      stripe_customer_id: "cus_mock",
-      stripe_subscription_id: "sub_mock_id_from_stripe"
-    };
-  } else if (mockScenario < 0.8) { // Inactive/canceled
-     return {
-      id: 'sub_mock_456',
-      user_id: userId,
-      status: 'canceled',
-      plan_name: 'Basic Yearly',
-      created_at: new Date(Date.now() - 1000 * 60 * 60 * 24 * 100).toISOString(),
-      current_period_end: new Date(Date.now() - 1000 * 60 * 60 * 24 * 10).toISOString(), // Ended 10 days ago
-      manage_url: 'https://billing.stripe.com/p/session/mock_manage_session_id_canceled',
-      stripe_customer_id: "cus_mock_other",
-      stripe_subscription_id: "sub_mock_id_from_stripe_other"
-    };
-  } else { // No subscription
-    return null;
-  }
-};
+// Import necessary Supabase client
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 // Helper to format date string
 const formatDate = (dateString?: string | null) => {
   if (!dateString) return 'N/A';
-  return new Date(dateString).toLocaleDateString('en-US', {
-    year: 'numeric', month: 'long', day: 'numeric'
-  });
+  try {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      year: 'numeric', month: 'long', day: 'numeric'
+    });
+  } catch (error) {
+    console.error("Invalid date string:", dateString, error);
+    return 'Invalid Date';
+  }
 };
 
 const getStatusBadgeVariant = (status: SubscriptionStatus) => {
@@ -73,6 +45,7 @@ export function SubscriptionClient() {
   const [subscription, setSubscription] = useState<Subscription | null>(null);
   const [isLoadingData, setIsLoadingData] = useState(true);
   const { toast } = useToast();
+  const supabase = createClientComponentClient();
 
   useEffect(() => {
     if (user && user.id) {
@@ -80,15 +53,23 @@ export function SubscriptionClient() {
       fetchSubscriptionDetails(user.id)
         .then(data => {
           setSubscription(data);
+          console.log("Fetched subscription data:", data);
         })
         .catch(err => {
           toast({ title: "Error", description: "Could not fetch subscription details: " + err.message, variant: "destructive" });
+          console.error("Failed to fetch subscription details:", err);
         })
         .finally(() => setIsLoadingData(false));
     } else if (!authLoading) {
       setIsLoadingData(false);
     }
   }, [user, toast, authLoading]);
+
+  const fetchSubscriptionDetails = async (userId: string): Promise<Subscription | null> => {
+    const { data, error } = await supabase.from('subscriptions').select('*').eq('user_id', userId).single();
+    if (error && error.code !== 'PGRST116') throw error; // Ignore "no rows found" error
+    return data as Subscription | null;
+  };
 
   const handleManageSubscription = () => {
     if (subscription?.manage_url) {
@@ -185,9 +166,9 @@ export function SubscriptionClient() {
            <Button disabled className="w-full">Management Link Unavailable</Button>
         ) : (
           <Button asChild className="w-full bg-primary hover:bg-primary/90">
-            <a href="/pricing"> {/* Assuming a pricing page exists */}
-              View Subscription Plans
-            </a>
+            <Link href="/pricing">
+            view Plans
+            </Link>
           </Button>
         )}
       </CardFooter>
