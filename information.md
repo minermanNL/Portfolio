@@ -30,6 +30,7 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
         *   **`/api`**: API routes for backend logic.
             *   **`/create-stripe-checkout`**: API route to initiate a Stripe checkout session.
             *   **`/stripe-webhook`**: API route to handle incoming webhook events from Stripe.
+            *   **`/generate-melody-task`**: API route to initiate an asynchronous melody generation task.
     *   **`/components`**: Reusable UI components.
         *   **`/auth`**: Components related to authentication.
         *   **`/dashboard`**: Components specific to the dashboard.
@@ -38,7 +39,7 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
     *   **`/hooks`**: Custom React hooks.
     *   **`/lib`**: Utility functions and libraries.
         *   **`/supabase`**: Supabase client setup and potentially helper functions.
-    *   **`/types`**: TypeScript type definitions, including `supabase.ts` which defines the structure of Supabase tables (e.g., `subscriptions`).
+    *   **`/types`**: TypeScript type definitions, including `supabase.ts` which defines the structure of Supabase tables (e.g., `subscriptions`, `tasks`).
     *   **`/ai`**: Artificial intelligence related code, likely for melody generation.
         *   **`/flows`**: Genkit flows for AI tasks.
 *   **`/public`**: Static assets like images and HTML files.
@@ -55,7 +56,7 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
 *   **Tailwind CSS**: Utility-first CSS framework.
 *   **Supabase**: Backend-as-a-Service platform providing:
     *   Authentication
-    *   PostgreSQL Database (including a `subscriptions` table)
+    *   PostgreSQL Database (including a `subscriptions` table and a `tasks` table for asynchronous jobs)
     *   Storage
     *   Edge Functions (though API routes in Next.js are also used)
 *   **Stripe**: Payment processing platform for handling subscriptions.
@@ -92,7 +93,23 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
 
 *   Located in `src/app/dashboard/generate/page.tsx` and `src/components/dashboard/MelodyGenerationClient.tsx`.
 *   A form (`MelodyGenerationClient.tsx`) takes user input (e.g., prompt, genre, mood).
-*   This input is sent to the backend, likely processed by AI models using Genkit (`src/ai/genkit.ts`, `src/ai/flows/generate-melody-from-prompt.ts`), potentially via a Next.js API route or a Supabase Edge Function.
+*   **Asynchronous Processing (Work in Progress):**
+    *   **Current Status:** Phase 1, Steps 1 and 2 completed.
+        *   **Step 1 (Completed):** Updated Supabase TypeScript types to include the new `public.tasks` table.
+        *   **Step 2 (Completed):** Created an API endpoint (`/api/generate-melody-task`) to initiate melody generation asynchronously. This endpoint creates a task record in the `public.tasks` table with a 'PENDING' status and returns a `taskId`.
+    *   **Next Steps:**
+        *   **Step 3:** Modify the AI flow (`generateMelodyFromPromptFlow` in `src/ai/flows/generate-melody-from-prompt.ts`) to:
+            *   Accept `taskId` as input.
+            *   Update the task status to 'PROCESSING' at the start.
+            *   Perform melody generation.
+            *   Update the task status to 'COMPLETED' with results or 'FAILED' with an error message upon completion/failure.
+        *   **Step 4:** Create an API endpoint (`/api/melody-status/[taskId]`) for the frontend to poll for the status of a generation task.
+        *   **Step 5 (Frontend):** Modify `MelodyGenerationClient.tsx` to:
+            *   Call the `/api/generate-melody-task` endpoint to start generation.
+            *   Receive the `taskId` and initiate polling to `/api/melody-status/[taskId]`.
+            *   Update the UI based on the polled status ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED').
+            *   Display the results or errors once the task is completed or fails.
+*   The input is sent to the backend, likely processed by AI models using Genkit (`src/ai/genkit.ts`, `src/ai/flows/generate-melody-from-prompt.ts`).
 *   `src/parseTextToMidi.ts` suggests that the AI might generate a textual representation of music that then gets converted to MIDI.
 *   The generated output could be MIDI files or even vocal tracks.
 *   `src/ai/flows/summarize-melody-details.ts` might be used to create descriptions or tags for generated melodies.
@@ -136,6 +153,7 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
 *   Next.js API routes (in `/src/app/api/`) handle specific backend tasks:
     *   `create-stripe-checkout`: Securely creates Stripe checkout sessions.
     *   `stripe-webhook`: Handles incoming webhooks from Stripe to update subscription data in Supabase.
+    *   `generate-melody-task`: Initiates an asynchronous AI melody generation task by creating a record in the `tasks` table.
     *   Other API routes might exist for AI interactions or other backend processes.
 
 ### Development and Tooling:
@@ -149,13 +167,14 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
 
 1.  **User signs up or logs in:** Supabase Authentication verifies credentials.
 2.  **User navigates the dashboard:** Next.js handles routing. The UI is built with React components and styled with Tailwind CSS.
-3.  **To generate a melody:**
+3.  **To generate a melody (Asynchronous Flow - In Progress):**
     *   The user fills a form in `MelodyGenerationClient.tsx`.
-    *   The client sends a request (likely to a Next.js API route or Supabase Edge Function).
-    *   The backend invokes a Genkit flow (`generate-melody-from-prompt.ts`).
-    *   The AI model processes the input and generates melody data.
-    *   This data might be converted to MIDI using `parseTextToMidi.ts`.
-    *   The result is returned to the client and presented to the user.
+    *   The client sends a request to the `/api/generate-melody-task` Next.js API route.
+    *   This API route creates a new task in the Supabase `tasks` table with 'PENDING' status and returns a `taskId`.
+    *   *(Next Step)* The API route will trigger the Genkit flow (`generate-melody-from-prompt.ts`) as a background process, passing the `taskId`.
+    *   *(Next Step)* The Genkit flow updates the task status to 'PROCESSING', generates the melody, and updates the task to 'COMPLETED' with results (or 'FAILED' with an error) in the Supabase `tasks` table.
+    *   *(Next Step)* The client (`MelodyGenerationClient.tsx`) will poll a new API endpoint (`/api/melody-status/[taskId]`) to get the task status.
+    *   *(Next Step)* Once the status is 'COMPLETED', the client retrieves the melody data and presents it to the user.
     *   Generated melodies might be saved to a Supabase table.
 4.  **To view melodies:**
     *   `MelodyList.tsx` fetches melody data from Supabase.
@@ -169,4 +188,4 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
     *   `SubscriptionClient.tsx` displays current status from Supabase.
     *   For managing payment methods or cancellations, the user is typically redirected to the Stripe customer portal.
 
-This `information.md` file provides a comprehensive overview based on the project's file structure and the initial blueprint, incorporating the recent Stripe and Supabase integration for subscriptions.
+This `information.md` file provides a comprehensive overview based on the project's file structure and the initial blueprint, incorporating the recent Stripe and Supabase integration for subscriptions, and tracking the progress of the asynchronous AI melody generation feature.
