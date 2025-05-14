@@ -5,19 +5,70 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { CheckCircle, ArrowRight } from "lucide-react";
 import { useAuthSession } from "@/hooks/useAuthSession";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { useToast } from "@/components/ui/use-toast";
 
 export default function PricingPage() {
-  const { user, isLoading } = useAuthSession();
+  const { user, isLoading: isUserLoading } = useAuthSession();
   const router = useRouter();
+  const { toast } = useToast();
+
+  const [isRedirecting, setIsRedirecting] = useState(false);
 
   useEffect(() => {
-    if (!user && !isLoading) {
+    if (!user && !isUserLoading) {
       // Redirect to login if not authenticated and not loading
       // The login page should then handle the plan parameter if needed
       // router.push('/login'); // Decide how to handle plan parameter on login page
     }
-  }, [user, isLoading, router]);
+  }, [user, isUserLoading, router]);
+
+  const handleCheckout = async (priceId: string) => {
+    if (!user) {
+        toast({
+            title: "Authentication required",
+            description: "Please log in to subscribe to a plan.",
+            variant: "destructive",
+        });
+        // Optionally redirect to login
+        // router.push(\`/login?plan=\${priceId}\`);
+        return;
+    }
+
+    setIsRedirecting(true);
+    try {
+      const response = await fetch('/api/create-stripe-checkout', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ priceId }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to create Stripe checkout session');
+      }
+
+      if (data.checkoutUrl) {
+        // Redirect to Stripe checkout page
+        window.location.href = data.checkoutUrl;
+      } else {
+         throw new Error('Invalid response from server: No checkout URL provided.');
+      }
+
+    } catch (error: any) {
+      console.error('Checkout error:', error);
+      toast({
+        title: "Checkout Failed",
+        description: error.message || "Could not initiate checkout process.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsRedirecting(false);
+    }
+  };
 
   return (
     <div className="min-h-screen font-sans">
@@ -137,14 +188,20 @@ export default function PricingPage() {
                     </ul>
                 </div>
                 <div className="flex flex-col gap-3 mt-auto">
-                  <Button className="w-full bg-secondary text-black rounded-full font-semibold hover:bg-opacity-90 transition-all btn-hover" asChild>
-                    <Link href="/login?plan=basic-monthly">Choose Basic Monthly</Link>
+                  <Button
+                    className="w-full bg-secondary text-black rounded-full font-semibold hover:bg-opacity-90 transition-all btn-hover"
+                    onClick={() => handleCheckout('price_basic_monthly')}
+                    disabled={isRedirecting || isUserLoading}
+                  >
+                    {isRedirecting ? 'Redirecting...' : 'Choose Basic Monthly'}
                   </Button>
-                  <Button variant="outline" className="w-full border-secondary text-white rounded-full font-semibold hover:bg-secondary/10 transition-all relative group btn-hover" asChild>
-                    <Link href="/signup?plan=basic-annual">
-                      <span>Choose Basic Annual</span>
-                      <span className="absolute -top-2 right-2 text-xs bg-primary text-white px-2 py-0.5 rounded-full group-hover:scale-110 transition-transform">Save $100</span>
-                     </Link>
+                  <Button
+                    variant="outline" className="w-full border-secondary text-white rounded-full font-semibold hover:bg-secondary/10 transition-all relative group btn-hover"
+                    onClick={() => handleCheckout('price_basic_annual')}
+                    disabled={isRedirecting || isUserLoading}
+                  >
+                    {isRedirecting ? 'Redirecting...' : 'Choose Basic Annual'}
+                    <span className="absolute -top-2 right-2 text-xs bg-primary text-white px-2 py-0.5 rounded-full group-hover:scale-110 transition-transform">Save $100</span>
                   </Button>
                 </div>
               </div>
@@ -189,14 +246,20 @@ export default function PricingPage() {
                     </ul>
                 </div>
                 <div className="flex flex-col gap-3 mt-auto">
-                  <Button className="w-full bg-gradient-to-r from-primary to-secondary text-white rounded-full font-semibold hover:opacity-90 transition-all btn-hover" asChild>
-                    <Link href="/login?plan=pro-monthly">Choose Pro Monthly</Link>
+                  <Button
+                    className="w-full bg-gradient-to-r from-primary to-secondary text-white rounded-full font-semibold hover:opacity-90 transition-all btn-hover"
+                     onClick={() => handleCheckout('price_pro_monthly')}
+                     disabled={isRedirecting || isUserLoading}
+                     >
+                    {isRedirecting ? 'Redirecting...' : 'Choose Pro Monthly'}
                   </Button>
-                  <Button variant="outline" className="w-full border-primary text-white rounded-full font-semibold hover:bg-primary/10 transition-all relative group btn-hover" asChild>
-                    <Link href="/signup?plan=pro-annual">
-                      <span>Choose Pro Annual</span>
-                      <span className="absolute -top-2 right-2 text-xs bg-secondary text-black px-2 py-0.5 rounded-full group-hover:scale-110 transition-transform">Save $200</span>
-                    </Link>
+                  <Button
+                    variant="outline" className="w-full border-primary text-white rounded-full font-semibold hover:bg-primary/10 transition-all relative group btn-hover"
+                     onClick={() => handleCheckout('price_pro_annual')}
+                     disabled={isRedirecting || isUserLoading}
+                     >
+                    {isRedirecting ? 'Redirecting...' : 'Choose Pro Annual'}
+                    <span className="absolute -top-2 right-2 text-xs bg-secondary text-black px-2 py-0.5 rounded-full group-hover:scale-110 transition-transform">Save $200</span>
                   </Button>
                 </div>
               </div>
