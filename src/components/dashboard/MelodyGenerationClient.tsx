@@ -4,16 +4,17 @@ import { useState, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import Link from 'next/link'; // Import Link
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
 import { generateMelodyFromPrompt, GenerateMelodyFromPromptOutput } from '@/ai/flows/generate-melody-from-prompt';
-import { Sparkles, Download, FileAudio, Loader2, TimerIcon } from 'lucide-react';
+import { Sparkles, Download, FileAudio, Loader2, TimerIcon, ArrowRight, Music, Mic } from 'lucide-react'; // Added ArrowRight, Music, Mic icons
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { parseTextToMidi } from '@/parseTextToMidi'; // Corrected import path
+import { parseTextToMidi } from '@/parseTextToMidi';
 
 const melodyGenerationSchema = z.object({
   prompt: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(500, { message: 'Prompt cannot exceed 500 characters.' }),
@@ -27,6 +28,7 @@ export function MelodyGenerationClient() {
   const [error, setError] = useState<string | null>(null);
   const [timer, setTimer] = useState(240); // Timer state for visual countdown, set to 240 seconds (4 minutes)
   const timerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store timer interval ID
+
   const { toast } = useToast();
 
   const form = useForm<MelodyGenerationFormValues>({
@@ -88,10 +90,10 @@ export function MelodyGenerationClient() {
     } catch (err: any) {
       // Check if the error is likely a timeout from the server action
       const isTimeout = err.message?.includes('504') || err.message?.includes('timed out') || err.message?.includes('deadline exceeded');
-      const errorMessage = isTimeout 
-        ? 'Melody generation is taking longer than expected. Please wait or try again. Check server logs for more details if this persists.' 
+      const errorMessage = isTimeout
+        ? 'Melody generation is taking longer than expected. Please wait or try again. Check server logs for more details if this persists.'
         : err.message || 'An unknown error occurred during melody generation.';
-        
+
       setError(errorMessage);
       toast({
         title: isTimeout ? 'Generation Still Processing?' : 'Generation Failed',
@@ -161,6 +163,7 @@ export function MelodyGenerationClient() {
                 {...form.register('prompt')}
                 className="min-h-[120px] text-base"
                 aria-invalid={form.formState.errors.prompt ? "true" : "false"}
+                disabled={isLoading} // Disable during generation
               />
               {form.formState.errors.prompt && (
                 <p className="text-sm text-destructive">{form.formState.errors.prompt.message}</p>
@@ -211,8 +214,7 @@ export function MelodyGenerationClient() {
             {/* Placeholder for MIDI player or visualizer */}
             <div className="p-4 border rounded-md bg-secondary/50 text-center">
               <p className="text-muted-foreground">MIDI player/visualizer would appear here.</p>
-              {/* Removed console log and added truncated MIDI data preview */}
-               {melodyResult.midiData && (
+              {melodyResult.midiData && (
                  <p className="text-sm text-muted-foreground mt-1 truncate">MIDI Data: {melodyResult.midiData.substring(0, 200)}...</p>
                )}
             </div>
@@ -225,16 +227,47 @@ export function MelodyGenerationClient() {
           </CardFooter>
         </Card>
       )}
+
+      {/* Links to other tools */}
+       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+           <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center"><Music className="mr-2 h-6 w-6 text-purple-500" /> Manual Text to MIDI</CardTitle>
+              <CardDescription>Manually convert AI text output to MIDI.</CardDescription>
+            </CardHeader>
+            <CardContent>
+               <Link href="/dashboard/advanced-tools" passHref>
+                 <Button variant="outline" className="w-full">
+                    Go to Tool <ArrowRight className="ml-2 h-4 w-4" />
+                 </Button>
+               </Link>
+            </CardContent>
+           </Card>
+
+            <Card className="shadow-lg">
+            <CardHeader>
+              <CardTitle className="text-xl flex items-center"><Mic className="mr-2 h-6 w-6 text-blue-500" /> Vocal Generation</CardTitle>
+              <CardDescription>Generate vocal melodies or convert text to speech.</CardDescription>
+            </CardHeader>
+            <CardContent>
+               <Link href="/dashboard/vocal-generation" passHref>
+                 <Button variant="outline" className="w-full">
+                    Go to Tool <ArrowRight className="ml-2 h-4 w-4" />
+                 </Button>
+               </Link>
+            </CardContent>
+           </Card>
+       </div>
+
+
        {!isLoading && !melodyResult && !error && (
         <Card className="shadow-md">
           <CardContent className="py-12 text-center">
             <Sparkles className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
             <p className="text-lg text-muted-foreground">
-              Your generated melody will appear here.
+              Generate a melody above or explore our other AI tools.
             </p>
-            <p className="text-sm text-muted-foreground/80">
-              Enter a prompt above and click "Generate Melody" to start.
-            </p>
+             {/* Removed specific instructions */} 
           </CardContent>
         </Card>
       )}
