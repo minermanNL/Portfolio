@@ -26,14 +26,17 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
 *   **`/src`**: Contains the main source code for the application.
     *   **`/app`**: The main application directory for Next.js, containing layouts, pages, and components.
         *   **`/(auth)`**: Authentication-related pages (login, signup).
-        *   **`/dashboard`**: Pages for the main user dashboard after login (generate, library, profile, subscription).
+        *   **`/dashboard`**: Pages for the main user dashboard after login (generate, library, profile, subscription, **advanced-tools**, **vocal-generation**).
         *   **`/api`**: API routes for backend logic.
             *   **`/create-stripe-checkout`**: API route to initiate a Stripe checkout session.
             *   **`/stripe-webhook`**: API route to handle incoming webhook events from Stripe.
             *   **`/generate-melody-task`**: API route to initiate an asynchronous melody generation task.
+            *   **`/midi-to-text`**: API route to convert MIDI files to text descriptions.
     *   **`/components`**: Reusable UI components.
         *   **`/auth`**: Components related to authentication.
         *   **`/dashboard`**: Components specific to the dashboard.
+            *   **`AdvancedMelodyToolsClient.tsx`**: Client component for manual text-to-MIDI and MIDI-to-text conversion tools.
+            *   **`VocalGenerationClient.tsx`**: Client component for vocal generation tools (placeholder).
         *   **`/shared`**: Components used across different parts of the application.
         *   **`/ui`**: General UI components (buttons, cards, dialogs, etc.), likely from a UI library like Shadcn/ui.
     *   **`/hooks`**: Custom React hooks.
@@ -42,6 +45,7 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
     *   **`/types`**: TypeScript type definitions, including `supabase.ts` which defines the structure of Supabase tables (e.g., `subscriptions`, `tasks`).
     *   **`/ai`**: Artificial intelligence related code, likely for melody generation.
         *   **`/flows`**: Genkit flows for AI tasks.
+        *   **`parseTextToMidi.ts`**: Script to convert text descriptions to MIDI files.
 *   **`/public`**: Static assets like images and HTML files.
 *   **`/functions`**: (Likely less used now, as API routes in Next.js handle backend logic for Stripe and potentially other tasks previously designated for Firebase Functions).
 *   **`/dataconnect`**: (Likely less used or removed if Firebase is fully replaced by Supabase).
@@ -61,6 +65,7 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
     *   Edge Functions (though API routes in Next.js are also used)
 *   **Stripe**: Payment processing platform for handling subscriptions.
 *   **Genkit (implied by `src/ai/genkit.ts`)**: An AI framework, likely used for the melody generation feature.
+*   **midi-parser-js**: Library used in the backend to parse MIDI files.
 
 ## Detailed Explanation of Features:
 
@@ -109,10 +114,10 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
             *   Receive the `taskId` and initiate polling to `/api/melody-status/[taskId]`.
             *   Update the UI based on the polled status ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED').
             *   Display the results or errors once the task is completed or fails.
-*   The input is sent to the backend, likely processed by AI models using Genkit (`src/ai/genkit.ts`, `src/ai/flows/generate-melody-from-prompt.ts`).
-*   `src/parseTextToMidi.ts` suggests that the AI might generate a textual representation of music that then gets converted to MIDI.
-*   The generated output could be MIDI files or even vocal tracks.
-*   `src/ai/flows/summarize-melody-details.ts` might be used to create descriptions or tags for generated melodies.
+    *   The input is sent to the backend, likely processed by AI models using Genkit (`src/ai/genkit.ts`, `src/ai/flows/generate-melody-from-prompt.ts`).
+    *   `src/parseTextToMidi.ts` suggests that the AI might generate a textual representation of music that then gets converted to MIDI.
+    *   The generated output could be MIDI files or even vocal tracks.
+    *   `src/ai/flows/summarize-melody-details.ts` might be used to create descriptions or tags for generated melodies.
 
 #### Basic Tier
 *   **Monthly Generations:** 100
@@ -154,14 +159,20 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
     *   `create-stripe-checkout`: Securely creates Stripe checkout sessions.
     *   `stripe-webhook`: Handles incoming webhooks from Stripe to update subscription data in Supabase.
     *   `generate-melody-task`: Initiates an asynchronous AI melody generation task by creating a record in the `tasks` table.
-    *   Other API routes might exist for AI interactions or other backend processes.
+    *   `midi-to-text`: Converts uploaded MIDI files into a specific text format.
 
-### Development and Tooling:
+### Development Environment and Tooling:
 
 *   `package.json` and `package-lock.json` manage project dependencies.
 *   `tsconfig.json` (and variants) configure the TypeScript compiler.
 *   `.idx/dev.nix` is a Nix environment configuration, likely for ensuring a consistent development environment within Google's IDX.
 *   `next.config.ts` is the configuration file for Next.js.
+*   **AI-Powered Development:**
+    *   AI coding assistance is integrated, notably with Gemini unified in IDX and Firebase. This provides enhanced code completion, suggestions, and assistance within the development environment.
+    *   The project utilizes multimodal prompting capabilities, allowing for more flexible and nuanced interactions with AI models during development.
+    *   Enhanced Firebase integration within the development environment streamlines workflows related to Firebase services.
+    *   Improved performance and more customization options within the development environment contribute to a more efficient coding experience.
+*   **midi-parser-js**: Library used in the backend to parse MIDI files.
 
 ## How It Works (High-Level Flow):
 
@@ -189,3 +200,14 @@ The project is a Next.js application with TypeScript. It uses Tailwind CSS for s
     *   For managing payment methods or cancellations, the user is typically redirected to the Stripe customer portal.
 
 This `information.md` file provides a comprehensive overview based on the project's file structure and the initial blueprint, incorporating the recent Stripe and Supabase integration for subscriptions, and tracking the progress of the asynchronous AI melody generation feature.
+
+---
+
+## Development Environment and Tooling Updates:
+
+This project is developed using Google's IDX, which offers enhanced AI assistance and integrated tooling.
+
+*   **Unified AI Assistance:** AI coding assistance, including features powered by Gemini, is seamlessly integrated across the IDX development environment and Firebase, providing a consistent and powerful coding companion.
+*   **Multimodal Prompting:** The development environment supports multimodal prompting, enabling more flexible and expressive interactions when using AI for coding tasks.
+*   **Enhanced Firebase Integration:** Tighter integration with Firebase services within IDX streamlines deployment, database management, and other Firebase-related workflows.
+*   **Improved Performance & Customization:** The development environment offers improved performance and increased customization options to tailor the coding experience to individual preferences and project needs.
