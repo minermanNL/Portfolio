@@ -13,6 +13,7 @@ export const metadata: Metadata = {
 const quickLinks = [
   { href: '/dashboard/generate', label: 'Create New Melody', icon: Sparkles, description: 'Use AI to generate unique melodies.' },
   { href: '/dashboard/library', label: 'Browse Library', icon: Library, description: 'Explore your saved melodies.' },
+  { href: '/dashboard/vocal-generation', label: 'Generate Vocals', icon: Sparkles, description: 'Use AI to generate vocals' },
   { href: '/dashboard/profile', label: 'Update Profile', icon: User, description: 'Manage your account details.' },
   { href: '/dashboard/subscription', label: 'Manage Subscription', icon: CreditCard, description: 'View your current plan and billing.' },
 ];
@@ -53,7 +54,7 @@ export default function DashboardOverviewPage() {
         </CardContent>
       </Card>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2">
+      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {quickLinks.map(link => (
           <Card key={link.href} className="hover:shadow-xl transition-shadow duration-300">
             <CardHeader>

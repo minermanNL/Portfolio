@@ -13,6 +13,7 @@ const navItems = [
   { href: '/dashboard/generate', label: 'AI Generator', icon: Sparkles },
   { href: '/dashboard/library', label: 'Melody Library', icon: Library },
   { href: '/dashboard/profile', label: 'User Profile', icon: User },
+  { href: '/dashboard/vocal-generation', label: 'Vocal Generation', icon: Music2 },
   { href: '/dashboard/subscription', label: 'Subscription', icon: CreditCard },
 ];
 
