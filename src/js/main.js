@@ -29,10 +29,13 @@ document.addEventListener('DOMContentLoaded', () => {
       
       const targetElement = document.querySelector(targetId);
       if (targetElement) {
-        // Close mobile menu if it's open
-        if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
-          mobileMenuBtn.classList.remove('open');
-          mobileMenu.classList.add('hidden');
+        // Close mobile menu if it's open and active
+        // Check if mobileMenu is defined and if it has the 'active' class
+        if (typeof mobileMenu !== 'undefined' && mobileMenu && mobileMenu.classList.contains('active')) { 
+          if (typeof mobileMenuBtn !== 'undefined' && mobileMenuBtn) {
+            mobileMenuBtn.classList.remove('open'); // For the button icon
+          }
+          mobileMenu.classList.remove('active'); // Correctly remove 'active' class
         }
         
         // Scroll to the target element
@@ -135,6 +138,71 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     typeNextChar();
+  }
+
+  // Experience tabs
+  const experienceTabs = document.querySelectorAll('.experience-tab');
+  const experienceContents = document.querySelectorAll('.experience-content'); // These are the divs like #it-experience, #music-experience
+  const experienceSelector = document.getElementById('experience-selector');
+
+  function showExperienceContent(targetId) {
+    experienceContents.forEach(content => {
+      if (content.id === targetId) {
+        content.classList.remove('hidden');
+      } else {
+        content.classList.add('hidden');
+      }
+    });
+    experienceTabs.forEach(tab => {
+      // Ensure tab.dataset.target is defined before comparing
+      if (tab.dataset.target && tab.dataset.target === targetId) {
+        tab.classList.add('active');
+        // Also ensure a more distinct active style if possible, e.g., text-white
+        tab.classList.remove('text-white/70'); 
+        tab.classList.add('text-white');
+      } else {
+        tab.classList.remove('active');
+        tab.classList.remove('text-white');
+        tab.classList.add('text-white/70');
+      }
+    });
+    // Sync selector if it exists
+    if (experienceSelector) {
+        experienceSelector.value = targetId;
+    }
+  }
+
+  experienceTabs.forEach(tab => {
+    tab.addEventListener('click', (event) => {
+      // Ensure event.currentTarget.dataset.target exists
+      if (event.currentTarget.dataset.target) {
+        showExperienceContent(event.currentTarget.dataset.target);
+      }
+    });
+  });
+
+  if (experienceSelector) {
+    experienceSelector.addEventListener('change', (event) => {
+      // Ensure event.target.value exists
+      if (event.target.value) {
+        showExperienceContent(event.target.value);
+      }
+    });
+  }
+
+  // Initially show the first tab's content or one marked active in HTML
+  const initialActiveTab = document.querySelector('.experience-tab.active');
+  if (initialActiveTab && initialActiveTab.dataset.target) {
+    showExperienceContent(initialActiveTab.dataset.target);
+  } else if (experienceTabs.length > 0 && experienceTabs[0].dataset.target) {
+    // Default to showing the first tab if no active one is specified in HTML
+    experienceTabs[0].classList.add('active'); // Make the first tab active visually
+    experienceTabs[0].classList.remove('text-white/70');
+    experienceTabs[0].classList.add('text-white');
+    showExperienceContent(experienceTabs[0].dataset.target);
+  } else if (experienceSelector && experienceContents.length > 0) {
+    // Fallback for mobile if tabs are not defining initial state (e.g. if only selector is visible)
+     showExperienceContent(experienceSelector.value);
   }
 
   // Hide page loader
