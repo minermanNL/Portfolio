@@ -17,9 +17,11 @@ if (!supabaseAnonKey) {
 
 export async function GET(
   req: Request,
-  { params }: { params: { taskId: string } }
+  routeContext: { params: { taskId: string } } // Renamed second argument
 ) {
-  const { taskId } = params;
+  // Explicitly await the resolution of params as hinted by the error message
+  const params = await Promise.resolve(routeContext.params); 
+  const taskId = params.taskId;
 
   if (!taskId) {
     console.error('Task ID is missing from request parameters');

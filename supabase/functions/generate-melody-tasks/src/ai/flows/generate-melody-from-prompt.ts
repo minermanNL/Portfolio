@@ -1,103 +1,46 @@
 // supabase/functions/generate-melody-tasks/src/ai/flows/generate-melody-from-prompt.ts
-'use server'; // This directive is typically for React Server Components, you can usually remove it.
-
-// Import the already configured 'ai' instance
-import { ai } from '../genkit.ts'; // <--- IMPORT THE CONFIGURED AI INSTANCE
 
 import { z } from 'https://esm.sh/zod@3';
+import { ai } from '../genkit.ts'; // Imports the configured ai instance
+import { gemini } from 'npm:@genkit-ai/googleai'; // Import gemini factory
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { Database } from '../../types/supabase.ts';
 
-// Initialize Supabase client with service role key for backend operations
-const supabaseUrl = Deno.env.get('NEXT_PUBLIC_SUPABASE_URL');
-const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
-
-if (!supabaseUrl) {
-  console.error('CRITICAL: Missing environment variable NEXT_PUBLIC_SUPABASE_URL in AI flow');
-  throw new Error('CRITICAL: Missing environment variable NEXT_PUBLIC_SUPABASE_URL');
-}
-if (!supabaseServiceRoleKey) {
-  console.error('CRITICAL: Missing environment variable SUPABASE_SERVICE_ROLE_KEY in AI flow');
-  throw new Error('CRITICAL: Missing environment variable SUPABASE_SERVICE_ROLE_KEY');
-}
-
-const supabase = createClient<Database>(supabaseUrl, supabaseServiceRoleKey);
-
-// --- Zod Schemas ---
+// Zod Schemas
 const GenerateMelodyFromPromptInputSchema = z.object({
-  prompt: z.string().describe('A text prompt describing the desired melody.'),
-  taskId: z.string().describe('The ID of the task to track asynchronous generation.'),
+  taskId: z.string(),
+  prompt: z.string(),
 });
 export type GenerateMelodyFromPromptInput = z.infer<typeof GenerateMelodyFromPromptInputSchema>;
 
-const MelodyMidiOutputSchema = z.object({
-  midiBase64: z.string().describe("The base64 encoded MIDI data."),
+const MelodyMidiOutputSchema = z.object({ 
+  midiBase64: z.string() 
 });
 
-const MelodyDescriptionOutputSchema = z.object({
-  description: z.string().describe("A textual description of the generated melody."),
+const MelodyDescriptionOutputSchema = z.object({ 
+  description: z.string() 
 });
 
 const GenerateMelodyFromPromptOutputSchema = z.object({
   taskId: z.string(),
-  midiData: z.string().describe("Base64 encoded MIDI data."),
+  midiData: z.string(),
   description: z.string(),
-  modelProvider: z.string().optional(),
-  modelUsed: z.string().optional(),
+  modelProvider: z.string(),
+  modelUsed: z.string(),
 });
 export type GenerateMelodyFromPromptOutput = z.infer<typeof GenerateMelodyFromPromptOutputSchema>;
 
+// Supabase client
+const supabaseUrl = Deno.env.get('NEXT_PUBLIC_SUPABASE_URL');
+const supabaseServiceRoleKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
+if (!supabaseUrl || !supabaseServiceRoleKey) throw new Error('Supabase config missing in flow');
+const supabase = createClient<Database>(supabaseUrl, supabaseServiceRoleKey);
 
-// --- System Prompts ---
-const melodyMidiSystemPrompt = `You are an expert MIDI music generation assistant. Your goal is to create a short, expressive MIDI melody based on the user's prompt. Output only the MIDI data as a base64 encoded string within a JSON object matching the provided schema.`;
-const melodyDescriptionSystemPrompt = `You are a musicologist. Based on the provided context about a generated melody and the original user prompt, create a concise and evocative description of the music. Output only the description within a JSON object matching the provided schema.`;
+// System Prompts (now combined into user messages)
+const MELODY_MIDI_SYSTEM_PROMPT = `You are an expert MIDI music generation assistant. Generate MIDI data based on user prompts. Return only valid base64-encoded MIDI data.`;
+const MELODY_DESCRIPTION_SYSTEM_PROMPT = `You are a musicologist. Describe the character and style of melodies based on the context provided.`;
 
-
-// --- Prompt Definitions ---
-// Use 'ai.definePrompt'
-const generateMelodyMidiPrompt = ai.definePrompt(
-  {
-    name: 'generateMelodyMidi',
-    description: 'Generates MIDI data from a user prompt.',
-    inputSchema: z.object({ userPrompt: z.string() }),
-    outputSchema: MelodyMidiOutputSchema,
-    config: {
-      temperature: 0.75,
-      candidateCount: 1,
-    },
-  },
-  async (input) => {
-    return {
-      messages: [
-        { role: 'system', content: melodyMidiSystemPrompt },
-        { role: 'user', content: input.userPrompt },
-      ],
-    };
-  }
-);
-
-const generateMelodyDescriptionPrompt = ai.definePrompt(
-  {
-    name: 'generateMelodyDescription',
-    description: 'Generates a description for a melody.',
-    inputSchema: z.object({ melodyContext: z.string(), originalPrompt: z.string() }),
-    outputSchema: MelodyDescriptionOutputSchema,
-    config: {
-      temperature: 0.6,
-    },
-  },
-  async (input) => {
-    return {
-      messages: [
-        { role: 'system', content: melodyDescriptionSystemPrompt },
-        { role: 'user', content: `The original user request was: "${input.originalPrompt}". Based on this, a melody was generated. Describe the likely character of this melody: ${input.melodyContext}` },
-      ],
-    };
-  }
-);
-
-// --- Flow Definition ---
-// Use 'ai.defineFlow'
+// Flow Definition
 export const generateMelodyFromPromptFlow = ai.defineFlow(
   {
     name: 'generateMelodyFromPromptFlow',
@@ -106,107 +49,109 @@ export const generateMelodyFromPromptFlow = ai.defineFlow(
   },
   async (input) => {
     const { taskId, prompt } = input;
+    const targetModelName = 'models/gemini-2.5-flash-preview-05-20';
+    const targetModel = gemini(targetModelName);
 
-    console.log(`Task ${taskId}: >>> Entering generateMelodyFromPromptFlow`);
-    console.log(`Task ${taskId}: generateMelodyFromPromptFlow started.`);
+    console.log(`Task ${taskId}: >>> Entering generateMelodyFromPromptFlow. Using model: ${targetModelName}`);
+
+    // Robust string sanitization helper
+    const sanitizeString = (str: unknown, fallback = 'Invalid input'): string => {
+      if (typeof str === 'string' && str.trim() !== '') return str.trim();
+      console.warn(`Sanitization: Input was not a valid string or was empty. Using fallback: "${fallback}". Original input:`, str);
+      return fallback;
+    };
 
     try {
-      console.log(`Task ${taskId}: About to attempt update status to PROCESSING.`);
-      const { error: updateError } = await supabase
-        .from('tasks') // Assuming your table is named 'tasks'
-        .update({ status: 'PROCESSING', updated_at: new Date().toISOString() })
-        .eq('id', taskId);
+      await supabase.from('tasks').update({ 
+        status: 'PROCESSING', 
+        updated_at: new Date().toISOString() 
+      }).eq('id', taskId);
+      console.log(`Task ${taskId}: Status updated to PROCESSING.`);
 
-      if (updateError) {
-        console.error(`Task ${taskId}: CRITICAL - Failed to update status to PROCESSING. Error: ${updateError.message}`);
-        throw new Error(`Task ${taskId}: Failed to update status to PROCESSING - ${updateError.message}`);
-      }
-      console.log(`Task ${taskId}: Status successfully updated to PROCESSING.`);
+      // Sanitize inputs for MIDI generation
+      const sanitizedUserPromptForMidi = sanitizeString(prompt, 'Generate a simple C major scale.');
+      const sanitizedSystemMidiPrompt = sanitizeString(MELODY_MIDI_SYSTEM_PROMPT);
+      const combinedMidiPrompt = `${sanitizedSystemMidiPrompt}
 
-      // Step 1: Generate MIDI
-      // Use 'ai.generate' and 'ai.model'
+User prompt: ${sanitizedUserPromptForMidi}`;
+
       const midiResponse = await ai.generate({
-        prompt: generateMelodyMidiPrompt,
-        input: { userPrompt: prompt },
-        model: ai.model('googleai/gemini-1.5-flash'), // Explicitly choose model for this step
+        model: targetModel,
+        messages: [
+          { role: 'user', content: [{ text: combinedMidiPrompt }] }
+        ],
+        output: { format: 'json', schema: MelodyMidiOutputSchema },
       });
-      const midiOutput = midiResponse.output(); // Get structured output if schema is defined
-      const midiData = midiOutput?.midiBase64; // Access the property from the schema
-
-      if (!midiData) {
-        console.error(`MIDI generation failed for task ${taskId}. Output:`, midiOutput);
-        throw new Error(`MIDI generation failed for task ${taskId}. No MIDI data produced or schema mismatch.`);
-      }
+      
+      // Fixed: Call the response object directly to get schema-validated output
+      const midiOutput = midiResponse();
+      const midiData = midiOutput?.midiBase64;
+      if (!midiData) throw new Error(`MIDI generation failed for task ${taskId}. No MIDI data returned from model.`);
       console.log(`Task ${taskId}: MIDI data generation complete.`);
 
-      // Step 2: Generate Description
-      // Use 'ai.generate' and 'ai.model'
+      // Sanitize inputs for Description generation
+      const sanitizedUserPromptForDescription = sanitizeString(prompt, 'A generic melody was generated.');
+      const sanitizedSystemDescriptionPrompt = sanitizeString(MELODY_DESCRIPTION_SYSTEM_PROMPT);
+      const melodyContextForDescription = "The MIDI for the melody has been successfully generated.";
+      const userDescriptionMessageContent = `The original user request for the melody was: "${sanitizedUserPromptForDescription}". Based on this, a melody (context: ${melodyContextForDescription}) was generated. Please describe the likely character, style, and potential instrumentation for this melody.`;
+      const combinedDescriptionPrompt = `${sanitizedSystemDescriptionPrompt}
+
+${userDescriptionMessageContent}`;
+
       const descriptionResponse = await ai.generate({
-        prompt: generateMelodyDescriptionPrompt,
-        input: { melodyContext: "A MIDI melody was successfully generated.", originalPrompt: prompt },
-        model: ai.model('googleai/gemini-1.5-flash'),
+        model: targetModel,
+        messages: [
+          { role: 'user', content: [{ text: combinedDescriptionPrompt }] }
+        ],
+        output: { format: 'json', schema: MelodyDescriptionOutputSchema },
       });
-      const descriptionOutput = descriptionResponse.output();
-      const description = descriptionOutput?.description || "No description could be generated.";
-
+      
+      // Fixed: Call the response object directly to get schema-validated output
+      const descriptionOutput = descriptionResponse();
+      const description = descriptionOutput?.description || "No description generated.";
       console.log(`Task ${taskId}: Description generation complete.`);
-      console.log(`Task ${taskId}: MIDI data and description obtained.`);
 
-      console.log(`Task ${taskId}: About to attempt update status to COMPLETED.`);
-      const { error: completeError } = await supabase
-        .from('tasks')
-        .update({
-          status: 'COMPLETED',
-          midi_data: midiData, // Ensure your DB column matches
-          description: description, // Ensure your DB column matches
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', taskId);
-
-      if (completeError) {
-        console.error(`Task ${taskId}: CRITICAL - Failed to update status to COMPLETED. Error: ${completeError.message}`);
-        throw new Error(`Task ${taskId}: Failed to update status to COMPLETED - ${completeError.message}`);
-      }
-      console.log(`Task ${taskId}: Status successfully updated to COMPLETED.`);
-
-      return {
-        taskId: taskId, // Return taskId as per output schema
-        midiData: midiData,
+      await supabase.from('tasks').update({
+        status: 'COMPLETED',
+        midi_data: midiData,
         description: description,
-        modelProvider: midiResponse.usage?.inputModel || 'googleai',
-        modelUsed: midiResponse.usage?.inputModel || 'gemini-1.5-flash',
+        updated_at: new Date().toISOString(),
+      }).eq('id', taskId);
+      console.log(`Task ${taskId}: Status updated to COMPLETED.`);
+
+      return { 
+        taskId, 
+        midiData, 
+        description, 
+        modelProvider: 'googleai', 
+        modelUsed: targetModelName 
       };
     } catch (error: any) {
-      console.error(`Task ${taskId}: CRITICAL Error in melody generation flow: ${error.message}`);
-      console.log(`Task ${taskId}: About to attempt update status to FAILED.`);
-      const { error: failError } = await supabase
-        .from('tasks')
-        .update({
-          status: 'FAILED',
-          error_message: error.message,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('id', taskId);
-
-      if (failError) {
-        console.error(`Task ${taskId}: CRITICAL - Also failed to update status to FAILED in catch block. Error: ${failError.message}`);
-      } else {
-        console.log(`Task ${taskId}: Status successfully updated to FAILED in catch block.`);
+      console.error(`Task ${taskId}: CRITICAL Error in melody generation flow: ${error.message}, Stack: ${error.stack}`);
+      if (supabase) {
+        try {
+          await supabase.from('tasks').update({
+            status: 'FAILED',
+            error_message: `Flow error: ${error.message}`,
+            updated_at: new Date().toISOString(),
+          }).eq('id', taskId);
+        } catch (dbErr: any) { 
+          console.error(`Task ${taskId}: DB fallback error: ${dbErr.message}`); 
+        }
       }
-
-      return {
-        taskId: taskId, // Return taskId even on error as per output schema
-        midiData: '', // Ensure output schema is satisfied
-        description: `Error processing task ${taskId}: ${error.message}`,
+      return { 
+        taskId, 
+        midiData: '',
+        description: `Error: ${error.message}`,
+        modelProvider: 'unknown',
+        modelUsed: 'unknown' 
       };
     }
   }
 );
 
-// If your index.ts calls `generateMelodyFromPromptFlow.invoke()`, you don't strictly need this wrapper.
-// But it's fine to keep it if other parts of your app depend on this specific function signature.
 export async function generateMelodyFromPrompt(
   input: GenerateMelodyFromPromptInput
 ): Promise<GenerateMelodyFromPromptOutput> {
-  return generateMelodyFromPromptFlow.invoke(input); // <--- Make sure to invoke the flow
+  return generateMelodyFromPromptFlow.invoke(input);
 }

@@ -1,13 +1,8 @@
 // supabase/functions/generate-melody-tasks/src/ai/genkit.ts
 
-// Import the main 'genkit' named export (the factory function)
-import { genkit } from 'npm:genkit@1.9.0';
-// Import the Google AI plugin
-import { googleAI } from 'npm:@genkit-ai/googleai@1.9.0';
+import { genkit } from 'npm:genkit';
+import { googleAI, gemini } from 'npm:@genkit-ai/googleai'; // Imported gemini
 
-// Initialize and export the configured Genkit instance
-// This 'ai' object will have methods like .defineFlow, .definePrompt, .model
-// The initialization happens when this module is imported.
 const geminiApiKey = Deno.env.get('GEMINI_API_KEY');
 
 if (!geminiApiKey) {
@@ -15,17 +10,15 @@ if (!geminiApiKey) {
   throw new Error('Missing env var GEMINI_API_KEY for Genkit/GoogleAI configuration.');
 }
 
-export const ai = genkit({ // 'genkit' here is the factory function we imported
+export const ai = genkit({
   plugins: [
     googleAI({
       apiKey: geminiApiKey,
     }),
   ],
-  defaultModel: "googleai/gemini-1.5-flash", // Set a default model here if desired
-  logLevel: 'debug', // Or 'info', 'warn', 'error' for production
-  enableTracingAndMetrics: true, // Recommended for observability
+  defaultModel: gemini("models/gemini-2.5-flash-preview-05-20"), // Changed to use gemini() factory with documented model ID
+  logLevel: 'debug',
+  enableTracingAndMetrics: true,
 });
 
-console.log('Genkit instance (ai) initialized successfully.');
-
-// The 'configureGenkit' function is no longer needed as 'ai' is exported directly.
+console.log('Genkit instance (ai) initialized successfully with Gemini 2.5 Flash Preview (May 20th).');

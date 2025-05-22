@@ -13,6 +13,14 @@ import { ai } from './src/ai/genkit.ts'; // <--- IMPORT THE CONFIGURED AI INSTAN
 import { generateMelodyFromPromptFlow } from './src/ai/flows/generate-melody-from-prompt.ts';
 import { Database } from './src/types/supabase.ts';
 
+// Log the imported flow to see what it is
+console.log('Imported generateMelodyFromPromptFlow:', generateMelodyFromPromptFlow);
+console.log('typeof generateMelodyFromPromptFlow:', typeof generateMelodyFromPromptFlow);
+if (generateMelodyFromPromptFlow) {
+  console.log('typeof generateMelodyFromPromptFlow.invoke:', typeof generateMelodyFromPromptFlow.invoke);
+  console.log('generateMelodyFromPromptFlow.invoke directly:', generateMelodyFromPromptFlow.invoke);
+  console.log('Does generateMelodyFromPromptFlow have invoke property?', 'invoke' in generateMelodyFromPromptFlow);
+}
 
 let supabase: ReturnType<typeof createClient<Database>>; // Declare supabase variable outside try/catch
 
@@ -78,30 +86,40 @@ serve(async (req) => {
         status: 400,
       });
     }
+    
+    // Detailed check for invoke method
+    console.log('Inside serve: typeof generateMelodyFromPromptFlow.invoke:', typeof generateMelodyFromPromptFlow?.invoke);
+    console.log('Inside serve: generateMelodyFromPromptFlow.invoke directly:', generateMelodyFromPromptFlow?.invoke);
 
-    // --- Call the AI Generation Flow ---
-    // Genkit flows are invoked using the .invoke() method on the flow object
-    const flowResult = await generateMelodyFromPromptFlow.invoke({ taskId, prompt }); // <--- USE .invoke()
+    let flowResult;
+    if (generateMelodyFromPromptFlow && typeof generateMelodyFromPromptFlow.invoke === 'function') {
+      console.log('Attempting to call generateMelodyFromPromptFlow.invoke()');
+      flowResult = await generateMelodyFromPromptFlow.invoke({ taskId, prompt });
+    } else if (typeof generateMelodyFromPromptFlow === 'function') {
+      console.log('Attempting to call generateMelodyFromPromptFlow directly as a function.');
+      flowResult = await generateMelodyFromPromptFlow({ taskId, prompt }); // Direct call
+    } else {
+      console.error(
+        'Edge Function Error: generateMelodyFromPromptFlow is neither invokable nor a direct function.',
+        'Type of flow:', typeof generateMelodyFromPromptFlow,
+        'Flow object:', generateMelodyFromPromptFlow
+      );
+      throw new Error('generateMelodyFromPromptFlow is not invokable or callable.');
+    }
 
     console.log(`Edge Function finished processing task ${taskId}. Flow result status: ${flowResult.midiData ? 'Completed' : 'Failed'}`);
 
-
-    // The flow itself is responsible for setting the task status in the DB.
-    // We return a success HTTP response to acknowledge the Edge Function executed.
     return new Response(JSON.stringify({
-        message: 'Melody generation flow initiated/completed',
+        message: 'Melody generation flow processed.',
         taskId: taskId,
-        // Optionally return a summary of the flow result, but full results are typically in DB
-        flowOutput: flowResult // Include flow output for direct debugging
+        flowOutput: flowResult
     }), {
       headers: { 'Content-Type': 'application/json' },
-      status: 200, // Indicate Edge Function call was successful
+      status: 200,
     });
 
   } catch (error: any) {
     console.error(`Edge Function Error processing task ${taskId}: ${error.message}`);
-    // Fallback: If an error occurs that wasn't caught by the flow's internal error handling,
-    // or if the flow failed to update the status, attempt to update the task status to FAILED.
     if (supabase) {
         try {
             const { error: fallbackError } = await supabase
@@ -111,7 +129,7 @@ serve(async (req) => {
                     error_message: `Edge Function top-level error: ${error.message}`,
                     updated_at: new Date().toISOString(),
                 })
-                .eq('id', taskId); // Use taskId captured earlier
+                .eq('id', taskId);
 
             if (fallbackError) {
                 console.error(`Edge Function Error: Also failed to update task ${taskId} to FAILED in fallback. Error: ${fallbackError.message}`);
@@ -125,14 +143,13 @@ serve(async (req) => {
      console.error(`Edge Function Fatal Error: Supabase client was not initialized, cannot perform fallback update for task ${taskId}.`);
     }
 
-    // Return a 500 (Internal Server Error) response for unhandled errors.
     return new Response(JSON.stringify({
         error: 'Failed to process melody generation task in Edge Function',
         details: error.message,
-        taskId: taskId, // Include taskId in error response for debugging
+        taskId: taskId,
     }), {
       headers: { 'Content-Type': 'application/json' },
-      status: 500, // Indicate server error
+      status: 500,
     });
   }
 });
