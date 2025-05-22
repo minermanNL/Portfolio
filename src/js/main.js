@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (mobileMenuBtn && mobileMenu) {
     mobileMenuBtn.addEventListener('click', () => {
       mobileMenuBtn.classList.toggle('open');
-      mobileMenu.classList.toggle('hidden');
+      mobileMenu.classList.toggle('active');
     });
   }
   
@@ -135,5 +135,15 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     
     typeNextChar();
+  }
+
+  // Hide page loader
+  const pageLoader = document.getElementById('page-loader');
+  if (pageLoader) {
+    pageLoader.style.transition = 'opacity 0.5s ease-out';
+    pageLoader.style.opacity = '0';
+    setTimeout(() => {
+      pageLoader.style.display = 'none';
+    }, 500); // Match timeout with transition duration
   }
 }); 
