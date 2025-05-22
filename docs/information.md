@@ -1,213 +1,212 @@
 # **App Name**: Tricion Studio
 
-## Core Features:
+## 🚀 Core Features:
 
-- User Authentication: Allow users to sign-up, log-in, and manage their accounts.
-- User Profile: Display user information fetched from the backend, allowing for profile updates.
-- Melody Library: Display a list of melodies, with search and filtering options.
-- AI Melody Generation: A form takes input to send to the backend. The response is used to generate MIDI or vocals.
-- Subscription Management: Allows users to subscribe to different tiers, manage their payment details via Stripe, and view their current subscription status.
+-   **User Authentication**: Robust and secure user sign-up, login, and account management.
+-   **User Profile Management**: Personalized profiles for users to view and update their information.
+-   **AI-Powered Melody Generation**: Advanced AI capabilities to transform text prompts into unique MIDI musical compositions and accompanying descriptions.
+-   **Interactive Melody Library**: A centralized hub for users to browse, search, filter, and manage their generated melodies.
+-   **Subscription Management**: Seamless integration with Stripe for tiered access, billing, and subscription lifecycle management.
+-   **Advanced Melody Tools**: Specialized utilities for manual manipulation and conversion of music data (e.g., text-to-MIDI, MIDI-to-text).
+-   **Vocal Generation (Future)**: Placeholder for upcoming capabilities to generate vocal tracks.
+-   **Observability**: Integrated logging and error tracking for monitoring backend function health and performance.
 
-## Style Guidelines:
+## 🎨 Style Guidelines:
 
-- Primary color: Dark blue (#1A202C) for a professional and modern feel.
-- Secondary color: Light gray (#EDF2F7) for backgrounds and subtle accents.
-- Accent color: Teal (#4DC0B5) for interactive elements and highlights.
-- Clean and readable sans-serif fonts for all text elements.
-- Modern and minimalist icons for navigation and actions.
-- A clean and responsive layout that adapts to different screen sizes.
+-   **Primary Color**: Dark blue (`#1A202C`) – for a professional, modern, and trustworthy aesthetic, forming the backbone of the UI.
+-   **Secondary Color**: Light gray (`#EDF2F7`) – employed for backgrounds and subtle accents, ensuring a clean, readable, and visually comfortable user interface.
+-   **Accent Color**: Teal (`#4DC0B5`) – reserved for interactive elements, highlights, and calls-to-action, providing clear user guidance and visual engagement.
+-   **Typography**: Utilizes clean and highly readable sans-serif fonts across all text elements, prioritizing legibility and a contemporary feel.
+-   **Iconography**: Modern, minimalist, and intuitive icons for navigation and actions, enhancing usability and visual appeal.
+-   **Layout Philosophy**: A clean, responsive, and adaptive design that guarantees an optimal user experience across various screen sizes and devices, from mobile to desktop.
 
-## Project Structure:
+## 📁 Project Structure:
 
-The project is a Next.js application with TypeScript. It uses Tailwind CSS for styling and Supabase for backend services, with Stripe integrated for payments.
+This project is built as a **Next.js application** utilizing **TypeScript** for enhanced type safety and maintainability. It employs **Tailwind CSS** for rapid and consistent styling, and relies on **Supabase** as its primary backend-as-a-service, with **Stripe** securely handling all payment processes. **Genkit** orchestrates the sophisticated AI generation workflows within Supabase Edge Functions.
 
 ### Key Directories:
 
 *   **`/src`**: Contains the main source code for the application.
-    *   **`/app`**: The main application directory for Next.js, containing layouts, pages, and components.
-        *   **`/(auth)`**: Authentication-related pages (login, signup).
-        *   **`/dashboard`**: Pages for the main user dashboard after login (generate, library, profile, subscription, **advanced-tools**, **vocal-generation**).
-        *   **`/api`**: API routes for backend logic.
-            *   **`/create-stripe-checkout`**: API route to initiate a Stripe checkout session.
-            *   **`/stripe-webhook`**: API route to handle incoming webhook events from Stripe.
-            *   **`/generate-melody-task`**: API route to initiate an asynchronous melody generation task.
-            *   **`/midi-to-text`**: API route to convert MIDI files to text descriptions.
-    *   **`/components`**: Reusable UI components.
-        *   **`/auth`**: Components related to authentication.
-        *   **`/dashboard`**: Components specific to the dashboard.
-            *   **`AdvancedMelodyToolsClient.tsx`**: Client component for manual text-to-MIDI and MIDI-to-text conversion tools.
-            *   **`VocalGenerationClient.tsx`**: Client component for vocal generation tools (placeholder).
-        *   **`/shared`**: Components used across different parts of the application.
-        *   **`/ui`**: General UI components (buttons, cards, dialogs, etc.), likely from a UI library like Shadcn/ui.
-    *   **`/hooks`**: Custom React hooks.
-    *   **`/lib`**: Utility functions and libraries.
-        *   **`/supabase`**: Supabase client setup and potentially helper functions.
-    *   **`/types`**: TypeScript type definitions, including `supabase.ts` which defines the structure of Supabase tables (e.g., `subscriptions`, `tasks`).
-    *   **`/ai`**: Artificial intelligence related code, likely for melody generation.
-        *   **`/flows`**: Genkit flows for AI tasks.
-        *   **`parseTextToMidi.ts`**: Script to convert text descriptions to MIDI files.
-*   **`/public`**: Static assets like images and HTML files.
-*   **`/functions`**: (Likely less used now, as API routes in Next.js handle backend logic for Stripe and potentially other tasks previously designated for Firebase Functions).
-*   **`/dataconnect`**: (Likely less used or removed if Firebase is fully replaced by Supabase).
-*   **`/docs`**: Project documentation.
-*   **`.idx`**: IDX-specific configuration files.
-*   **`.vscode`**: VS Code editor settings.
+    *   **`/app`**: The main application directory, leveraging **Next.js 13+ App Router** for routing, layouts, and pages.
+        *   **`/(auth)`**: Contains UI and logic related to user authentication flows (e.g., `login/page.tsx`, `signup/page.tsx`).
+        *   **`/dashboard`**: Houses all pages and components accessible to authenticated users.
+            *   **`/generate`**: The main interface for AI melody generation.
+            *   **`/library`**: Displays the user's collection of generated melodies.
+            *   **`/profile`**: User profile viewing and editing page.
+            *   **`/subscription`**: Details and management options for user subscriptions.
+            *   **`/advanced-tools`**: Pages for advanced melody conversion tools.
+            *   **`/vocal-generation`**: Placeholder for future vocal generation features.
+        *   **`/api`**: **Next.js API Routes** (running as serverless functions within the Next.js environment). These act as secure intermediaries or orchestrators for backend logic.
+            *   **`/create-stripe-checkout`**: Handles requests to initiate a Stripe checkout session.
+            *   **`/stripe-webhook`**: Secure webhook endpoint for receiving and processing events from Stripe (e.g., subscription changes).
+            *   **`/generate-melody-task`**: Receives frontend requests to initiate melody generation, creates a task record in Supabase, and triggers the Supabase Edge Function.
+            *   **`/melody-status/[taskId]`**: Endpoint for the frontend to poll for the asynchronous status of a melody generation task.
+            *   **`/midi-to-text`**: Processes requests to convert uploaded MIDI files into textual descriptions.
+    *   **`/components`**: Houses all reusable UI components.
+        *   **`/auth`**: Components specific to authentication forms and UI.
+        *   **`/dashboard`**: Components used across dashboard pages (e.g., forms, lists, cards specific to dashboard features).
+            *   `MelodyGenerationClient.tsx`: Client-side logic for the AI generation form, handling user input, API calls, and UI state (including polling).
+            *   `MelodyList.tsx`: Component for displaying lists of melodies.
+            *   `MelodyCard.tsx`: Individual card component for a melody entry.
+            *   `ProfileClient.tsx`: Client-side profile management.
+            *   `SubscriptionClient.tsx`: Client-side subscription display and management.
+            *   `AdvancedMelodyToolsClient.tsx`: Frontend for manual text-to-MIDI and MIDI-to-text tools.
+            *   `VocalGenerationClient.tsx`: Placeholder for vocal generation UI.
+        *   **`/shared`**: Generic components used application-wide (e.g., `Header.tsx`, `Footer.tsx`, `Navbar.tsx`).
+        *   **`/ui`**: Fundamental, unstyled UI primitives or components derived from a UI library (e.g., Shadcn/ui) for consistency and accessibility.
+    *   **`/hooks`**: Custom React hooks encapsulating reusable stateful logic (e.g., `useAuthSession.ts` for managing authentication state).
+    *   **`/lib`**: Utility functions, external library configurations, and helpers.
+        *   **`/supabase`**: Configuration and client setup for interacting with Supabase services (both client-side and server-side admin clients).
+    *   **`/types`**: Centralized TypeScript type definitions, including `supabase.ts` (defining the shape of Supabase database tables like `profiles`, `subscriptions`, `tasks`, `melodies`).
+    *   **`/ai`**: Dedicated directory for Artificial Intelligence related code and Genkit integration.
+        *   **`genkit.ts`**: Core Genkit initialization and configuration, including plugin registration (`googleAI`) and default model setup.
+        *   **`/flows`**: Defines Genkit flows (`ai.defineFlow`) that orchestrate multi-step AI tasks.
+        *   **`/prompts`**: May contain separate files for `ai.definePrompt` definitions (currently handled inline in `ai.generate` for simplicity).
+    *   **`/utils`**: General purpose utility functions.
+        *   **`parseTextToMidi.ts`**: **Crucial standalone utility** responsible for converting AI-generated textual MIDI event descriptions into a playable base64 encoded MIDI file using the `@tonejs/midi` library.
+*   **`/public`**: Stores static assets (images, fonts, favicons, HTML files).
+*   **`/functions`**: (This directory might be less used or deprecated if Next.js API Routes handle all backend logic previously assigned to Firebase Functions or other serverless platforms).
+*   **`/dataconnect`**: (Likely deprecated or removed if Firebase-specific data connectors are no longer relevant).
+*   **`/docs`**: Project-level documentation (like this `information.md`).
+*   **`.idx`**: Google IDX-specific configuration files for the cloud development environment.
+*   **`.vscode`**: Visual Studio Code editor settings and configurations.
 
 ### Main Technologies Used:
 
-*   **Next.js**: React framework for server-side rendering and static site generation, including API routes for backend logic.
-*   **TypeScript**: Superset of JavaScript that adds static typing.
-*   **Tailwind CSS**: Utility-first CSS framework.
-*   **Supabase**: Backend-as-a-Service platform providing:
-    *   Authentication
-    *   PostgreSQL Database (including a `subscriptions` table and a `tasks` table for asynchronous jobs)
-    *   Storage
-    *   Edge Functions (though API routes in Next.js are also used)
-*   **Stripe**: Payment processing platform for handling subscriptions.
-*   **Genkit (implied by `src/ai/genkit.ts`)**: An AI framework, likely used for the melody generation feature.
-*   **midi-parser-js**: Library used in the backend to parse MIDI files.
+*   **Next.js**: The chosen React framework, providing server-side rendering (SSR), static site generation (SSG), and **API Routes** which are central to handling backend logic and external API calls.
+*   **TypeScript**: Employed throughout the codebase to enhance code quality, enable type safety, improve developer experience, and facilitate large-scale project management.
+*   **Tailwind CSS**: A highly efficient, utility-first CSS framework for rapid UI development and consistent design application.
+*   **Supabase**: The comprehensive open-source backend-as-a-service solution:
+    *   **PostgreSQL Database**: Serves as the robust and scalable relational data store, managing user profiles, melodies, asynchronous tasks, and subscription data. Extensively uses **Row Level Security (RLS)** for secure, fine-grained data access.
+    *   **Authentication**: Provides secure and flexible user authentication (email/password, OAuth).
+    *   **Storage**: For handling file uploads and serving static assets.
+    *   **Edge Functions**: Deno-based serverless functions for running backend code closer to users. Crucially, these are used for computationally intensive or long-running tasks, such as AI model inference with Genkit.
+*   **Stripe**: A leading payment processing platform, integrated to securely handle all subscription billing, payments, and customer portal management.
+*   **Genkit**: An open-source AI framework that abstracts away complexities of interacting with various AI models. It is used here to orchestrate multi-step AI generation flows and integrate with Google's generative models.
+*   **@tonejs/midi**: A dedicated JavaScript library used for programmatically creating, manipulating, and exporting MIDI files from within the Deno runtime.
+*   **midi-parser-js**: Another MIDI library, potentially used for MIDI-to-text conversion (e.g., in the `/api/midi-to-text` route) or other parsing needs.
+*   **Zod**: A TypeScript-first schema declaration and validation library, used for input/output validation in API routes, database operations, and Genkit flows.
 
 ## Detailed Explanation of Features:
 
 ### User Authentication:
-*   Located in `src/app/(auth)/` and `src/components/auth/`.
-*   Provides forms for user sign-up (`SignupForm.tsx`) and login (`LoginForm.tsx`).
-*   Uses Supabase Authentication for managing user accounts.
-*   `AuthSessionProvider.tsx` likely manages the user's session state.
-*   `useAuthSession.ts` is probably a custom hook to access authentication state.
-*   Handles user login, signup, and session management.
-*   Ensures secure access to the application.
+*   **Flow:** Users can sign up or log in via forms in `src/app/(auth)/` (e.g., `SignupForm.tsx`, `LoginForm.tsx`).
+*   **Mechanism:** Securely managed by Supabase Authentication. The frontend utilizes the Supabase JS client's `auth.signUp()`, `auth.signInWithPassword()`, and `auth.onAuthStateChange()` methods.
+*   **Session Management:** `AuthSessionProvider.tsx` manages the global authentication state, often leveraging Next.js's context or React Query for session freshness. `useAuthSession.ts` provides a convenient hook to access the current user's session and ID across components.
 
 ### User Profile:
-*   Allows users to view and update their profile information.
-*   Displays user-specific data.
-*   Located in `src/app/dashboard/profile/page.tsx` and `src/components/dashboard/ProfileClient.tsx`.
-*   Fetches user information from the backend (Supabase).
-*   Allows users to view and potentially update their profile details.
+*   **Access:** Users can view and update their profile details (e.g., `username`, `full_name`, `avatar_url`, `website`).
+*   **Data Source:** Profile information is stored in a dedicated `profiles` table within Supabase, linked to `auth.users` via a `user_id` column.
+*   **Updates:** Client-side components like `ProfileClient.tsx` handle form submissions, which are securely sent to Supabase via the Supabase JS client.
 
 ### Melody Library:
-
-*   Located in `src/app/dashboard/library/page.tsx` and `src/components/dashboard/MelodyList.tsx`.
-*   Displays a list of melodies, likely stored in a Supabase table.
-*   `MelodyCard.tsx` is probably used to display individual melodies.
-*   May include search and filtering capabilities.
-*   Provides an organized view of generated and saved melodies.
-*   Allows users to easily find and access their musical creations.
+*   **Display:** `MelodyList.tsx` fetches and displays a paginated list of melodies, each presented as a `MelodyCard.tsx`.
+*   **Data Source:** Melodies are stored in a `melodies` table in Supabase. This table links to the `tasks` table (for generation history) and `user_id` (for ownership).
+*   **Interaction:** Users can search and filter their melodies based on metadata (genre, mood, description).
+*   **Playback/Download:** The `MelodyCard` facilitates playback of generated MIDI data (by decoding base64) and provides download options.
 
 ### AI Melody Generation:
+*   **User Interface:** The primary interaction point is the generation form in `src/app/dashboard/generate/page.tsx` (`MelodyGenerationClient.tsx`).
+*   **Asynchronous Flow (Current State: Debugging API Interaction):**
+    1.  **Task Initiation (Frontend -> Next.js API Route):**
+        *   The user submits a text prompt (e.g., "upbeat piano melody in C major") via `MelodyGenerationClient.tsx`.
+        *   The client sends a `POST` request to the Next.js API Route: `/api/generate-melody-task`.
+        *   This API Route first creates a new record in the Supabase `public.tasks` table (e.g., `id`, `user_id`, `prompt`, `status: 'PENDING'`) using the `authenticated` user's ID for RLS. This is secured by a specific RLS policy: `"Allow authenticated users to insert their own tasks"`.
+        *   The Next.js API Route then immediately returns a `202 Accepted` status with the `taskId` to the frontend, indicating that the task has been queued.
+    2.  **AI Processing (Next.js API Route -> Supabase Edge Function -> Supabase DB):**
+        *   **Crucially, *after* creating the task in Supabase, the Next.js API Route makes an internal, server-to-server call to your deployed Supabase Edge Function (`generate-melody-tasks`).** It passes the `taskId` and `prompt`.
+        *   The Edge Function, running in a Deno environment:
+            *   Updates the `tasks` table status to 'PROCESSING' using the `service_role` key (secured by `"Allow service_role to update tasks table"` policy).
+            *   Calls the Google AI model (`googleai/gemini-2.5-flash-preview-05-20`) via Genkit's `ai.generate()` method. Messages are directly constructed within `ai.generate()` (e.g., `{ role: 'user', content: [{ text: "system prompt + user prompt" }] }`), bypassing `ai.definePrompt`'s templating layer to ensure `content` is never `[null]`.
+            *   The AI model returns a raw text string containing MIDI event descriptions.
+            *   This raw text string is passed to `src/utils/parseTextToMidi.ts`, which is responsible for converting the text into a playable binary MIDI file and then encoding it to a base64 string.
+            *   Finally, the Edge Function updates the `tasks` table to 'COMPLETED' with the `midi_data` (base64 string) and `description`, or to 'FAILED' with an error message if any step fails.
+    3.  **Frontend Polling & Display (Frontend -> Next.js API Route -> Frontend):**
+        *   After initiating the task, `MelodyGenerationClient.tsx` begins polling a new Next.js API Route: `/api/melody-status/[taskId]`.
+        *   This polling route retrieves the current `status` from the `tasks` table in Supabase.
+        *   Once the status changes to 'COMPLETED':
+            *   The frontend retrieves the `midi_data` (the full base64 string) and `description`.
+            *   It decodes the base64 string using `window.atob()` and converts it to a `Uint8Array`.
+            *   A `Blob` is created from this binary data, and an object URL is generated.
+            *   A temporary link element is used to trigger a file download (`audio.midi` type).
+            *   The melody is displayed and made available for playback.
+        *   If the status is 'FAILED', the frontend displays the `error_message` from the task record.
 
-*   Located in `src/app/dashboard/generate/page.tsx` and `src/components/dashboard/MelodyGenerationClient.tsx`.
-*   A form (`MelodyGenerationClient.tsx`) takes user input (e.g., prompt, genre, mood).
-*   **Asynchronous Processing (Work in Progress):**
-    *   **Current Status:** Phase 1, Steps 1 and 2 completed.
-        *   **Step 1 (Completed):** Updated Supabase TypeScript types to include the new `public.tasks` table.
-        *   **Step 2 (Completed):** Created an API endpoint (`/api/generate-melody-task`) to initiate melody generation asynchronously. This endpoint creates a task record in the `public.tasks` table with a 'PENDING' status and returns a `taskId`.
-    *   **Next Steps:**
-        *   **Step 3:** Modify the AI flow (`generateMelodyFromPromptFlow` in `src/ai/flows/generate-melody-from-prompt.ts`) to:
-            *   Accept `taskId` as input.
-            *   Update the task status to 'PROCESSING' at the start.
-            *   Perform melody generation.
-            *   Update the task status to 'COMPLETED' with results or 'FAILED' with an error message upon completion/failure.
-        *   **Step 4:** Create an API endpoint (`/api/melody-status/[taskId]`) for the frontend to poll for the status of a generation task.
-        *   **Step 5 (Frontend):** Modify `MelodyGenerationClient.tsx` to:
-            *   Call the `/api/generate-melody-task` endpoint to start generation.
-            *   Receive the `taskId` and initiate polling to `/api/melody-status/[taskId]`.
-            *   Update the UI based on the polled status ('PENDING', 'PROCESSING', 'COMPLETED', 'FAILED').
-            *   Display the results or errors once the task is completed or fails.
-    *   The input is sent to the backend, likely processed by AI models using Genkit (`src/ai/genkit.ts`, `src/ai/flows/generate-melody-from-prompt.ts`).
-    *   `src/parseTextToMidi.ts` suggests that the AI might generate a textual representation of music that then gets converted to MIDI.
-    *   The generated output could be MIDI files or even vocal tracks.
-    *   `src/ai/flows/summarize-melody-details.ts` might be used to create descriptions or tags for generated melodies.
+#### Subscription Tiers:
 
-#### Basic Tier
-*   **Monthly Generations:** 100
-*   **Max Melody Storage:** 500
-*   **Concurrent Generations:** 2
-*   **Max API Keys:** 5
-*   **Advanced Features:** True
-*   **API Access:** False
-
-#### Pro Tier
-*   **Monthly Generations:** 1000
-*   **Max Melody Storage:** 5000
-*   **Concurrent Generations:** 5
-*   **Max API Keys:** 20
-*   **Advanced Features:** True
-*   **API Access:** True
+*   **Basic Tier**
+    *   Monthly Generations: 100
+    *   Max Melody Storage: 500 MB
+    *   Concurrent Generations: 2
+    *   Max API Keys: 5
+    *   Advanced Features: True
+    *   API Access: False
+*   **Pro Tier**
+    *   Monthly Generations: 1000
+    *   Max Melody Storage: 5 GB
+    *   Concurrent Generations: 5
+    *   Max API Keys: 20
+    *   Advanced Features: True
+    *   API Access: True
 
 ### Subscription Management:
-
-*   Frontend components located in `src/app/dashboard/subscription/page.tsx` and `src/components/dashboard/SubscriptionClient.tsx`.
-*   The pricing page (`src/app/pricing/page.tsx`) initiates the subscription process.
-*   When a user selects a plan, a request is made to the `/api/create-stripe-checkout` Next.js API route. This route communicates with Stripe to create a checkout session.
-*   The user is redirected to Stripe's secure portal to enter payment details and confirm the subscription.
-*   Stripe sends webhook events (e.g., `checkout.session.completed`, `customer.subscription.created`) to the `/api/stripe-webhook` Next.js API route.
-*   This webhook handler verifies the event and updates the `subscriptions` table in the Supabase database with the user's subscription status, current plan, and subscription period.
-*   The `SubscriptionClient.tsx` component displays the user's current subscription status by fetching data from the Supabase `subscriptions` table.
-*   Users can manage their subscription (e.g., change plan, update payment method, cancel) by being redirected to the Stripe customer portal (this link should be provided in `SubscriptionClient.tsx`).
+*   **Initiation:** The pricing page (`src/app/pricing/page.tsx`) guides users to select a plan.
+*   **Checkout Flow:** User selection triggers a request to the `/api/create-stripe-checkout` Next.js API Route. This route securely communicates with Stripe's API to create a unique checkout session. The user is then redirected to Stripe's secure hosted checkout page for payment.
+*   **Webhook Processing:** Upon successful payment or subscription changes, Stripe sends real-time webhook events (e.g., `checkout.session.completed`, `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`) to the `/api/stripe-webhook` Next.js API Route. This webhook handler includes **Stripe signature verification** for security and updates the `subscriptions` table in Supabase with the user's accurate subscription status, current plan, and billing period.
+*   **Status Display:** `SubscriptionClient.tsx` fetches and displays the user's current subscription details from the Supabase `subscriptions` table.
+*   **User Portal:** For managing payment methods, updating billing information, or cancelling subscriptions, users are securely redirected to the Stripe customer portal, providing a self-service option.
 
 ### UI Components:
+*   **Structure:** Components in `src/components/ui/` are built upon a robust UI library (like Shadcn/ui), providing a consistent, accessible, and themeable design system. This includes common elements such as buttons, cards, dialogs, forms, input fields, and navigation elements (menubar, sidebar).
+*   **Styling:** The application's visual consistency is maintained through a utility-first approach with **Tailwind CSS**, configured via `tailwind.config.ts` and `postcss.config.mjs`. Global styles are managed in `globals.css`.
 
-*   The project uses a rich set of UI components, found in `src/components/ui/`. These include common elements like buttons, cards, dialogs, forms, input fields, navigation elements (menubar, sidebar), and more. This suggests a well-structured and consistent user interface.
-*   `tailwind.config.ts` and `postcss.config.mjs` configure Tailwind CSS.
-*   `globals.css` contains global styles.
-
-### Backend Logic (Next.js API Routes & Supabase):
-
-*   Supabase is the primary backend for data storage (PostgreSQL) and authentication.
-*   Next.js API routes (in `/src/app/api/`) handle specific backend tasks:
-    *   `create-stripe-checkout`: Securely creates Stripe checkout sessions.
-    *   `stripe-webhook`: Handles incoming webhooks from Stripe to update subscription data in Supabase.
-    *   `generate-melody-task`: Initiates an asynchronous AI melody generation task by creating a record in the `tasks` table.
-    *   `midi-to-text`: Converts uploaded MIDI files into a specific text format.
+### Backend Logic (Next.js API Routes & Supabase Edge Functions):
+*   **Supabase:** Serves as the central backend for all data storage (PostgreSQL), user authentication, and file storage.
+*   **Next.js API Routes (`/src/app/api/`)**: Act as serverless functions within the Next.js framework. They are used for:
+    *   Handling sensitive operations (e.g., communicating with Stripe APIs, creating initial database records).
+    *   Orchestrating complex asynchronous workflows by triggering Supabase Edge Functions.
+    *   Serving as dedicated endpoints for frontend interaction (e.g., polling for task status).
+*   **Supabase Edge Functions (`supabase/functions/`)**: Deno-based serverless functions deployed globally. They are specifically chosen for:
+    *   **AI Model Inference:** Offloading the heavy computation of AI model calls to a dedicated, performant, and scalable environment.
+    *   **Long-Running Tasks:** Handling asynchronous operations that might exceed typical API route timeouts.
+    *   **Deno Runtime:** Leveraging Deno's modern JavaScript/TypeScript runtime for secure and efficient execution.
 
 ### Development Environment and Tooling:
+*   **Google IDX Integration**: The project is developed within Google's IDX, a cloud-based IDE that provides a tightly integrated and powerful development environment.
+*   **Unified AI Assistance**: Deep integration of AI coding assistance (powered by **Gemini**), providing intelligent code completion, suggestions, and context-aware help directly within the editor. This spans across the IDX environment and Firebase services.
+*   **Multimodal Prompting**: The development environment supports multimodal prompting capabilities, enabling more flexible and expressive interactions when using AI for coding and development tasks.
+*   **Enhanced Firebase Integration**: Provides streamlined workflows and tighter integration with Firebase services, complementing Supabase where applicable (e.g., for analytics, specific cloud functions if any are still used, or project management).
+*   **Improved Performance & Customization**: The IDX environment offers enhanced performance for development workflows and extensive customization options to tailor the coding experience to individual preferences and project needs.
+*   **Dependency Management**: `package.json` and `package-lock.json` manage NPM dependencies. `tsconfig.json` configures TypeScript. `.idx/dev.nix` is a Nix environment configuration for consistent local development.
+*   **MIDI Libraries**: `midi-parser-js` (potentially for MIDI-to-text conversion) and `@tonejs/midi` (for programmatically generating MIDI data in the backend).
 
-*   `package.json` and `package-lock.json` manage project dependencies.
-*   `tsconfig.json` (and variants) configure the TypeScript compiler.
-*   `.idx/dev.nix` is a Nix environment configuration, likely for ensuring a consistent development environment within Google's IDX.
-*   `next.config.ts` is the configuration file for Next.js.
-*   **AI-Powered Development:**
-    *   AI coding assistance is integrated, notably with Gemini unified in IDX and Firebase. This provides enhanced code completion, suggestions, and assistance within the development environment.
-    *   The project utilizes multimodal prompting capabilities, allowing for more flexible and nuanced interactions with AI models during development.
-    *   Enhanced Firebase integration within the development environment streamlines workflows related to Firebase services.
-    *   Improved performance and more customization options within the development environment contribute to a more efficient coding experience.
-*   **midi-parser-js**: Library used in the backend to parse MIDI files.
+## 🚀 How It Works (High-Level Flow):
 
-## How It Works (High-Level Flow):
-
-1.  **User signs up or logs in:** Supabase Authentication verifies credentials.
-2.  **User navigates the dashboard:** Next.js handles routing. The UI is built with React components and styled with Tailwind CSS.
-3.  **To generate a melody (Asynchronous Flow - In Progress):**
-    *   The user fills a form in `MelodyGenerationClient.tsx`.
-    *   The client sends a request to the `/api/generate-melody-task` Next.js API route.
-    *   This API route creates a new task in the Supabase `tasks` table with 'PENDING' status and returns a `taskId`.
-    *   *(Next Step)* The API route will trigger the Genkit flow (`generate-melody-from-prompt.ts`) as a background process, passing the `taskId`.
-    *   *(Next Step)* The Genkit flow updates the task status to 'PROCESSING', generates the melody, and updates the task to 'COMPLETED' with results (or 'FAILED' with an error) in the Supabase `tasks` table.
-    *   *(Next Step)* The client (`MelodyGenerationClient.tsx`) will poll a new API endpoint (`/api/melody-status/[taskId]`) to get the task status.
-    *   *(Next Step)* Once the status is 'COMPLETED', the client retrieves the melody data and presents it to the user.
-    *   Generated melodies might be saved to a Supabase table.
-4.  **To view melodies:**
-    *   `MelodyList.tsx` fetches melody data from Supabase.
-    *   Melodies are displayed using `MelodyCard.tsx`.
-5.  **To manage subscription:**
-    *   User visits the pricing page and selects a plan.
-    *   A request is sent to `/api/create-stripe-checkout`.
-    *   The user is redirected to Stripe to complete payment.
-    *   Stripe sends a webhook event to `/api/stripe-webhook`.
-    *   The webhook handler updates the `subscriptions` table in Supabase.
-    *   `SubscriptionClient.tsx` displays current status from Supabase.
-    *   For managing payment methods or cancellations, the user is typically redirected to the Stripe customer portal.
-
-This `information.md` file provides a comprehensive overview based on the project's file structure and the initial blueprint, incorporating the recent Stripe and Supabase integration for subscriptions, and tracking the progress of the asynchronous AI melody generation feature.
+1.  **User Authentication & Access**: A user signs up/logs in via the frontend (Supabase Auth). Upon successful authentication, they gain access to the dashboard.
+2.  **Subscription & Monetization**:
+    *   User selects a plan from the pricing page.
+    *   Frontend calls `/api/create-stripe-checkout`.
+    *   Next.js API route interacts with Stripe, creates a checkout session, and redirects the user to Stripe's payment portal.
+    *   After payment, Stripe sends a webhook to `/api/stripe-webhook`.
+    *   The Next.js webhook handler verifies the Stripe signature and updates the Supabase `subscriptions` table.
+    *   The user's subscription status is displayed in `SubscriptionClient.tsx`.
+3.  **AI Melody Generation (Asynchronous & Event-Driven)**:
+    *   The user provides a text prompt in `MelodyGenerationClient.tsx` and initiates generation.
+    *   **Frontend Request to Next.js API:** `MelodyGenerationClient.tsx` sends a `POST` request with the prompt to `/api/generate-melody-task`.
+    *   **Next.js API Task Creation:** `/api/generate-melody-task` generates a `taskId`, saves a 'PENDING' task record in the Supabase `tasks` table, and immediately returns the `taskId` to the frontend.
+    *   **Next.js API Triggers Edge Function:** `/api/generate-melody-task` then makes a background server-to-server call to the **Supabase Edge Function** (`generate-melody-tasks`), passing the `taskId` and prompt.
+    *   **Edge Function Processing (Genkit Core)**:
+        *   The Edge Function updates the task status to 'PROCESSING' in Supabase.
+        *   It constructs messages (including system and user prompts) and calls Genkit's `ai.generate()` using the specified Google AI model (e.g., `googleai/gemini-2.5-flash-preview-05-20`).
+        *   The model returns raw MIDI event text.
+        *   This text is passed to `parseTextToMidi.ts`, which uses `@tonejs/midi` to convert the text into a full binary MIDI file, then base64 encodes it.
+        *   The Edge Function updates the task status to 'COMPLETED' in Supabase, saving the base64 `midi_data` and a generated `description`. If an error occurs during AI generation or processing, the status is set to 'FAILED' with an `error_message`.
+    *   **Frontend Polling & Display**:
+        *   While the Edge Function processes, `MelodyGenerationClient.tsx` periodically polls the `/api/melody-status/[taskId]` Next.js API route.
+        *   This API route fetches the latest status from the Supabase `tasks` table.
+        *   Once the status is 'COMPLETED', the frontend retrieves the full base64 `midi_data` and `description`. It then decodes the base64 data, creates a playable MIDI object (e.g., a Blob or AudioBuffer), and updates the UI with playback controls, visualization, and the description.
+        *   If 'FAILED', an error message is displayed.
+4.  **Melody Management:** Users can view their generated melodies in the dashboard library.
+5.  **Tools and Future Expansion:** Advanced features and vocal generation are planned for future development.
 
 ---
-
-## Development Environment and Tooling Updates:
-
-This project is developed using Google's IDX, which offers enhanced AI assistance and integrated tooling.
-
-*   **Unified AI Assistance:** AI coding assistance, including features powered by Gemini, is seamlessly integrated across the IDX development environment and Firebase, providing a consistent and powerful coding companion.
-*   **Multimodal Prompting:** The development environment supports multimodal prompting, enabling more flexible and expressive interactions when using AI for coding tasks.
-*   **Enhanced Firebase Integration:** Tighter integration with Firebase services within IDX streamlines deployment, database management, and other Firebase-related workflows.
-*   **Improved Performance & Customization:** The development environment offers improved performance and increased customization options to tailor the coding experience to individual preferences and project needs.

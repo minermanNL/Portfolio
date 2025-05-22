@@ -14,7 +14,7 @@ import { GenerateMelodyFromPromptOutput } from '@/ai/flows/generate-melody-from-
 import { Sparkles, Download, FileAudio, Loader2, TimerIcon, ArrowRight, Music, Mic } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-import { parseTextToMidi } from '@/parseTextToMidi';
+// REMOVED import { parseTextToMidi } from '@/parseTextToMidi'; // parseTextToMidi is server-side only
 // Import the Supabase client used on the frontend
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types/supabase';
@@ -35,7 +35,7 @@ type MelodyGenerationFormValues = z.infer<typeof melodyGenerationSchema>;
 interface TaskStatusResponse {
   id: string;
   status: string; // 'PENDING', 'PROCESSING', 'COMPLETED', 'FAILED'
-  midi_data?: string;
+  midi_data?: string; // This will now contain the base64 encoded MIDI bytes
   description?: string;
   error_message?: string;
   created_at: string;
@@ -48,7 +48,7 @@ export function MelodyGenerationClient() {
   const [isLoading, setIsLoading] = useState(false);
   const [melodyResult, setMelodyResult] = useState<GenerateMelodyFromPromptOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
-  
+
   const [taskId, setTaskId] = useState<string | null>(null);
   const [pollingStatus, setPollingStatus] = useState<string | null>(null);
   const pollingIntervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -100,7 +100,7 @@ export function MelodyGenerationClient() {
                      pollingIntervalRef.current = null;
                  }
             }
-            return; 
+            return;
         }
 
         const taskData = await response.json() as TaskStatusResponse;
@@ -207,19 +207,40 @@ export function MelodyGenerationClient() {
       setIsLoading(false); // Stop loading if submission itself fails or returns error
     }
   };
-  
+
   const handleDownloadMidi = () => {
     if (melodyResult?.midiData) {
       try {
-        const blob = new Blob([parseTextToMidi(melodyResult.midiData)], {type: 'audio/midi'});
+        const base64MidiString = melodyResult.midiData; // Already the base64 string
+
+        // Decode base64 string to a binary string
+        const binaryString = window.atob(base64MidiString);
+
+        // Convert the binary string to a Uint8Array
+        const len = binaryString.length;
+        const bytes = new Uint8Array(len);
+        for (let i = 0; i < len; i++) {
+            bytes[i] = binaryString.charCodeAt(i);
+        }
+
+        // Create a Blob from the Uint8Array
+        // Use the bytes.buffer to get the underlying ArrayBuffer for robustness
+        const blob = new Blob([bytes.buffer], { type: 'audio/midi' });
+
+        // Create an Object URL for the Blob
         const url = URL.createObjectURL(blob);
+
+        // Create a link and trigger the download
         const a = document.createElement('a');
         a.href = url;
-        a.download = 'generated_melody.mid';
+        a.download = 'generated_melody.mid'; // Set the desired filename
         document.body.appendChild(a);
         a.click();
+
+        // Clean up by removing the link and revoking the Object URL
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
+
         toast({ title: "Download Started", description: "Your MIDI file should be downloading."});
       } catch (e: any) {
         console.error("Error downloading MIDI:", e);
@@ -242,9 +263,9 @@ export function MelodyGenerationClient() {
   if (isLoading) {
     if (pollingStatus === 'PENDING') buttonText = "Task Queued, Waiting...";
     else if (pollingStatus === 'PROCESSING') buttonText = "Generating Melody...";
-    else if (taskId && !pollingStatus) buttonText = "Initializing Task..."; 
+    else if (taskId && !pollingStatus) buttonText = "Initializing Task...";
     else if (pollingStatus === 'STOPPED_ERROR') buttonText = "Error Polling Status";
-    else buttonText = "Submitting Task..."; 
+    else buttonText = "Submitting Task...";
   }
 
   const showInProgressAlert = isLoading && taskId && (pollingStatus === 'PENDING' || pollingStatus === 'PROCESSING');
@@ -327,7 +348,7 @@ export function MelodyGenerationClient() {
             <div className="p-4 border rounded-md bg-secondary/50 text-center">
               <p className="text-muted-foreground">MIDI player/visualizer would appear here.</p>
               {melodyResult.midiData && (
-                 <p className="text-sm text-muted-foreground mt-1 truncate">MIDI Data Preview: {melodyResult.midiData.substring(0, 150)}...</p>
+                 <p className="text-sm text-muted-foreground mt-1 truncate">MIDI Data Preview (Base64): {melodyResult.midiData.substring(0, 150)}...</p>
                )}
             </div>
           </CardContent>
