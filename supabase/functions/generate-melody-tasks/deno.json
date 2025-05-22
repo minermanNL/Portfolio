@@ -1,9 +1,5 @@
 {
   "imports": {
-    "@/": "./src/",
-    "genkit": "https://deno.land/x/genkit@0.0.5/mod.ts", // Or the specific Genkit version you are using
-    "@genkit-ai/core": "https://deno.land/x/genkit@0.0.5/core/mod.ts", // Or the specific version
-    "@genkit-ai/googleai": "https://deno.land/x/genkit@0.0.5/plugins/googleai/mod.ts" // Or the specific version
-    // Add other Genkit imports if needed, e.g., "@genkit-ai/flow"
+    "@/": "./src/"
   }
 }
