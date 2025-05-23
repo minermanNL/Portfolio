@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
@@ -21,12 +21,17 @@ const supabase = createClientComponentClient<Database>({
 });
 
 export function AdvancedMelodyToolsClient() {
+  const [password, setPassword] = useState('');
+  const [isUnlocked, setIsUnlocked] = useState(false);
+  const CORRECT_PASSWORD = "melody"; // Define the correct password here
+
   const [manualTextInput, setManualTextInput] = useState('');
   const [manualMidiBlob, setManualMidiBlob] = useState<Blob | null>(null);
 
   const [midiFileForText, setMidiFileForText] = useState<File | null>(null); // State for the selected MIDI file for conversion TO text
   const [llmTextOutput, setLlmTextOutput] = useState(''); // State for the generated text output FROM MIDI
   const [isConvertingToText, setIsConvertingToText] = useState(false); // Loading state for MIDI to Text conversion
+  const [error, setError] = useState<string | null>(null); // Added error state
 
   // States for Iterative Generation
   const [currentIterativeTaskId, setCurrentIterativeTaskId] = useState<string | null>(null); // Task ID for the current iterative generation job
@@ -38,6 +43,17 @@ export function AdvancedMelodyToolsClient() {
   const [iterativeOutputMidiBlob, setIterativeOutputMidiBlob] = useState<Blob | null>(null); // State for the generated MIDI blob from iteration
 
   const { toast } = useToast();
+
+  const handleUnlock = () => {
+    if (password === CORRECT_PASSWORD) {
+      setIsUnlocked(true);
+      toast({ title: "Unlocked", description: "Advanced tools are now accessible." });
+    } else {
+      setIsUnlocked(false);
+      setPassword(''); // Clear password on incorrect attempt
+      toast({ title: "Incorrect Password", description: "Please try again.", variant: "destructive" });
+    }
+  };
 
   // --- Manual Text to MIDI Conversion ---
   const handleManualConvert = () => {
@@ -51,16 +67,21 @@ export function AdvancedMelodyToolsClient() {
     }
 
     try {
-      // Assuming parseTextToMidi directly returns Uint8Array or ArrayBuffer for Blob construction.
-      // If parseTextToMidi returns a base64 string, you need to decode it first:
-      const midiBase64String = parseTextToMidi(manualTextInput); // This is now base64 string
+      // Assuming parseTextToMidi returns a base64 string
+      const midiBase64String = parseTextToMidi(manualTextInput);
+
+      // Decode base64 string to a binary string
       const byteCharacters = atob(midiBase64String);
-      const byteNumbers = new Array(byteCharacters.length);
-      for (let i = 0; i < byteCharacters.length; i++) {
-        byteNumbers[i] = byteCharacters.charCodeAt(i);
+
+      // Convert the binary string to a Uint8Array
+      const len = byteCharacters.length;
+      const bytes = new Uint8Array(len);
+      for (let i = 0; i < len; i++) {
+          bytes[i] = byteCharacters.charCodeAt(i);
       }
-      const byteArray = new Uint8Array(byteNumbers);
-      const blob = new Blob([byteArray.buffer], { type: 'audio/midi' });
+
+      // Create a Blob from the Uint8Array
+      const blob = new Blob([bytes.buffer], { type: 'audio/midi' });
 
       setManualMidiBlob(blob);
        toast({
@@ -164,7 +185,7 @@ export function AdvancedMelodyToolsClient() {
       headers['Authorization'] = `Bearer ${jwt}`;
     } else {
         // If no session, show an error immediately
-        setError('You must be logged in to convert MIDI to text.');
+        setError('You must be logged in to convert MIDI to text.'); // Use setError
         setIsConvertingToText(false);
         toast({
              title: 'Authentication Required',
@@ -173,7 +194,6 @@ export function AdvancedMelodyToolsClient() {
         });
         return;
     }
-
 
     try {
       const response = await fetch('/api/midi-to-text', {
@@ -292,7 +312,7 @@ export function AdvancedMelodyToolsClient() {
         console.log('Polling result:', result);
 
         if (result.status === 'COMPLETED') { // Changed from 'SUCCEEDED' to 'COMPLETED'
-          setIterativeOutputText(result.text_description || 'Generation succeeded.'); // The API might return text_description or just description
+          setIterativeOutputText(result.text_description || result.description || 'Generation succeeded.'); // The API might return text_description or just description
           if (result.midi_data) {
             // Convert base64 to Blob
             const byteCharacters = atob(result.midi_data);
@@ -394,7 +414,7 @@ export function AdvancedMelodyToolsClient() {
       authHeaders['Authorization'] = `Bearer ${jwt}`;
     } else {
         // If no session, the backend will return 401 anyway, but we can show an error immediately
-        setError('You must be logged in to generate melodies.');
+        setError('You must be logged in to generate melodies.'); // Use setError
         setIsGeneratingIterative(false);
         toast({
              title: 'Authentication Required',
@@ -404,7 +424,6 @@ export function AdvancedMelodyToolsClient() {
         return;
     }
 
-
     let initialMelodyText = '';
 
     try {
@@ -413,14 +432,10 @@ export function AdvancedMelodyToolsClient() {
          const formData = new FormData();
          formData.append('midiFile', iterateBaseMidiFile);
 
-         // Note: For FormData, 'Content-Type' header is usually handled automatically by the browser
-         // when you pass a FormData object. Manually setting it might cause issues.
-         // Just ensure Authorization header is present.
          const midiToTextHeaders: Record<string, string> = {};
-         if (jwt) {
+         if (jwt) { // Ensure authentication for midi-to-text conversion too
            midiToTextHeaders['Authorization'] = `Bearer ${jwt}`;
          }
-
 
          const convertResponse = await fetch('/api/midi-to-text', {
             method: 'POST',
@@ -451,13 +466,23 @@ export function AdvancedMelodyToolsClient() {
          console.log('Using pasted text as iteration base.');
       }
 
-      // Step 2: Call the generate-melody-task API route with iteration context
+      // --- CRITICAL CHANGE HERE ---
+      // Construct the combined prompt string including the base melody context.
+      let combinedPrompt = `Iteration prompt: ${iterativePromptInput.trim()}`;
+      if (initialMelodyText.trim()) {
+          // Add the base melody context to the prompt, clearly labeled.
+          combinedPrompt += `\n\nBase melody context:\n${initialMelodyText.trim()}`;
+      }
+      // --- END CRITICAL CHANGE ---
+
+      // Step 2: Call the generate-melody-task API route with the combined prompt
       const generateResponse = await fetch('/api/generate-melody-task', {
         method: 'POST',
         headers: authHeaders, // Use the pre-prepared authHeaders for JSON content
         body: JSON.stringify({
-          prompt: iterativePromptInput.trim(),
-          initialMelodyText: initialMelodyText,
+          prompt: combinedPrompt, // Send the combined prompt
+          // Removed initialMelodyText as a separate field from the payload,
+          // as it's now integrated into the 'prompt' string.
         }),
       });
 
@@ -495,11 +520,7 @@ export function AdvancedMelodyToolsClient() {
       });
        // Set output text to error message for visibility
        setIterativeOutputText(`Error: ${error.message}`);
-    } finally {
-      // The loading state should be managed by the polling function's completion or failure.
-      // Do not set to false here, as it would stop the spinner immediately after task submission,
-      // not after the task is actually done.
-      // setIsGeneratingIterative(false); // REMOVED: Managed by pollTaskStatus
+       setIsGeneratingIterative(false); // Ensure loading state is reset on immediate errors
     }
    };
 
@@ -539,52 +560,42 @@ export function AdvancedMelodyToolsClient() {
 
   return (
     <div className="space-y-8">
-      {/* Manual Text to MIDI Conversion Section */}
+       {/* Password Unlock Section */}
       <Card className="shadow-lg">
         <CardHeader>
-          <CardTitle className="text-2xl flex items-center"><Music className="mr-2 h-6 w-6 text-purple-500" /> Convert Text to MIDI</CardTitle>
-          <CardDescription>Manually paste AI text output here to convert it into a MIDI file.</CardDescription>
+          <CardTitle className="text-2xl">Advanced Tools Access</CardTitle>
+          <CardDescription>Enter the password to unlock advanced melody tools.</CardDescription>
         </CardHeader>
-        <CardContent className="space-y-6">
-           <div className="space-y-2">
-              <Label htmlFor="manualTextInput" className="text-lg font-medium">Paste AI Text Output</Label>
-                 <Textarea
-                  id="manualTextInput"
-                  placeholder="Paste the text output from the AI here..."
-                  value={manualTextInput}
-                  onChange={(e) => setManualTextInput(e.target.value)}
-                  className="min-h-[150px] text-base"
-                 />
-            </div>
-            {/* Container for Convert and Paste buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-4">
-               <Button onClick={handleManualConvert} className="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white text-lg py-3 px-6">
-                <FileAudio className="mr-2 h-5 w-5" />
-                Convert to MIDI
-              </Button>
-                <Button
-                 onClick={handlePasteIntoManualText}
-                 variant="outline"
-                 size="lg"
-                 className="w-full sm:w-auto"
-                 title="Paste from Clipboard"
-               >
-                  <ClipboardPaste className="mr-2 h-5 w-5" /> Paste Text
-               </Button>
-            </div>
+        <CardContent className="flex items-center gap-4">
+           <div className="flex-1">
+              <Label htmlFor="password" className="sr-only">Password</Label>
+                <input
+                 id="password"
+                 type="password"
+                 placeholder="Enter Password"
+                 value={password}
+                 onChange={(e) => setPassword(e.target.value)}
+                 onKeyPress={(e) => { // Allow pressing Enter to submit
+                   if (e.key === 'Enter') {
+                     handleUnlock();
+                   }
+                 }}
+                 className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                 disabled={isUnlocked} // Disable input once unlocked
+                />
+           </div>
+           <div>
+              <Button onClick={handleUnlock} disabled={isUnlocked}>Unlock</Button>
+           </div>
         </CardContent>
-        {manualMidiBlob && (
-           <CardFooter className="flex items-center justify-between">
-             <span className="text-sm text-muted-foreground">Conversion successful.</span>
-             <Button onClick={handleDownloadManualMidi} variant="outline">
-                <Download className="mr-2 h-5 w-5" />
-                Download Manual MIDI
-             </Button>
-           </CardFooter>
-        )}
+         {isUnlocked && (
+             <CardFooter>
+                 <span className="text-sm text-green-600">Advanced tools unlocked.</span>
+             </CardFooter>
+         )}
       </Card>
 
-      {/* Iterate Input for MIDI Generation */}
+      {/* Iterate Input for MIDI Generation - ALWAYS VISIBLE (not behind password) */}
       <Card className="shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl flex items-center"><Repeat2 className="mr-2 h-6 w-6 text-green-500" /> Iterate for MIDI Generation</CardTitle>
@@ -697,77 +708,126 @@ export function AdvancedMelodyToolsClient() {
         </CardContent>
       </Card>
 
-      {/* MIDI to LLM Text Conversion */}
-       <Card className="shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl flex items-center"><FileText className="mr-2 h-6 w-6 text-orange-500" /> MIDI to LLM Text Conversion</CardTitle>
-          <CardDescription>Upload a MIDI file and convert it into an LLM-style text description.</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-           <div className="space-y-2">
-              <Label htmlFor="midiUploadForText" className="text-lg font-medium">Upload MIDI File</Label>
-              <input
-                id="midiUploadForText"
-                type="file"
-                accept=".mid,.midi"
-                onChange={handleFileChangeForText}
-                disabled={isConvertingToText}
-              />
-           </div>
-           {/* Container for Convert and Copy buttons */}
-           <div className="flex flex-col sm:flex-row items-center gap-4">
-             <Button
-               onClick={handleConvertToText}
-               disabled={!midiFileForText || isConvertingToText}
-               className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white text-lg py-3 px-6"
-             >
-              {isConvertingToText ? (
-                <span className="flex items-center">
-                  <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Converting...
-                </span>
-              ) : (
-                <>
-                  <FileText className="mr-2 h-5 w-5" />
-                  Convert to Text
-                </>
+      {/* Conditionally render the other advanced tools only if unlocked */}
+      {isUnlocked && (
+         <>
+            {/* Manual Text to MIDI Conversion Section */}
+            <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl flex items-center"><Music className="mr-2 h-6 w-6 text-purple-500" /> Convert Text to MIDI</CardTitle>
+                <CardDescription>Manually paste AI text output here to convert it into a MIDI file.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                 <div className="space-y-2">
+                    <Label htmlFor="manualTextInput" className="text-lg font-medium">Paste AI Text Output</Label>
+                       <Textarea
+                        id="manualTextInput"
+                        placeholder="Paste the text output from the AI here..."
+                        value={manualTextInput}
+                        onChange={(e) => setManualTextInput(e.target.value)}
+                        className="min-h-[150px] text-base"
+                       />
+                  </div>
+                  {/* Container for Convert and Paste buttons */}
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                     <Button onClick={handleManualConvert} className="w-full sm:w-auto bg-purple-500 hover:bg-purple-600 text-white text-lg py-3 px-6">
+                      <FileAudio className="mr-2 h-5 w-5" />
+                      Convert to MIDI
+                    </Button>
+                      <Button
+                       onClick={handlePasteIntoManualText}
+                       variant="outline"
+                       size="lg"
+                       className="w-full sm:w-auto"
+                       title="Paste from Clipboard"
+                     >
+                        <ClipboardPaste className="mr-2 h-5 w-5" /> Paste Text
+                     </Button>
+                  </div>
+              </CardContent>
+              {manualMidiBlob && (
+                 <CardFooter className="flex items-center justify-between">
+                   <span className="text-sm text-muted-foreground">Conversion successful.</span>
+                   <Button onClick={handleDownloadManualMidi} variant="outline">
+                      <Download className="mr-2 h-5 w-5" />
+                      Download Manual MIDI
+                   </Button>
+                 </CardFooter>
               )}
+            </Card>
 
-             </Button>
-              <Button
-                onClick={handleCopyToClipboard}
-                disabled={!llmTextOutput}
-                variant="outline"
-                size="lg"
-                className="w-full sm:w-auto"
-              >
-                 <Copy className="mr-2 h-5 w-5" /> Copy Text
-               </Button>
-           </div>
-           <div className="space-y-2">
-              <Label htmlFor="llmTextOutput" className="text-lg font-medium">LLM Text Output</Label>
-              <Textarea
-                id="llmTextOutput"
-                placeholder="Generated LLM text description will appear here..."
-                className="min-h-[150px] text-base bg-muted"
-                readOnly
-                value={llmTextOutput}
-              />
-               {/* Removed absolute positioned copy button */}
-            </div>
-        </CardContent>
-       </Card>
+            {/* MIDI to LLM Text Conversion */}
+             <Card className="shadow-lg">
+              <CardHeader>
+                <CardTitle className="text-2xl flex items-center"><FileText className="mr-2 h-6 w-6 text-orange-500" /> MIDI to LLM Text Conversion</CardTitle>
+                <CardDescription>Upload a MIDI file and convert it into an LLM-style text description.</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                 <div className="space-y-2">
+                    <Label htmlFor="midiUploadForText" className="text-lg font-medium">Upload MIDI File</Label>
+                    <input
+                      id="midiUploadForText"
+                      type="file"
+                      accept=".mid,.midi"
+                      onChange={handleFileChangeForText}
+                      disabled={isConvertingToText}
+                    />
+                 </div>
+                 {/* Container for Convert and Copy buttons */}
+                 <div className="flex flex-col sm:flex-row items-center gap-4">
+                   <Button
+                     onClick={handleConvertToText}
+                     disabled={!midiFileForText || isConvertingToText}
+                     className="w-full sm:w-auto bg-orange-500 hover:bg-orange-600 text-white text-lg py-3 px-6"
+                   >
+                    {isConvertingToText ? (
+                      <span className="flex items-center">
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                        Converting...
+                      </span>
+                    ) : (
+                      <>
+                        <FileText className="mr-2 h-5 w-5" />
+                        Convert to Text
+                      </>
+                    )}
 
-        {/* Placeholder for Vocal Generation - Assuming this is separate */}
-       {/* <Card className="shadow-lg">
-        <CardHeader>
-          <CardTitle className="text-2xl flex items-center"><FileAudio className="mr-2 h-6 w-6 text-blue-500" /> Vocal Generation</CardTitle>
-          <CardDescription>Generate vocals based on a melody.</CardDescription>
-        </CardHeader>
-        <CardContent>
-           <p>Content for vocal generation tools goes here.</p>
-        </CardContent>
-       </Card> */}
+                   </Button>
+                    <Button
+                      onClick={handleCopyToClipboard}
+                      disabled={!llmTextOutput}
+                      variant="outline"
+                      size="lg"
+                      className="w-full sm:w-auto"
+                    >
+                       <Copy className="mr-2 h-5 w-5" /> Copy Text
+                     </Button>
+                 </div>
+                 <div className="space-y-2">
+                    <Label htmlFor="llmTextOutput" className="text-lg font-medium">LLM Text Output</Label>
+                    <Textarea
+                      id="llmTextOutput"
+                      placeholder="Generated LLM text description will appear here..."
+                      className="min-h-[150px] text-base bg-muted"
+                      readOnly
+                      value={llmTextOutput}
+                    />
+                  </div>
+              </CardContent>
+             </Card>
+         </>
+      )}
+
+       {/* Placeholder for Vocal Generation - Assuming this is separate */}
+      {/* <Card className="shadow-lg">
+       <CardHeader>
+         <CardTitle className="text-2xl flex items-center"><FileAudio className="mr-2 h-6 w-6 text-blue-500" /> Vocal Generation</CardTitle>
+         <CardDescription>Generate vocals based on a melody.</CardDescription>
+       </CardHeader>
+       <CardContent>
+          <p>Content for vocal generation tools goes here.</p>
+       </CardContent>
+      </Card> */}
     </div>
   );
 }
