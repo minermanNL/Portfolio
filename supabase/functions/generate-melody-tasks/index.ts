@@ -71,15 +71,22 @@ serve(async (req) => {
   }
 
   let taskId = 'unknown'; // Initialize taskId to help in error reporting
+  let receivedPrompt = 'N/A'; // Store the received prompt for logging
+  let initialMelodyTextReceived = false; // Flag to indicate if initialMelodyText was received
 
   try {
     const body = await req.json();
     taskId = body.taskId; // Assign taskId here if available from the request body
-    const { prompt } = body;
+    const { prompt, initialMelodyText } = body; // Destructure both fields
 
-    console.log(`Edge Function processing task: ${taskId} with prompt: "${prompt ? prompt.substring(0, 50) + '...' : 'N/A'}"`);
+    receivedPrompt = prompt; // Store the received prompt
+    if (initialMelodyText !== undefined) {
+        initialMelodyTextReceived = true;
+    }
 
-    if (!taskId || !prompt) {
+    console.log(`Edge Function processing task: ${taskId}. Prompt: "${receivedPrompt ? receivedPrompt.substring(0, 50) + '...' : 'N/A'}". Iteration context provided: ${initialMelodyTextReceived}`);
+
+    if (!taskId || !receivedPrompt) {
        console.error(`Edge Function Error: Missing taskId or prompt in request body for task ${taskId}`);
        return new Response(JSON.stringify({ error: 'Task ID and prompt are required in the request body' }), {
         headers: { 'Content-Type': 'application/json' },
@@ -87,17 +94,33 @@ serve(async (req) => {
       });
     }
     
+    // Construct the prompt for the AI based on whether initialMelodyText is present
+    let promptForAI: string;
+    if (initialMelodyTextReceived) {
+        promptForAI = `Original Melody:
+${initialMelodyText}
+
+User Request:
+${receivedPrompt}`;
+        console.log(`Edge Function: Constructed iterative prompt for AI for task ${taskId}`);
+    } else {
+        promptForAI = receivedPrompt;
+        console.log(`Edge Function: Using direct prompt for AI for task ${taskId}`);
+    }
+
     // Detailed check for invoke method
     console.log('Inside serve: typeof generateMelodyFromPromptFlow.invoke:', typeof generateMelodyFromPromptFlow?.invoke);
     console.log('Inside serve: generateMelodyFromPromptFlow.invoke directly:', generateMelodyFromPromptFlow?.invoke);
 
     let flowResult;
     if (generateMelodyFromPromptFlow && typeof generateMelodyFromPromptFlow.invoke === 'function') {
-      console.log('Attempting to call generateMelodyFromPromptFlow.invoke()');
-      flowResult = await generateMelodyFromPromptFlow.invoke({ taskId, prompt });
+      console.log('Attempting to call generateMelodyFromPromptFlow.invoke() with constructed prompt.');
+      // Pass the constructed promptForAI to the flow
+      flowResult = await generateMelodyFromPromptFlow.invoke({ taskId, prompt: promptForAI });
     } else if (typeof generateMelodyFromPromptFlow === 'function') {
-      console.log('Attempting to call generateMelodyFromPromptFlow directly as a function.');
-      flowResult = await generateMelodyFromPromptFlow({ taskId, prompt }); // Direct call
+      console.log('Attempting to call generateMelodyFromPromptFlow directly as a function with constructed prompt.');
+       // Pass the constructed promptForAI to the flow
+      flowResult = await generateMelodyFromPromptFlow({ taskId, prompt: promptForAI }); // Direct call
     } else {
       console.error(
         'Edge Function Error: generateMelodyFromPromptFlow is neither invokable nor a direct function.',
@@ -108,6 +131,10 @@ serve(async (req) => {
     }
 
     console.log(`Edge Function finished processing task ${taskId}. Flow result status: ${flowResult.midiData ? 'Completed' : 'Failed'}`);
+
+    // Here you might want to update the task in Supabase with the result (flowResult.midiData, etc.)
+    // This part is not explicitly requested but is likely the next step.
+    // For now, we just return the result.
 
     return new Response(JSON.stringify({
         message: 'Melody generation flow processed.',

@@ -54,14 +54,23 @@ export async function POST(req: Request) {
     }
 
     const profileId = profile.id;
-    const { prompt } = await req.json();
+    
+    // Destructure prompt and optional initialMelodyText from the request body
+    const { prompt, initialMelodyText } = await req.json();
 
+    // Ensure prompt is provided
+    if (!prompt) {
+         console.error('Missing prompt in generate-melody-task route request body');
+         return NextResponse.json({ error: 'Prompt is required' }, { status: 400 });
+    }
+
+    // Insert task into Supabase database (store the user's direct prompt)
     const { data: task, error: taskError } = await supabase
       .from('tasks')
       .insert([
         {
           user_id: profileId,
-          prompt: prompt,
+          prompt: prompt, // Store the user's direct prompt
           status: 'PENDING',
         },
       ])
@@ -81,29 +90,43 @@ export async function POST(req: Request) {
     
     console.log(`API Route: Attempting to call Edge Function at URL: ${edgeFunctionUrl}`);
 
+    // Prepare the body to send to the Edge Function
+    const edgeFunctionBody: any = {
+      taskId: taskId,
+      prompt: prompt, // Always send the user's prompt
+    };
+
+    // Include initialMelodyText if it was provided in the request body
+    if (initialMelodyText !== undefined) {
+        edgeFunctionBody.initialMelodyText = initialMelodyText;
+    }
+
     fetch(edgeFunctionUrl, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${supabaseAnonKey}`,
       },
-      body: JSON.stringify({
-        taskId: taskId,
-        prompt: prompt,
-      }),
+      body: JSON.stringify(edgeFunctionBody), // Send the constructed body
     })
       .then(response => {
         if (!response.ok) {
           console.error(`Error calling Edge Function for task ${taskId}: Status ${response.status} ${response.statusText}`);
           // Consider updating task status to reflect that the Edge Function call failed
+          // Note: This fetch is intentionally not awaited to allow the API route to respond quickly.
+          // Error handling for the fetch itself should ideally update the task status from the Edge Function side
+          // if the function is successfully invoked but fails internally.
         } else {
           console.log(`Successfully triggered Edge Function for task ${taskId}`);
         }
       })
       .catch(edgeError => {
-        console.error(`Network error or exception when calling Edge Function for task ${taskId}:`, edgeError);
+        console.error(`Network error or exception when calling Edge Function for task ${taskId} (fetch failed):`, edgeError);
+        // Note: Similar to the response.ok check, this catch handles network errors *from the API route's perspective*. 
+        // Robust error handling for the task completion/failure should be in the Edge Function.
       });
 
+    // Respond immediately with the task ID
     return NextResponse.json({ taskId: taskId }, { status: 202 });
 
   } catch (error: any) {
