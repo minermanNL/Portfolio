@@ -33,7 +33,7 @@ const prompt = ai.definePrompt({
   name: 'summarizeMelodyDetailsPrompt',
   input: {schema: SummarizeMelodyDetailsInputSchema},
   output: {schema: SummarizeMelodyDetailsOutputSchema},
-  prompt: `You are a music expert. Summarize the following melody details, highlighting the key characteristics such as key, tempo, and instrumentation.\n\nMelody Details: {{{melodyDetails}}}`,
+  prompt: `You are a music expert. Summarize the following melody details but don't make it long or make up untrue statements, highlighting the key characteristics such as key, tempo, and instrumentation.\n\nMelody Details: {{{melodyDetails}}}`,
 });
 
 const summarizeMelodyDetailsFlow = ai.defineFlow(

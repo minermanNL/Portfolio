@@ -14,17 +14,7 @@ import { GenerateMelodyFromPromptOutput } from '@/ai/flows/generate-melody-from-
 import { Sparkles, Download, FileAudio, Loader2, TimerIcon, ArrowRight, Music, Mic } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
 import { LoadingSpinner } from '@/components/shared/LoadingSpinner';
-// REMOVED import { parseTextToMidi } from '@/parseTextToMidi'; // parseTextToMidi is server-side only
-// Import the Supabase client used on the frontend
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/types/supabase';
-
-// Configure cookie options to only look for cookies starting with 'sb-'
-const supabase = createClientComponentClient<Database>({
-  cookieOptions: {
-    name: 'sb'
-  }
-});
+import { useAuthSession } from '@/hooks/useAuthSession'; // Import the hook
 
 const melodyGenerationSchema = z.object({
   prompt: z.string().min(10, { message: 'Prompt must be at least 10 characters long.' }).max(500, { message: 'Prompt cannot exceed 500 characters.' }),
@@ -45,7 +35,8 @@ interface TaskStatusResponse {
 const POLLING_INTERVAL = 5000; // Poll every 5 seconds
 
 export function MelodyGenerationClient() {
-  const [isLoading, setIsLoading] = useState(false);
+  const { session, isLoading: isSessionLoading } = useAuthSession(); // Use the hook
+  const [isGenerating, setIsGenerating] = useState(false); // Use a separate state for submission/polling
   const [melodyResult, setMelodyResult] = useState<GenerateMelodyFromPromptOutput | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -73,9 +64,7 @@ export function MelodyGenerationClient() {
     }
 
     const poll = async () => {
-      // Get current session to include JWT in polling request
-      const { data: { session } } = await supabase.auth.getSession();
-      const jwt = session?.access_token;
+      const jwt = session?.access_token; // Get JWT from the session hook
 
       const headers: Record<string, string> = { 'Content-Type': 'application/json' };
       if (jwt) {
@@ -91,8 +80,8 @@ export function MelodyGenerationClient() {
             console.error(`Polling error: Status ${response.status}`);
              // If 401 (Unauthorized) or 404 (Not Found - might be RLS issue or task deleted)
             if (response.status === 401 || response.status === 404) {
-                 setError(`Polling failed or task not found/authorized. Status: ${response.status}`);
-                 setIsLoading(false);
+                 setError(`Polling failed or task not found/authorized. Status: ${response.status}. Please log in again if necessary.`);
+                 setIsGenerating(false); // Stop generation loading state
                  setTaskId(null);
                  setPollingStatus('STOPPED_ERROR'); // Indicate polling stopped due to error
                  if (pollingIntervalRef.current) {
@@ -115,7 +104,7 @@ export function MelodyGenerationClient() {
             title: 'Melody Generated!',
             description: 'Your AI-powered melody is ready.',
           });
-          setIsLoading(false);
+          setIsGenerating(false); // Stop generation loading state
           setTaskId(null); // Stop polling
         } else if (taskData.status === 'FAILED') {
           setError(taskData.error_message || 'Melody generation failed for an unknown reason.');
@@ -124,26 +113,37 @@ export function MelodyGenerationClient() {
             description: taskData.error_message || 'An error occurred during melody generation.',
             variant: 'destructive',
           });
-          setIsLoading(false);
+          setIsGenerating(false); // Stop generation loading state
           setTaskId(null); // Stop polling
         }
       } catch (err: any) {
         console.error('Exception during polling:', err);
+        setError('An error occurred while polling for the task status.');
+        setIsGenerating(false); // Stop generation loading state
+        setTaskId(null);
+        setPollingStatus('STOPPED_ERROR'); // Indicate polling stopped due to error
+        if (pollingIntervalRef.current) {
+            clearInterval(pollingIntervalRef.current);
+            pollingIntervalRef.current = null;
+        }
       }
     };
 
-    poll();
-    pollingIntervalRef.current = setInterval(poll, POLLING_INTERVAL);
+    // Only start polling if session is loaded and valid
+    if (!isSessionLoading && session) {
+        poll();
+        pollingIntervalRef.current = setInterval(poll, POLLING_INTERVAL);
+    }
 
     return () => {
       if (pollingIntervalRef.current) {
         clearInterval(pollingIntervalRef.current);
       }
     };
-  }, [taskId, pollingStatus, toast]); // Effect dependencies
+  }, [taskId, pollingStatus, toast, session, isSessionLoading]); // Add session and isSessionLoading as dependencies
 
   const onSubmit = async (data: MelodyGenerationFormValues) => {
-    setIsLoading(true);
+    setIsGenerating(true); // Start generation loading state
     setMelodyResult(null);
     setError(null);
     setTaskId(null);
@@ -153,17 +153,16 @@ export function MelodyGenerationClient() {
       clearInterval(pollingIntervalRef.current);
     }
 
-    // Get current session to include JWT in submission request
-    const { data: { session } } = await supabase.auth.getSession();
+    // Use session from the hook
     const jwt = session?.access_token;
 
     const headers: Record<string, string> = { 'Content-Type': 'application/json' };
     if (jwt) {
       headers['Authorization'] = `Bearer ${jwt}`;
     } else {
-        // If no session, the backend will return 401 anyway, but we can show an error immediately
+        // If no session from the hook, display error immediately
         setError('You must be logged in to generate melodies.');
-        setIsLoading(false);
+        setIsGenerating(false); // Stop generation loading state
         toast({
              title: 'Authentication Required',
              description: 'Please log in to submit a generation task.',
@@ -188,7 +187,7 @@ export function MelodyGenerationClient() {
       if (result.taskId) {
         setTaskId(result.taskId);
         setPollingStatus('PENDING'); // Trigger polling useEffect
-        // isLoading remains true to show polling status
+        // isGenerating remains true to show polling status
         toast({
           title: 'Melody Task Submitted',
           description: 'Your melody is being queued for generation. We will notify you shortly.',
@@ -204,7 +203,7 @@ export function MelodyGenerationClient() {
         description: err.message || 'Could not submit your melody generation task.',
         variant: 'destructive',
       });
-      setIsLoading(false); // Stop loading if submission itself fails or returns error
+      setIsGenerating(false); // Stop generation loading state
     }
   };
 
@@ -259,8 +258,15 @@ export function MelodyGenerationClient() {
     }
   };
 
+  // Determine button state and text based on session loading and generation state
+  const isSubmitButtonDisabled = isSessionLoading || isGenerating || !session;
+
   let buttonText = "Generate Melody";
-  if (isLoading) {
+  if (isSessionLoading) {
+    buttonText = "Loading Session...";
+  } else if (!session) {
+    buttonText = "Log in to Generate";
+  } else if (isGenerating) {
     if (pollingStatus === 'PENDING') buttonText = "Task Queued, Waiting...";
     else if (pollingStatus === 'PROCESSING') buttonText = "Generating Melody...";
     else if (taskId && !pollingStatus) buttonText = "Initializing Task...";
@@ -268,8 +274,9 @@ export function MelodyGenerationClient() {
     else buttonText = "Submitting Task...";
   }
 
-  const showInProgressAlert = isLoading && taskId && (pollingStatus === 'PENDING' || pollingStatus === 'PROCESSING');
-  const showPollingErrorAlert = pollingStatus === 'ERROR_POLLING_404' || pollingStatus === 'STOPPED_ERROR';
+
+  const showInProgressAlert = isGenerating && taskId && (pollingStatus === 'PENDING' || pollingStatus === 'PROCESSING');
+   const showPollingErrorAlert = pollingStatus === 'STOPPED_ERROR'; // Use the new STOPPED_ERROR status
 
   return (
     <div className="space-y-8">
@@ -288,14 +295,14 @@ export function MelodyGenerationClient() {
                 {...form.register('prompt')}
                 className="min-h-[120px] text-base"
                 aria-invalid={form.formState.errors.prompt ? "true" : "false"}
-                disabled={isLoading}
+                disabled={isGenerating || isSessionLoading || !session} // Disable based on generation and session state
               />
               {form.formState.errors.prompt && (
                 <p className="text-sm text-destructive">{form.formState.errors.prompt.message}</p>
               )}
             </div>
-            <Button type="submit" className="w-full md:w-auto bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-3 px-6" disabled={isLoading}>
-              {isLoading ? (
+            <Button type="submit" className="w-full md:w-auto bg-accent hover:bg-accent/90 text-accent-foreground text-lg py-3 px-6" disabled={isSubmitButtonDisabled}>
+              {isGenerating || isSessionLoading ? (
                 <span className="flex items-center">
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                   {buttonText}
@@ -311,6 +318,14 @@ export function MelodyGenerationClient() {
         </CardContent>
       </Card>
 
+      {/* Display login requirement message if session is not loaded and no session exists */}
+      {!isSessionLoading && !session && (
+         <Alert variant="default" className="shadow-md mt-4">
+           <AlertTitle>Login Required</AlertTitle>
+           <AlertDescription>Please log in to use the AI Melody Generator.</AlertDescription>
+         </Alert>
+      )}
+
       {showInProgressAlert && (
         <Alert className="shadow-md mt-4 animate-in fade-in duration-300">
           <TimerIcon className="h-5 w-5 mr-2" />
@@ -324,11 +339,11 @@ export function MelodyGenerationClient() {
        {showPollingErrorAlert && (
          <Alert variant="destructive" className="shadow-md mt-4">
            <AlertTitle>Polling Issue</AlertTitle>
-           <AlertDescription>Could not retrieve task status for {taskId ? taskId.substring(0,8) : ''}... Polling stopped. It might be an authentication, network, or server issue.</AlertDescription>
+           <AlertDescription>{error || 'Could not retrieve task status. Polling stopped. It might be an authentication, network, or server issue.'}</AlertDescription>
          </Alert>
        )}
 
-      {error && (
+      {error && !showPollingErrorAlert && (
          <Alert variant="destructive" className="shadow-md mt-4">
           <AlertTitle>Error</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
@@ -391,7 +406,7 @@ export function MelodyGenerationClient() {
            </Card>
        </div>
 
-       {!isLoading && !melodyResult && !error && !showInProgressAlert && !showPollingErrorAlert && (
+       {!isGenerating && !isSessionLoading && !session && !melodyResult && !error && !showInProgressAlert && !showPollingErrorAlert && (
         <Card className="shadow-md mt-4">
           <CardContent className="py-12 text-center">
             <Sparkles className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
@@ -401,6 +416,17 @@ export function MelodyGenerationClient() {
           </CardContent>
         </Card>
       )}
+
+       {!isGenerating && !isSessionLoading && session && !melodyResult && !error && !showInProgressAlert && !showPollingErrorAlert && (
+         <Card className="shadow-md mt-4">
+           <CardContent className="py-12 text-center">
+             <Sparkles className="mx-auto h-12 w-12 text-muted-foreground/50 mb-4" />
+             <p className="text-lg text-muted-foreground">
+               Enter a prompt above to generate a melody!
+             </p>
+           </CardContent>
+         </Card>
+       )}
     </div>
   );
 }
