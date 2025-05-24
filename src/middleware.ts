@@ -3,16 +3,12 @@ import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  let response = NextResponse.next({
+  // Create a response object that will be returned by the middleware.
+  // This is where any refreshed cookies will be set.
+  const response = NextResponse.next({
     request: {
       headers: request.headers,
     },
-  });
-
-  // Log all incoming cookies available to the middleware
-  console.log('[Middleware] Incoming cookies:');
-  request.cookies.getAll().forEach(cookie => {
-    console.log(`- ${cookie.name}: ${cookie.value.substring(0, 20) + '...'}`);
   });
 
   const supabase = createServerClient(
@@ -21,11 +17,13 @@ export async function middleware(request: NextRequest) {
     {
       cookies: {
         get(name: string) {
-          console.log(`[Middleware] Attempting to get cookie: ${name}`);
+          // Get cookies from the incoming request
           return request.cookies.get(name)?.value;
         },
         set(name: string, value: string, options: CookieOptions) {
-          console.log(`[Middleware] Setting cookie: ${name}, Value (truncated): ${value.substring(0, 20) + '...'}, Options:`, options);
+          // CORRECTED: Use response.cookies.set() directly.
+          // Next.js handles adding the Set-Cookie header correctly.
+          // Do NOT manually append 'Set-Cookie' header if using response.cookies.set.
           response.cookies.set({
             name,
             value,
@@ -33,44 +31,40 @@ export async function middleware(request: NextRequest) {
           });
         },
         remove(name: string, options: CookieOptions) {
-          console.log(`[Middleware] Removing cookie: ${name}, Options:`, options);
+          // CORRECTED: Use response.cookies.set() to clear the cookie.
+          // Next.js handles adding the Set-Cookie header correctly.
           response.cookies.set({
             name,
-            value: '',
+            value: '', // Set value to empty
             ...options,
-            maxAge: 0,
+            maxAge: 0, // Set maxAge to 0 for immediate expiration
           });
-          for (let i = 0; i < 10; i++) {
-            response.cookies.set({
-                name: `${name}.${i}`,
-                value: '',
-                ...options,
-                maxAge: 0,
-            });
-          }
         },
       },
     }
   );
 
-  console.log('[Middleware] Calling getSession...');
-  const { data: { session }, error } = await supabase.auth.getSession();
-  console.log('[Middleware] getSession finished. Session:', session ? 'Found' : 'None', 'Error:', error);
+  // Refresh session if expired and set new cookies
+  // This call triggers the `get`, `set`, and `remove` methods defined above,
+  // which will now correctly modify the `response` object's cookies.
+  await supabase.auth.getSession();
 
-
-  const setCookieHeaders = response.headers.getSetCookie();
-  if (setCookieHeaders.length > 0) {
-      console.log('[Middleware] Set-Cookie headers on outgoing response:', setCookieHeaders);
-  } else {
-      console.log('[Middleware] No Set-Cookie headers added to outgoing response.');
-  }
-
-
+  // Return the response, which now contains any updated cookies.
   return response;
 }
 
+// Configure the middleware to run on all paths except for static files, image optimization, and the favicon
 export const config = {
   matcher: [
-    '/((?!_next/static|_next/image|favicon.ico|assets|api/auth).*)',
+    /*
+     * Match all request paths except for the ones starting with:
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     * - assets (public assets)
+     * - api/auth (Supabase auth routes - middleware should not interfere with their initial cookie setting)
+     * - _next/data (Next.js data fetches, which might sometimes need to bypass middleware for specific cookie handling)
+     */
+    '/((?!_next/static|_next/image|favicon.ico|assets|api/auth|_next/data).*)',
   ],
 };
