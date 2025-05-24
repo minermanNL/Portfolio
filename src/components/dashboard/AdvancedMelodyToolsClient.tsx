@@ -378,15 +378,12 @@ export function AdvancedMelodyToolsClient() {
         initialMelodyText = iterateBaseTextInput.trim();
       }
 
-      let combinedPrompt = `Iteration prompt: ${iterativePromptInput.trim()}`;
-      if (initialMelodyText.trim()) {
-        combinedPrompt += `\n\nBase melody context:\n${initialMelodyText.trim()}`;
-      }
-
       // Step 2: Request iterative generation task
       const generateResponse = await fetch('/api/generate-melody-task', {
         method: 'POST', headers: authHeaders,
-        body: JSON.stringify({ prompt: combinedPrompt }),
+ body: JSON.stringify({
+ prompt: iterativePromptInput.trim(), existingMidiText: initialMelodyText.trim()
+ }),
       });
       if (!generateResponse.ok) {
         const errorText = await generateResponse.text();

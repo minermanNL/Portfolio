@@ -14,6 +14,7 @@ console.log('Type of refineMelodyPromptFlow:', typeof refineMelodyPromptFlow, re
 const GenerateMelodyFromPromptInputSchema = z.object({
   taskId: z.string(),
   prompt: z.string(),
+  existingMidiText: z.string().optional(), // Added optional existingMidiText field for iteration
 });
 export type GenerateMelodyFromPromptInput = z.infer<typeof GenerateMelodyFromPromptInputSchema>;
 
@@ -46,9 +47,8 @@ export const generateMelodyFromPromptFlow = ai.defineFlow(
     outputSchema: GenerateMelodyFromPromptOutputSchema,
   },
   async (input) => {
-    const { taskId, prompt } = input;
-    console.log(`Task ${taskId}: Received prompt: "${prompt}"`);
-
+    const { taskId, prompt, existingMidiText } = input; // Destructure existingMidiText
+    console.log(`Task ${taskId}: Received prompt: "${prompt}"${existingMidiText ? ', with existing MIDI data' : ''}`);
 
     // System Prompts (now combined into user messages) - DEFINED INSIDE THE FLOW
     const MELODY_MIDI_SYSTEM_PROMPT = `System Prompt: MIDI Loop Generation (Melody/Drum)
@@ -107,6 +107,19 @@ Melody Chords: Only if explicitly requested/strongly implied? Loops well? Output
 All NoteOn events have a corresponding NoteOff?
 `;
 
+    // System Prompt for Iteration
+    const MELODY_ITERATION_SYSTEM_PROMPT = `System Prompt: MIDI Loop Iteration
+
+You are an AI music assistant. The user wants to iterate on an existing MIDI sequence.
+The existing MIDI data is provided below.
+Your task is to modify this MIDI sequence based on the user's refinement prompt.
+Respond ONLY with the complete modified MIDI text block. No intros/outros/explanations.
+Ensure all original technical specifications (Tempo, Resolution, 16-bar loop, NoteOff events, etc.) are maintained unless the user explicitly requests a change in them.
+
+Existing MIDI Data:
+`; // Placeholder for existing MIDI data
+
+
     const MELODY_DESCRIPTION_SYSTEM_PROMPT = `System Prompt: Melody Description Generator
 
 Core Directive: Based on the user's request for a melody, generate a concise and informative description of its expected musical characteristics. This description should cover the likely genre/style, mood/feeling, key/mode, and tempo, noting any aspects that were likely assumed because they were not explicitly provided by the user. should be short
@@ -142,18 +155,31 @@ Output Format: Provide the description as a single paragraph of text. Do NOT inc
       const refinedPrompt = await refineMelodyPromptFlow(prompt);
       console.log(`Task ${taskId}: Prompt refinement complete. Refined Prompt: "${refinedPrompt}"`); // Added quotes for clarity
 
-      // --- ADDED DEBUGGING LOGS HERE ---
       console.log(`Task ${taskId}: Continuing after prompt refinement.`);
       const sanitizedRefinedPromptForMidi = sanitizeString(refinedPrompt, 'Generate a simple test melody.');
       console.log(`Task ${taskId}: Sanitized Refined Prompt for MIDI: "${sanitizedRefinedPromptForMidi}"`);
 
-      const combinedMidiPromptContent = `${MELODY_MIDI_SYSTEM_PROMPT}
-
-User Prompt: ${sanitizedRefinedPromptForMidi}`;
-      console.log(`Task ${taskId}: Combined MIDI Prompt Content (first 200 chars): "${combinedMidiPromptContent.substring(0, 200)}..."`);
-      console.log(`Task ${taskId}: Attempting MIDI generation with model: ${midiModelName}`);
+      let combinedMidiPromptContent;
 
       // Step 2: Generate MIDI using the specified MIDI model - Expecting raw text output
+      if (existingMidiText) {
+        // If iterating, combine iteration system prompt, existing MIDI, and refined prompt
+        console.log(`Task ${taskId}: Iteration mode - Combining iteration prompt with existing MIDI.`);
+        combinedMidiPromptContent = `${MELODY_ITERATION_SYSTEM_PROMPT}${existingMidiText}
+
+User Refinement Prompt: ${sanitizedRefinedPromptForMidi}`;
+         console.log(`Task ${taskId}: Combined Iteration MIDI Prompt Content (first 400 chars): "${combinedMidiPromptContent.substring(0, 400)}..."`);
+      } else {
+        // If not iterating, use the standard generation system prompt and refined prompt
+        console.log(`Task ${taskId}: Generation mode - Combining standard prompt.`);
+        combinedMidiPromptContent = `${MELODY_MIDI_SYSTEM_PROMPT}
+
+User Prompt: ${sanitizedRefinedPromptForMidi}`;
+         console.log(`Task ${taskId}: Combined Generation MIDI Prompt Content (first 400 chars): "${combinedMidiPromptContent.substring(0, 400)}..."`);
+      }
+
+      console.log(`Task ${taskId}: Attempting MIDI generation with model: ${midiModelName}`);
+
       const midiResponse = await ai.generate({
         model: midiModel, // Use the specific MIDI model
         messages: [
@@ -179,10 +205,14 @@ User Prompt: ${sanitizedRefinedPromptForMidi}`;
       // Use the refined prompt for description generation context
       console.log(`Task ${taskId}: Starting description generation.`); // Log before description generation
       const sanitizedRefinedPromptForDescription = sanitizeString(refinedPrompt, 'A melody was generated.');
-      const melodyContextForDescription = "the MIDI for the melody has been successfully generated based on the refined prompt.";
+      // Adjust the description context based on whether it was an iteration or a new generation
+      const melodyContextForDescription = existingMidiText 
+        ? "the MIDI for the melody has been successfully iterated upon based on the refined prompt." 
+        : "the MIDI for the melody has been successfully generated based on the refined prompt.";
+
       const combinedDescriptionPromptContent = `${MELODY_DESCRIPTION_SYSTEM_PROMPT}
 
-The original user request was: "${sanitizeString(prompt)}". The refined prompt used for generation was: "${sanitizedRefinedPromptForDescription}". Based on this, ${melodyContextForDescription}. Describe its likely character, style, and potential instrumentation.`;
+The original user request was: "${sanitizeString(prompt)}". The refined prompt used for generation${existingMidiText ? ' and iteration' : ''} was: "${sanitizedRefinedPromptForDescription}". Based on this, ${melodyContextForDescription}. Describe its likely character, style, and potential instrumentation.`;
       console.log(`Task ${taskId}: Combined Description Prompt Content (first 200 chars): "${combinedDescriptionPromptContent.substring(0, 200)}..."`);
 
       const descriptionResponse = await ai.generate({
