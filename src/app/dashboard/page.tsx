@@ -31,8 +31,8 @@ export default function DashboardOverviewPage() {
         <CardContent className="flex flex-col md:flex-row items-center gap-6">
           <div className="flex-1">
             <p className="mb-6 text-foreground/90">
-              Ready to compose your next masterpiece? Jump right into the AI Melody Generator or explore your existing library. 
-              Your profile and subscription settings are also just a click away.
+              Ready to compose your next masterpiece? Jump right into the AI Melody Generator. 
+              -Note that it's still Work in progress-
             </p>
             <Button size="lg" asChild className="bg-accent hover:bg-accent/90 text-accent-foreground">
               <Link href="/dashboard/generate">
@@ -41,10 +41,11 @@ export default function DashboardOverviewPage() {
               </Link>
             </Button>
           </div>
+          {/* Put the image back in its own div for better layout */}
           <div className="flex-shrink-0">
              <Image 
-              src="https://picsum.photos/300/200?music" 
-              alt="Musical inspiration" 
+              src="/white-bizz-card.png" 
+              alt="White business card" 
               width={300} 
               height={200} 
               className="rounded-lg shadow-md object-cover"

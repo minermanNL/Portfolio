@@ -39,6 +39,12 @@ export default function RootLayout({
         <AuthSessionProvider>
           {children}
           <Toaster />
+ {/* Footer - Assuming you have a standard Footer, or reuse from HomePage */}
+      <footer className="bg-surface/80 backdrop-blur-sm border-t border-gray-800">
+ <div className="max-w-7xl mx-auto px-6 py-12 text-center">
+ <p className="text-sm text-gray-400">&copy; {new Date().getFullYear()} Tricion MIDI Studio. All rights reserved.</p>
+ </div>
+      </footer>
         </AuthSessionProvider>
       </body>
     </html>
