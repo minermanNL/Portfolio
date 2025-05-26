@@ -2,9 +2,9 @@
 document.addEventListener('DOMContentLoaded', () => {
   // Initialize AOS
   AOS.init({
-    duration: 800,
+    duration: 1000, // Smoother, longer animation
     easing: 'ease-in-out',
-    once: true,
+    once: true, // Only animate once per element
     mirror: false
   });
 
@@ -146,4 +146,59 @@ document.addEventListener('DOMContentLoaded', () => {
       pageLoader.style.display = 'none';
     }, 500); // Match timeout with transition duration
   }
+
+  // --- Experience Tabs & Selector Logic ---
+  // Handles switching between IT and Music/Business experience sections
+  const experienceTabs = document.querySelectorAll('.experience-tab');
+  const experienceContents = document.querySelectorAll('.experience-content');
+  const experienceSelector = document.getElementById('experience-selector');
+
+  // Helper: Show the correct experience section
+  function showExperienceSection(sectionId) {
+    experienceContents.forEach(content => {
+      if (content.id === sectionId) {
+        content.classList.remove('hidden');
+      } else {
+        content.classList.add('hidden');
+      }
+    });
+  }
+
+  // Set initial state on page load (desktop: active tab, mobile: selector value)
+  function setInitialExperienceSection() {
+    if (window.innerWidth >= 768) { // Desktop: use active tab
+      const activeTab = document.querySelector('.experience-tab.active');
+      if (activeTab) {
+        showExperienceSection(activeTab.getAttribute('data-target'));
+      }
+    } else if (experienceSelector) { // Mobile: use selector value
+      showExperienceSection(experienceSelector.value);
+    }
+  }
+  setInitialExperienceSection();
+
+  // Tab click (desktop)
+  if (experienceTabs.length > 0) {
+    experienceTabs.forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active from all tabs
+        experienceTabs.forEach(t => t.classList.remove('active', 'text-white', 'text-white/70'));
+        // Add active to clicked tab
+        this.classList.add('active', 'text-white');
+        // Show correct content
+        const target = this.getAttribute('data-target');
+        showExperienceSection(target);
+      });
+    });
+  }
+
+  // Selector change (mobile)
+  if (experienceSelector) {
+    experienceSelector.addEventListener('change', function() {
+      showExperienceSection(this.value);
+    });
+  }
+
+  // Re-run initial state on resize (in case user resizes window)
+  window.addEventListener('resize', setInitialExperienceSection);
 }); 

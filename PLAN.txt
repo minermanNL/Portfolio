@@ -1,0 +1,22 @@
+# PLAN.txt
+
+## Recent Improvements (2024-06)
+- Added clear focus states for all interactive elements (buttons, links) for accessibility.
+- All images (except favicon) use loading="lazy" for better performance.
+- Defered non-critical JS (AOS, Typed.js) to improve load speed.
+- Back-to-top button now uses smooth scroll.
+- Mobile menu now animates in/out with fade/slide effect.
+- Added/expanded helpful comments in index.html for maintainability.
+
+## Manual Suggestions (To Do)
+- Optimize all images (use WebP, compress, provide responsive srcset).
+- Add project/case study links in experience/skills sections.
+- Add testimonials or endorsements section.
+- Consider adding a blog or insights section for SEO and expertise.
+- Add a simple contact form with spam protection.
+- Minify CSS/JS for production.
+- Add a web app manifest for better mobile support.
+- Add a custom 404 page.
+- Use Lighthouse to audit accessibility, performance, and SEO.
+- Test on multiple devices and browsers.
+- Keep this PLAN.txt updated with all major changes and suggestions. 
