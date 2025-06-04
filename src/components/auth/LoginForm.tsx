@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Import useEffect
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -9,7 +9,6 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { AuthFormWrapper } from './AuthFormWrapper';
-import { useAuthSession } from '@/hooks/useAuthSession';
 import { Mail, Lock, LogIn as LogInIcon } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 
@@ -20,13 +19,19 @@ const loginSchema = z.object({
 
 type LoginFormValues = z.infer<typeof loginSchema>;
 
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
 export function LoginForm() {
-  const { supabase } = useAuthSession();
   const searchParams = useSearchParams();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const plan = searchParams.get('plan');
+  const [isClient, setIsClient] = useState(false); // State to track client-side mount
+
+  useEffect(() => {
+    setIsClient(true); // Set to true after component mounts on client
+  }, []);
 
   const form = useForm<LoginFormValues>({
     resolver: zodResolver(loginSchema),
@@ -39,28 +44,50 @@ export function LoginForm() {
   const onSubmit = async (data: LoginFormValues) => {
     setIsLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
-        email: data.email,
-        password: data.password,
+      const turnstileToken = (document.querySelector('.cf-turnstile') as any)?.dataset.response;
+
+      if (!turnstileToken) {
+        toast({
+          title: 'Verification Required',
+          description: 'Please complete the bot verification.',
+          variant: 'destructive',
+        });
+        setIsLoading(false);
+        return;
+      }
+
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          turnstileToken: turnstileToken,
+        }),
       });
 
-      if (error) {
+      const result = await response.json();
+
+      if (!response.ok) {
         toast({
-          title: 'Login Failed',
-          description: error.message,
+          title: result.error || 'Login Failed',
+          description: result.message || 'An error occurred during login.',
           variant: 'destructive',
         });
       } else {
         toast({
-          title: 'Login Successful',
-          description: "Welcome back! You're being redirected...",
+          title: result.message || 'Login Successful',
+          description: result.description || "Welcome back!",
         });
-        router.push('/dashboard'); // router.refresh() might be called by AuthSessionProvider effect
+        router.push('/dashboard');
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error('Client-side error during login submission:', err);
       toast({
         title: 'An Unexpected Error Occurred',
-        description: 'Please try again.',
+        description: err.message || 'Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -83,9 +110,9 @@ export function LoginForm() {
           : "/signup"
       }
       footerLinkText="Sign Up"
-      footerLinkHref="/signup"
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* ... email and password fields ... */}
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <div className="relative">
@@ -120,6 +147,15 @@ export function LoginForm() {
             <p className="text-sm text-destructive">{form.formState.errors.password.message}</p>
           )}
         </div>
+
+         {/* Cloudflare Turnstile Widget - Render only on client-side after mount */}
+         {isClient && turnstileSiteKey && (
+          <div
+            className="cf-turnstile"
+            data-sitekey={turnstileSiteKey}
+          ></div>
+        )}
+
         <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
           {isLoading ? 'Logging In...' : <> <LogInIcon className="mr-2 h-5 w-5" /> Log In </>}
         </Button>

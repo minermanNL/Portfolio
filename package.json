@@ -42,6 +42,7 @@
     "@tanstack-query-firebase/react": "^1.0.5",
     "@tanstack/react-query": "^5.66.0",
     "@tonejs/midi": "^2.0.28",
+    "@upstash/redis": "^1.34.9",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
     "date-fns": "^3.6.0",

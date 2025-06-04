@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react'; // Import useEffect
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -9,9 +9,8 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { AuthFormWrapper } from './AuthFormWrapper';
-import { useAuthSession } from '@/hooks/useAuthSession';
 import { Mail, Lock, UserPlus } from 'lucide-react';
-import { useRouter }from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
 const signupSchema = z.object({
   email: z.string().email({ message: 'Invalid email address' }),
@@ -19,16 +18,22 @@ const signupSchema = z.object({
   confirmPassword: z.string(),
 }).refine(data => data.password === data.confirmPassword, {
   message: "Passwords don't match",
-  path: ["confirmPassword"], // path of error
+  path: ["confirmPassword"], 
 });
 
 type SignupFormValues = z.infer<typeof signupSchema>;
 
+const turnstileSiteKey = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY;
+
 export function SignupForm() {
-  const { supabase } = useAuthSession();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const [isClient, setIsClient] = useState(false); // State to track client-side mount
+
+  useEffect(() => {
+    setIsClient(true); // Set to true after component mounts on client
+  }, []);
 
   const form = useForm<SignupFormValues>({
     resolver: zodResolver(signupSchema),
@@ -42,49 +47,50 @@ export function SignupForm() {
   const onSubmit = async (data: SignupFormValues) => {
     setIsLoading(true);
     try {
-      const { data: signUpData, error } = await supabase.auth.signUp({
-        email: data.email,
-        password: data.password,
-        // Options for email confirmation, user metadata, etc. can be added here
-        // options: {
-        //   emailRedirectTo: `${window.location.origin}/auth/callback`,
-        // }
-      });
+      const turnstileToken = (document.querySelector('.cf-turnstile') as any)?.dataset.response;
 
-      if (error) {
+      if (!turnstileToken) {
         toast({
-          title: 'Signup Failed',
-          description: error.message,
+          title: 'Verification Required',
+          description: 'Please complete the bot verification.',
           variant: 'destructive',
         });
-      } else if (signUpData.user && signUpData.user.identities && signUpData.user.identities.length === 0) {
-        // This case might indicate an existing user trying to sign up again with a different method or some other issue.
-        // Supabase typically returns user data if signup is for an existing unconfirmed account, or if it's a new account.
-        // If identities array is empty, it might mean user already exists but is unconfirmed / social.
-         toast({
-          title: 'Signup Successful - Confirmation Needed',
-          description: 'Please check your email to confirm your account before logging in.',
-        });
-        router.push('/login');
+        setIsLoading(false);
+        return;
       }
-      
-      else {
+
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: data.email,
+          password: data.password,
+          turnstileToken: turnstileToken,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
         toast({
-          title: 'Signup Successful!',
-          description: signUpData.session ? "You're now logged in." : 'Please check your email to confirm your account.',
+          title: result.error || 'Signup Failed',
+          description: result.message || 'An error occurred during signup.',
+          variant: 'destructive',
         });
-        // If Supabase auto-confirms or email confirmation is disabled, user might be logged in.
-        // Otherwise, they need to confirm email.
-        // The AuthSessionProvider will handle redirect if session becomes active.
-        // If no immediate session, redirect to login page so they can login after confirmation.
-        if (!signUpData.session) {
-          router.push('/login?message=confirmation_sent');
-        }
+      } else {
+        toast({
+          title: result.message || 'Signup Successful!',
+          description: result.description || 'Please check your email to confirm your account.',
+        });
+        router.push('/login?message=signup_success');
       }
-    } catch (err) {
+    } catch (err: any) {
+      console.error('Client-side error during signup submission:', err);
       toast({
         title: 'An Unexpected Error Occurred',
-        description: 'Please try again.',
+        description: err.message || 'Please try again.',
         variant: 'destructive',
       });
     } finally {
@@ -101,6 +107,7 @@ export function SignupForm() {
       footerLinkHref="/login"
     >
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        {/* ... email, password, confirmPassword fields ... */}
         <div className="space-y-2">
           <Label htmlFor="email">Email</Label>
           <div className="relative">
@@ -152,6 +159,15 @@ export function SignupForm() {
             <p className="text-sm text-destructive">{form.formState.errors.confirmPassword.message}</p>
           )}
         </div>
+
+        {/* Cloudflare Turnstile Widget - Render only on client-side after mount */}
+        {isClient && turnstileSiteKey && (
+          <div
+            className="cf-turnstile"
+            data-sitekey={turnstileSiteKey}
+          ></div>
+        )}
+
         <Button type="submit" className="w-full bg-primary hover:bg-primary/90" disabled={isLoading}>
           {isLoading ? 'Signing Up...' : <> <UserPlus className="mr-2 h-5 w-5" /> Sign Up </>}
         </Button>

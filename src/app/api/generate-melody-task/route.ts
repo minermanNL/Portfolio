@@ -2,6 +2,8 @@
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 import { Database } from '@/types/supabase';
+import { withRateLimit, ActionType } from '@/services/rate-limiter'; // Import rate limiter
+import { getIpAddress } from '@/lib/get-ip'; // Import getIpAddress - might not be needed if strictly user-based
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
@@ -17,7 +19,8 @@ if (!supabaseServiceRoleKey) {
    console.warn('SUPABASE_SERVICE_ROLE_KEY is missing. Edge Function might fail.');
 }
 
-export async function POST(req: Request) {
+// Original POST handler logic
+const handlePostRequest = async (req: Request) => {
   const authHeader = req.headers.get('Authorization');
   const jwt = authHeader?.split(' ')[1];
 
@@ -133,4 +136,48 @@ export async function POST(req: Request) {
     console.error('An unexpected error occurred in generate-melody-task route:', error);
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-}
+};
+
+// Wrap the original handler with the rate limiter middleware
+export const POST = withRateLimit(
+  handlePostRequest, // Your original request handler
+  ActionType.MidiGeneration, // The action type for rate limiting
+  async (req: Request) => { // Function to get the identifier
+    // This function needs to get the user ID from the request
+    // Assuming the user is authenticated via JWT in the Authorization header
+    const authHeader = req.headers.get('Authorization');
+    const jwt = authHeader?.split(' ')[1];
+
+    if (!jwt) {
+      // If no JWT, can't get user ID. The handler will return 401, 
+      // but for rate limiting purposes, we might return undefined 
+      // or an IP if you want to rate limit unauthenticated attempts.
+      // For now, return undefined - the wrapped handler will handle 401.
+      console.warn('No JWT found in generate-melody-task route for rate limiter identifier.');
+      return undefined;
+    }
+
+    try {
+       // Re-create supabase client to get user from JWT - consider optimizing this 
+       // if getUser is already done in the handler.
+       const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey, {
+        global: {
+          headers: { Authorization: `Bearer ${jwt}` },
+        },
+      });
+
+      const { data: { user }, error: userError } = await supabase.auth.getUser();
+
+      if (userError || !user) {
+        console.warn('Failed to get user for rate limiter identifier.', userError?.message);
+        return undefined; // Return undefined if user cannot be authenticated
+      }
+
+      return user.id; // Use user ID as the identifier
+
+    } catch (error) {
+      console.error('Error extracting user ID for rate limiting:', error);
+      return undefined; // Return undefined on error
+    }
+  }
+);
