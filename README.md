@@ -12,7 +12,6 @@ A modern, responsive portfolio website showcasing my work in IT, PC Building, an
 - 💼 Professional experience timeline
 - 🛠 Skills & expertise visualization
 
-2
 
 ## Contributing
 
