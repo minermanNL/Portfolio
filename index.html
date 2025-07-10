@@ -94,6 +94,25 @@
             font-family: 'Inter', sans-serif;
             background-color: var(--dark);
             color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* Enhanced typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-weight: 600;
+            line-height: 1.2;
+            letter-spacing: -0.02em;
+        }
+
+        p {
+            line-height: 1.7;
+            font-weight: 400;
+        }
+
+        /* Improved text rendering */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
         }
 
         .container {
@@ -107,12 +126,12 @@
         }
 
         .section-title {
-            font-size: 2.8rem;
+            font-size: clamp(2.2rem, 5vw, 3.5rem);
             font-weight: 800;
-            margin-bottom: 3.5rem;
+            margin-bottom: 4rem;
             text-align: center;
-            letter-spacing: -1px;
-            background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
+            letter-spacing: -0.03em;
+            background: linear-gradient(135deg, var(--primary), var(--accent), var(--secondary));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
@@ -120,18 +139,30 @@
             display: inline-block;
             width: 100%;
             text-shadow: 0 2px 16px rgba(124,58,237,0.08);
+            animation: titleGlow 3s ease-in-out infinite alternate;
         }
         .section-title::after {
             content: '';
             position: absolute;
-            bottom: -0.75rem;
+            bottom: -1rem;
             left: 50%;
             transform: translateX(-50%);
-            width: 80px;
+            width: 120px;
             height: 4px;
             background: linear-gradient(90deg, var(--primary), var(--accent), var(--secondary));
             border-radius: 2px;
-            box-shadow: 0 2px 8px var(--primary, #7c3aed, 0.15);
+            box-shadow: 0 2px 8px rgba(124,58,237,0.3);
+            animation: underlineGlow 3s ease-in-out infinite alternate;
+        }
+        
+        @keyframes titleGlow {
+            0% { filter: brightness(1); }
+            100% { filter: brightness(1.1); }
+        }
+        
+        @keyframes underlineGlow {
+            0% { box-shadow: 0 2px 8px rgba(124,58,237,0.3); }
+            100% { box-shadow: 0 2px 12px rgba(124,58,237,0.5); }
         }
 
         /* Skill badge styling */
@@ -156,20 +187,99 @@
             color: #ffffff;
         }
         
-        /* Glass effect */
+        /* Enhanced Glass effect */
         .glass-effect {
             background: rgba(24, 24, 27, 0.85);
-            border: 1.5px solid rgba(255,255,255,0.07);
-            box-shadow: 0 8px 32px rgba(124,58,237,0.08), 0 1.5px 8px rgba(0,0,0,0.10);
+            border: 1.5px solid rgba(255,255,255,0.08);
+            box-shadow: 
+                0 8px 32px rgba(124,58,237,0.08), 
+                0 1.5px 8px rgba(0,0,0,0.10),
+                inset 0 1px 0 rgba(255,255,255,0.05);
             border-radius: 1.5rem;
             padding: 2.5rem 2rem;
-            transition: var(--transition-all);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .glass-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.1), 
+                transparent
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
         
         .glass-effect:hover {
-            box-shadow: 0 16px 48px rgba(124,58,237,0.18), 0 2px 12px rgba(0,0,0,0.13);
-            border: 1.5px solid var(--primary);
-            transform: translateY(-6px) scale(1.025);
+            box-shadow: 
+                0 20px 60px rgba(124,58,237,0.15), 
+                0 8px 24px rgba(0,0,0,0.15),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            border: 1.5px solid rgba(124,58,237,0.3);
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(24, 24, 27, 0.9);
+        }
+        
+        .glass-effect:hover::before {
+            opacity: 1;
+        }
+
+        /* Enhanced card animations with multiple effects */
+        .feature-card {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.08), 
+                transparent
+            );
+            transition: left 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 1;
+        }
+
+        .feature-card:hover::before {
+            left: 100%;
+        }
+
+        .feature-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(
+                circle at var(--mouse-x, 50%) var(--mouse-y, 50%), 
+                rgba(124,58,237,0.05) 0%, 
+                transparent 50%
+            );
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .feature-card:hover::after {
+            opacity: 1;
         }
         
         /* Hover scale effect */
@@ -182,9 +292,9 @@
         }
 
         body {
-            background-color: #121212;
+            background-color: #0a0a0a;
             color: #ffffff;
-            background: linear-gradient(135deg, #121212, #1a1a1a);
+            background: linear-gradient(135deg, #0a0a0a, #121212, #0f0f0f);
             position: relative;
             overflow-x: hidden;
         }
@@ -197,16 +307,40 @@
             right: 0;
             bottom: 0;
             background: 
-                radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.15) 0%, transparent 40%);
+                radial-gradient(circle at 20% 20%, rgba(79, 70, 229, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(236, 72, 153, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 10%, rgba(6, 182, 212, 0.08) 0%, transparent 40%);
             pointer-events: none;
             z-index: -1;
-            animation: backgroundPulse 15s ease-in-out infinite;
+            animation: backgroundPulse 20s ease-in-out infinite;
         }
 
         @keyframes backgroundPulse {
-            0%, 100% { opacity: 0.8; }
-            50% { opacity: 1; }
+            0%, 100% { 
+                opacity: 0.7; 
+                transform: scale(1);
+            }
+            50% { 
+                opacity: 1; 
+                transform: scale(1.05);
+            }
+        }
+        
+        /* Add subtle grid pattern */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+            background-size: 50px 50px;
+            pointer-events: none;
+            z-index: -1;
+            opacity: 0.3;
         }
         
         .glass-effect {
@@ -435,6 +569,69 @@
             animation: float 6s ease-in-out infinite;
         }
         
+        /* Additional animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .animate-fade-in-up {
+            animation: fadeInUp 0.8s ease-out forwards;
+        }
+
+        /* Improved skill badges */
+        .skill-badge {
+            background: rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(79, 70, 229, 0.2);
+            color: #ffffff;
+            padding: 0.6rem 1.2rem;
+            border-radius: 9999px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-block;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-badge::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.1), 
+                transparent
+            );
+            transition: left 0.5s ease;
+        }
+
+        .skill-badge:hover::before {
+            left: 100%;
+        }
+        
+        .skill-badge:hover {
+            background: rgba(79, 70, 229, 0.2);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 
+                0 6px 20px rgba(79, 70, 229, 0.3), 
+                0 0 20px rgba(79, 70, 229, 0.2);
+            color: #ffffff;
+            border-color: rgba(79, 70, 229, 0.4);
+        }
+
         /* Respect user's motion preferences */
         @media (prefers-reduced-motion) {
             .animate-float, 
@@ -445,7 +642,8 @@
             .hero-btn-primary:hover,
             .hero-btn-secondary:hover,
             .back-to-top:hover,
-            .dark-toggle:hover {
+            .dark-toggle:hover,
+            .animate-fade-in-up {
                 animation: none;
                 transition: none;
                 transform: none;
@@ -587,42 +785,84 @@
         }
         
         .hero-btn {
-            padding: 0.75rem 1.75rem;
+            padding: 0.875rem 2rem;
             border-radius: 9999px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 1.05rem;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            min-width: 160px;
-            height: 48px;
+            min-width: 180px;
+            height: 52px;
+            text-decoration: none;
+            letter-spacing: 0.01em;
+        }
+        
+        .hero-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, 
+                transparent, 
+                rgba(255,255,255,0.2), 
+                transparent
+            );
+            transition: left 0.6s ease;
+        }
+        
+        .hero-btn:hover::before {
+            left: 100%;
         }
         
         .hero-btn-primary {
-            background: linear-gradient(135deg, #4F46E5, #EC4899);
+            background: linear-gradient(135deg, #4F46E5, #EC4899, #06B6D4);
+            background-size: 200% 200%;
             color: white;
-            box-shadow: 0 4px 6px rgba(79, 70, 229, 0.25);
+            box-shadow: 
+                0 4px 15px rgba(79, 70, 229, 0.3),
+                0 0 20px rgba(79, 70, 229, 0.1);
+            border: 1px solid rgba(255,255,255,0.1);
+            animation: gradientShift 3s ease infinite;
+        }
+        
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
         
         .hero-btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 15px rgba(79, 70, 229, 0.4);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 
+                0 12px 25px rgba(79, 70, 229, 0.4),
+                0 0 30px rgba(79, 70, 229, 0.2);
+            filter: brightness(1.1);
         }
         
         .hero-btn-secondary {
-            background: rgba(30, 30, 30, 0.7);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            background: rgba(30, 30, 30, 0.8);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             color: white;
             border: 1px solid rgba(79, 70, 229, 0.3);
+            box-shadow: 
+                0 4px 15px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255,255,255,0.1);
         }
         
         .hero-btn-secondary:hover {
-            transform: translateY(-2px);
-            border-color: rgba(79, 70, 229, 0.8);
-            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2), 0 0 10px rgba(79, 70, 229, 0.2);
+            transform: translateY(-3px) scale(1.05);
+            border-color: rgba(79, 70, 229, 0.6);
+            background: rgba(30, 30, 30, 0.9);
+            box-shadow: 
+                0 12px 25px rgba(0, 0, 0, 0.3), 
+                0 0 20px rgba(79, 70, 229, 0.2),
+                inset 0 1px 0 rgba(255,255,255,0.2);
         }
         
         .btn-arrow {
@@ -765,19 +1005,22 @@
         
         /* Your existing styles... */
 
-        /* Mobile Optimizations */
+        /* Enhanced Mobile Optimizations */
         @media (max-width: 767px) {
             .section-title {
-                font-size: 1.5rem;
+                font-size: clamp(1.8rem, 6vw, 2.5rem);
                 text-align: center;
+                margin-bottom: 2.5rem;
             }
 
             .feature-card {
-                padding: 1.25rem !important;
+                padding: 1.5rem !important;
+                margin-bottom: 1rem;
             }
 
             .feature-card h3 {
-                font-size: 1.1rem !important;
+                font-size: 1.2rem !important;
+                margin-bottom: 0.75rem !important;
             }
 
             .feature-card .flex-shrink-0 {
@@ -786,12 +1029,13 @@
 
             .glass-effect {
                 border-radius: 1rem !important;
+                padding: 1.5rem !important;
             }
 
-            /* Tighter spacing on mobile */
+            /* Optimized spacing on mobile */
             .section-padding {
-                padding-top: 3rem;
-                padding-bottom: 3rem;
+                padding-top: 4rem;
+                padding-bottom: 4rem;
             }
 
             .space-y-8 > * {
@@ -800,7 +1044,7 @@
             }
 
             h2, h3 {
-                margin-bottom: 1rem !important;
+                margin-bottom: 1.5rem !important;
             }
 
             /* Better list formatting */
@@ -808,34 +1052,41 @@
                 padding-left: 0.5rem;
             }
 
-            /* Adjusted button size */
-            .btn {
-                padding: 0.5rem 1rem;
-                font-size: 0.9rem;
+            .list-disc.list-inside li {
+                margin-bottom: 0.5rem;
+            }
+
+            /* Enhanced button sizes */
+            .hero-btn {
+                min-width: 160px;
+                height: 48px;
+                padding: 0.75rem 1.5rem;
+                font-size: 1rem;
             }
             
             /* Skills section mobile optimizations */
             .skill-badge {
                 font-size: 0.8rem;
-                padding: 0.4rem 0.8rem;
-                margin-bottom: 0.4rem;
+                padding: 0.5rem 1rem;
+                margin-bottom: 0.5rem;
+                margin-right: 0.5rem;
             }
             
             #skills .grid {
-                gap: 1rem !important;
+                gap: 1.5rem !important;
             }
             
             #skills h4 {
-                font-size: 1rem;
-                margin-bottom: 0.75rem !important;
-            }
-            
-            #skills .space-y-6 > div {
-                margin-top: 1rem !important;
+                font-size: 1.1rem;
                 margin-bottom: 1rem !important;
             }
             
-            /* Fix for experience tabs white bar in mobile */
+            #skills .space-y-6 > div {
+                margin-top: 1.5rem !important;
+                margin-bottom: 1.5rem !important;
+            }
+            
+            /* Fix for experience tabs */
             #experience h3.text-2xl {
                 display: block;
                 width: 100%;
@@ -847,8 +1098,56 @@
             }
             
             #experience-selector {
-                background-color: rgba(30, 30, 30, 0.7);
+                background-color: rgba(30, 30, 30, 0.8);
                 border-color: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+            }
+
+            /* Hero section mobile optimization */
+            #hero h1 {
+                font-size: clamp(2.5rem, 8vw, 4rem) !important;
+                margin-bottom: 1.5rem !important;
+            }
+
+            #hero .typed-container {
+                font-size: 1.2rem !important;
+                margin-bottom: 2rem !important;
+            }
+
+            #hero p {
+                font-size: 1.1rem !important;
+                margin-bottom: 2.5rem !important;
+            }
+
+            /* Profile image mobile size */
+            .profile-image-container {
+                width: 140px !important;
+                height: 140px !important;
+            }
+
+            .profile-image-container > div {
+                width: 140px !important;
+                height: 140px !important;
+            }
+
+            .profile-image {
+                width: 140px !important;
+                height: 140px !important;
+            }
+        }
+
+        /* Tablet optimizations */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            .section-title {
+                font-size: clamp(2.5rem, 4vw, 3rem);
+            }
+
+            .feature-card {
+                padding: 2rem !important;
+            }
+
+            .glass-effect {
+                padding: 2rem !important;
             }
         }
 
@@ -918,11 +1217,18 @@
     <!-- Rest of your head content -->
 </head>
 <body class="bg-dark text-light font-sans">
-    <!-- Page Loader -->
-    <div id="page-loader" class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-dark z-[9999]">
+    <!-- Enhanced Page Loader -->
+    <div id="page-loader" class="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-gradient-to-br from-dark via-darker to-dark z-[9999]">
         <div class="relative">
-            <div class="w-16 h-16 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-            <div class="mt-4 text-center text-white font-medium">Loading...</div>
+            <div class="w-20 h-20 border-4 border-primary/20 border-t-primary rounded-full animate-spin"></div>
+            <div class="absolute inset-0 w-20 h-20 border-4 border-transparent border-r-accent/50 rounded-full animate-spin" style="animation-direction: reverse; animation-duration: 1.5s;"></div>
+            <div class="mt-6 text-center">
+                <div class="text-white font-semibold text-lg mb-2">Ivan.dev</div>
+                <div class="text-gray-400 text-sm font-medium">Loading Portfolio...</div>
+                <div class="w-32 h-1 bg-gray-700 rounded-full mt-3 mx-auto overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-primary to-accent rounded-full animate-pulse"></div>
+                </div>
+            </div>
         </div>
     </div>
     
@@ -987,15 +1293,15 @@
                             </div>
                         </div>
                     </div>
-                    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent mb-4">
+                    <h1 class="text-4xl md:text-5xl lg:text-7xl font-bold bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent mb-8 leading-tight animate-fade-in-up">
                         Ivan van der Schuit
                     </h1>
-                    <div class="text-lg md:text-xl text-gray-300 mb-6 flex items-center justify-center typed-container">
-                        <span class="mr-2">I'm a</span>
-                        <span class="typed-text animated-text" data-typed-items='["IT Specialist", "PC Builder", "Music Producer"]'></span>
+                    <div class="text-xl md:text-2xl text-gray-300 mb-10 flex items-center justify-center typed-container">
+                        <span class="mr-3 font-medium">I'm a</span>
+                        <span class="typed-text animated-text font-semibold" data-typed-items='["CTO", "Startup Founder", "Full-Stack Developer", "AI Engineer"]'></span>
                     </div>
-                    <p class="text-gray-300 mb-8 max-w-lg mx-auto">
-                        Business IT Management student with hands-on experience in enterprise migrations, technical support, and system optimization. Specializing in bridging technology and creative industries through innovative digital solutions.
+                    <p class="text-lg md:text-xl text-gray-300 mb-12 max-w-2xl mx-auto leading-relaxed font-light animate-fade-in-up" style="animation-delay: 0.2s;">
+                        Chief Technology Officer and Startup Founder building AI-powered SaaS platforms. Leading engineering teams and architecting scalable solutions in health tech and music industries. From bootstrapped freelancer to profitable tech entrepreneur.
                     </p>
                     <div class="flex flex-wrap justify-center gap-4">
                         <a href="#contact" class="hero-btn hero-btn-primary">
@@ -1022,31 +1328,46 @@
             <h2 class="section-title" data-aos="fade-up">About Me</h2>
             <div class="grid md:grid-cols-2 gap-12">
                 <div data-aos="fade-up" data-aos-delay="200">
-                    <p class="text-gray-400 mb-4">
-                        From a young age, I have been deeply fascinated by technology and music. This dual interest has significantly influenced my personal and professional development.
+                    <p class="text-gray-400 mb-4 text-lg">
+                        My journey from freelance PC builder to startup CTO represents a unique blend of technical expertise, entrepreneurial vision, and creative innovation. What started as a passion for technology has evolved into leading engineering teams and architecting scalable AI-powered platforms.
                     </p>
-                    <p class="text-gray-400 mb-4">
-                        My journey began with building custom PCs for friends and family, which honed my technical skills and led to freelance opportunities in IT support and system integration. Simultaneously, I explored music production, experimenting with various genres and eventually establishing myself in the Phonk, Trap, and House music scenes.
+                    <p class="text-gray-400 mb-4 text-lg">
+                        As founder of Tricion, I've successfully bootstrapped an AI-driven music tech SaaS platform from freelance income to early profitability. This experience taught me to balance technical architecture with business strategy, user experience with scalable infrastructure, and creative vision with market demands.
                     </p>
-                    <p class="text-gray-400 mb-4">
-                        Balancing my IT career with music production has been both challenging and rewarding. This balance has allowed me to develop a diverse skill set and adapt to various creative and technical demands.
+                    <p class="text-gray-400 mb-4 text-lg">
+                        Currently serving as CTO in the health tech space, I'm applying my full-stack development expertise and startup experience to solve complex challenges in healthcare technology. My approach combines deep technical knowledge with strategic leadership and cross-functional collaboration.
                     </p>
-                    <p class="text-gray-400">
-                        I am committed to continuous learning, regularly updating my knowledge in emerging technologies and music trends. Engaging with online communities and attending industry events has enriched my understanding and network in both fields.
+                    <p class="text-gray-400 text-lg">
+                        My diverse background spanning music production, enterprise IT, and startup founding gives me a unique perspective on technology's role in transforming industries and empowering creators.
                     </p>
                 </div>
                 <div class="space-y-4" data-aos="fade-up" data-aos-delay="300">
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="0">
-                        <h3 class="text-xl font-semibold mb-2 text-light">PC Building & IT Support</h3>
-                        <p class="text-gray-400">Custom PC builds optimized for gaming, productivity, crypto mining, and creative work with comprehensive troubleshooting and maintenance services.</p>
+                        <div class="flex items-center mb-3">
+                            <div class="bg-primary/20 p-2 rounded-lg mr-3">
+                                <i class="fas fa-user-tie text-primary"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-light">Chief Technology Officer</h3>
+                        </div>
+                        <p class="text-gray-400">Leading engineering teams and architecting core product infrastructure for health tech startup. Overseeing compliance, security, and scalable software solutions.</p>
                     </div>
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
-                        <h3 class="text-xl font-semibold mb-2 text-light">Enterprise IT Solutions</h3>
-                        <p class="text-gray-400">Experience with enterprise-level migrations, Microsoft 365 transitions, and providing first-line IT support for businesses.</p>
+                        <div class="flex items-center mb-3">
+                            <div class="bg-secondary/20 p-2 rounded-lg mr-3">
+                                <i class="fas fa-rocket text-secondary"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-light">Startup Founder - Tricion</h3>
+                        </div>
+                        <p class="text-gray-400">Built and launched AI-powered music tech SaaS platform from concept to profitability. Global user base across US, Brazil, India, and Germany with organic growth strategy.</p>
                     </div>
                     <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="200">
-                        <h3 class="text-xl font-semibold mb-2 text-light">Music Production</h3>
-                        <p class="text-gray-400">Creating and engineering music across various genres including Phonk, Trap, and House, with millions of streams worldwide and viral TikTok placements.</p>
+                        <div class="flex items-center mb-3">
+                            <div class="bg-accent/20 p-2 rounded-lg mr-3">
+                                <i class="fas fa-code text-accent"></i>
+                            </div>
+                            <h3 class="text-xl font-semibold text-light">Full-Stack Development</h3>
+                        </div>
+                        <p class="text-gray-400">Expert in building scalable web applications, AI integration, payment systems, and cloud infrastructure. Specialized in transforming complex requirements into user-friendly solutions.</p>
                     </div>
                 </div>
             </div>
@@ -1065,10 +1386,10 @@
             <div class="hidden md:flex justify-center mb-12">
                 <div class="inline-flex bg-glass-gradient backdrop-blur-md rounded-full p-1">
                     <button class="experience-tab active px-6 py-2 rounded-full text-white transition duration-300" data-target="it-experience">
-                        <i class="fas fa-laptop-code mr-2"></i>PC & IT
+                        <i class="fas fa-user-tie mr-2"></i>Leadership & Tech
                     </button>
                     <button class="experience-tab px-6 py-2 rounded-full text-white/70 transition duration-300" data-target="music-experience">
-                        <i class="fas fa-music mr-2"></i>Music Production
+                        <i class="fas fa-music mr-2"></i>Music & Creative
                     </button>
                 </div>
             </div>
@@ -1076,15 +1397,15 @@
             <!-- Mobile Category Selection -->
             <div class="md:hidden mb-8">
                 <select id="experience-selector" class="w-full bg-glass-gradient backdrop-blur-md text-white border border-white/10 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-primary/50">
-                    <option value="it-experience">PC & IT Projects</option>
-                    <option value="music-experience">Music Production & Business</option>
+                    <option value="it-experience">Leadership & Technology</option>
+                    <option value="music-experience">Music & Creative Business</option>
                 </select>
             </div>
             
-            <!-- IT Experience Tab Content -->
+            <!-- Leadership & Technology Tab Content -->
             <div id="it-experience" class="experience-content space-y-8">
                 <h3 class="text-2xl font-semibold text-center mb-8 text-light relative inline-block" data-aos="fade-up">
-                    PC & IT Projects
+                    Leadership & Technology
                     <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-primary to-transparent"></span>
                 </h3>
                 
@@ -1092,56 +1413,63 @@
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
                         <div class="flex items-center">
                             <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
-                                <i class="fas fa-laptop-code text-primary text-xl"></i>
+                                <i class="fas fa-user-tie text-primary text-xl"></i>
                             </div>
-                            <h3 class="text-xl font-semibold">IT Migration Technician - Student aan Bedrijf B.V.</h3>
+                            <h3 class="text-xl font-semibold">Chief Technology Officer - Health Tech Startup</h3>
                         </div>
                         <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
-                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Mar 2025 - Present</span>
+                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Jun 2025 - Present</span>
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">
-                        IT Project Assistant for Microsoft Migration at Amarant (Hybrid)
+                        Chief Technology Officer for a Health Tech Startup in Gorinchem, Netherlands
                     </p>
                     <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>Assisted in Amarant's full-scale transition to Microsoft 365, migrating user accounts and configuring devices for seamless integration</li>
-                        <li>Replaced and configured hardware units (laptops, desktops, tablets) for the organization</li>
-                        <li>Provided first-line IT support with quick resolution times</li>
-                        <li>Implemented efficient migration protocols that reduced system downtime during transition</li>
+                        <li>Architecting and building core product infrastructure and technology stack for health industry solutions</li>
+                        <li>Leading and scaling cross-functional engineering teams with focus on performance and collaboration</li>
+                        <li>Overseeing data security, compliance (GDPR, HIPAA), and healthcare interoperability standards</li>
+                        <li>Translating complex health-related challenges into scalable, user-friendly software solutions</li>
+                        <li>Collaborating with founders, medical advisors, and business stakeholders on strategic technology decisions</li>
+                        <li>Defining long-term technology vision aligned with business goals and market opportunities</li>
                     </ul>
                     <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Microsoft 365</span>
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">IT Support</span>
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Migrations</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Technology Leadership</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Health Tech</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">GDPR/HIPAA</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Team Leadership</span>
                     </div>
                 </div>
 
                 <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="100">
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
                         <div class="flex items-center">
-                            <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
-                                <i class="fas fa-headset text-primary text-xl"></i>
+                            <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
+                                <i class="fas fa-rocket text-secondary text-xl"></i>
                             </div>
-                            <h3 class="text-xl font-semibold">IT Support Technician - Studentaanhuis</h3>
+                            <h3 class="text-xl font-semibold">Founder - Tricion</h3>
                         </div>
                         <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
-                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Nov 2024 - Feb 2025</span>
+                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Apr 2024 - Present</span>
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">
-                        Part-time IT support services in South Holland (Hybrid)
+                        AI-driven music tech startup building next-gen tools for producers and creators
                     </p>
                     <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>Diagnosed and fixed Windows OS issues, network problems, and hardware malfunctions</li>
-                        <li>Provided remote and on-site tech support for regular clients</li>
-                        <li>Achieved high customer satisfaction ratings across support tickets</li>
+                        <li>Bootstrapped from freelance income to fully operational AI SaaS platform with early profitability</li>
+                        <li>Built and launched full-stack platform offering royalty-free MIDI generation using generative AI</li>
+                        <li>Achieved optimal cost alignment between AI API expenses and pricing strategy for sustainable growth</li>
+                        <li>Attracted global user base across US, Brazil, India, and Germany through organic growth strategies</li>
+                        <li>Developing advanced features including MIDI editor and vocal generation engine for expanded market fit</li>
+                        <li>Leading product vision, roadmap planning, and technical architecture decisions</li>
                     </ul>
                     <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Tech Support</span>
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Windows</span>
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Troubleshooting</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">AI SaaS</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Full-Stack Development</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Stripe Integration</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Product Strategy</span>
                     </div>
                 </div>
 
@@ -1149,21 +1477,28 @@
                     <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
                         <div class="flex items-center">
                             <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
-                                <i class="fas fa-utensils text-primary text-xl"></i>
+                                <i class="fas fa-laptop-code text-primary text-xl"></i>
                             </div>
-                            <h3 class="text-xl font-semibold">Server - Van der Valk Hotel Gorinchem</h3>
+                            <h3 class="text-xl font-semibold">IT Migration Technician - Amarant (via Studentaanbedrijf)</h3>
                         </div>
                         <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
-                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Oct 2023 - May 2024</span>
+                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Mar 2025 - Present</span>
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">
-                        Part-time server role at a hotel restaurant, providing efficient service and assisting guests professionally.
+                        IT Migration Project Assistant for Microsoft Migration at Amarant, North Brabant
                     </p>
+                    <ul class="list-disc list-inside text-gray-400 space-y-2">
+                        <li>Supporting Amarant's enterprise transition to Microsoft 365 with hardware replacement and device configuration</li>
+                        <li>Providing comprehensive on-site IT support and troubleshooting for seamless migration process</li>
+                        <li>Configuring laptops, desktops, and tablets for optimal integration with new Microsoft ecosystem</li>
+                        <li>Implementing efficient migration protocols that minimize system downtime and user disruption</li>
+                    </ul>
                     <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Customer Service</span>
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Hospitality</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Microsoft 365</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Hardware Deployment</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Enterprise Migration</span>
                     </div>
                 </div>
 
@@ -1173,33 +1508,34 @@
                             <div class="bg-primary/20 p-3 rounded-full mr-4 flex-shrink-0">
                                 <i class="fas fa-microchip text-primary text-xl"></i>
                             </div>
-                            <h3 class="text-xl font-semibold">Computer Technician</h3>
+                            <h3 class="text-xl font-semibold">Computer Technician - Freelance</h3>
                         </div>
                         <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
                             <i class="far fa-calendar-alt mr-2"></i>
-                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Jun 2019 - Present</span>
+                            <span class="bg-primary/10 text-primary px-2 py-1 rounded">Jun 2019 - Jul 2025</span>
                         </div>
                     </div>
                     <p class="text-gray-400 mb-4">
-                        Freelance PC building and system optimization services
+                        Seasoned PC builder and tech specialist delivering custom computer solutions
                     </p>
                     <ul class="list-disc list-inside text-gray-400 space-y-2">
-                        <li>Built custom gaming PCs and workstations</li>
-                        <li>Provided hardware consulting and optimization services resulting in performance improvements</li>
-                        <li>Specialized in high-performance systems</li>
+                        <li>Successfully delivered numerous custom PC builds from high-performance gaming rigs to efficient office setups</li>
+                        <li>Mastered Windows operating systems for expert troubleshooting and performance optimization</li>
+                        <li>Built, managed, and optimized crypto mining rigs with HiveOS for peak efficiency and profitability</li>
+                        <li>Provided comprehensive software and hardware support with proactive problem-solving approach</li>
                     </ul>
                     <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">PC Building</span>
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Hardware</span>
-                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">System Optimization</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Custom PC Building</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">Hardware Troubleshooting</span>
+                        <span class="inline-block text-xs font-medium bg-primary/20 text-primary rounded-full px-3 py-1">HiveOS</span>
                     </div>
                 </div>
             </div>
             
-            <!-- Music Experience Tab Content -->
+            <!-- Music & Creative Business Tab Content -->
             <div id="music-experience" class="experience-content space-y-8 hidden">
                 <h3 class="text-2xl font-semibold text-center mb-8 text-light relative inline-block" data-aos="fade-up">
-                    Music Production & Business
+                    Music & Creative Business
                     <span class="absolute bottom-0 left-0 w-full h-0.5 bg-gradient-to-r from-secondary to-transparent"></span>
                 </h3>
                 
@@ -1209,25 +1545,28 @@
                                 <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
                                     <i class="fas fa-music text-secondary text-xl"></i>
                                 </div>
-                                <h3 class="text-xl font-semibold">Music Producer</h3>
+                                <h3 class="text-xl font-semibold">Music Producer - Ya Boi Ivan</h3>
                             </div>
                             <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
                                 <i class="far fa-calendar-alt mr-2"></i>
-                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Oct 2020 - Present</span>
+                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Oct 2020 - Jul 2025</span>
                             </div>
                         </div>
                         <p class="text-gray-400 mb-4">
-                            Freelance Music Producer/DJ specializing in Phonk, Trap, House, and club beats
+                            Independent artist and seasoned music producer specializing in Phonk, Trap, House, and club beats
                         </p>
                         <ul class="list-disc list-inside text-gray-400 space-y-2">
-                            <li>Over 5 million streams worldwide on personal releases</li>
-                            <li>Created viral tracks for TikTok and social media</li>
-                            <li>Produced and sold custom beats for artists and brands</li>
+                            <li>Achieved over 10 million streams on personal music releases across all platforms</li>
+                            <li>Contributed to over 100 million views across musical projects and collaborations</li>
+                            <li>Provided ghost production services delivering high-quality, ready-to-release music</li>
+                            <li>Developed and executed tailored social media marketing strategies for artists</li>
+                            <li>Managed music distribution for multiple talents, navigating industry complexities</li>
+                            <li>Cultivated strong collaborations with record labels, enhancing industry influence</li>
                         </ul>
                     <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Phonk</span>
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Trap</span>
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">House</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">10M+ Streams</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Ghost Production</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Music Marketing</span>
                     </div>
                     </div>
                     
@@ -1237,25 +1576,26 @@
                                 <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
                                     <i class="fas fa-headphones text-secondary text-xl"></i>
                                 </div>
-                                <h3 class="text-xl font-semibold">Music Production for Clients</h3>
+                                <h3 class="text-xl font-semibold">Music Production & Engineering</h3>
                             </div>
                             <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
                                 <i class="fas fa-tag mr-2"></i>
-                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Ghost Production & Custom Beats</span>
+                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Professional Services</span>
                             </div>
                         </div>
                         <p class="text-gray-400 mb-4">
-                            Providing freelance ghost production services for artists and brands.
+                            Comprehensive music production services from concept to final master
                         </p>
                         <ul class="list-disc list-inside text-gray-400 space-y-2">
-                            <li>Sold and licensed custom beats and full tracks to artists and brands</li>
-                            <li>Delivered high-quality mixing & mastering for professional sound</li>
-                            <li>Worked on custom client projects in different sub-genres</li>
+                            <li>Composing, arranging, mixing, and mastering original tracks from concept to final master</li>
+                            <li>Offering ghost production services to bring diverse musical visions to life</li>
+                            <li>Developing and implementing artist-specific digital marketing and distribution plans</li>
+                            <li>Building and maintaining professional relationships within the music industry</li>
                         </ul>
                     <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Mixing</span>
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Mastering</span>
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Custom Beats</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Mixing & Mastering</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Music Production</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Industry Relations</span>
                     </div>
                     </div>
                     
@@ -1265,56 +1605,28 @@
                                 <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
                                     <i class="fab fa-tiktok text-secondary text-xl"></i>
                                 </div>
-                                <h3 class="text-xl font-semibold">TikTok & Viral Music Placements</h3>
+                                <h3 class="text-xl font-semibold">Viral Content & Distribution</h3>
                             </div>
                             <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
                                 <i class="fas fa-bullhorn mr-2"></i>
-                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">Social Media Music Marketing</span>
+                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">100M+ Views</span>
                             </div>
                         </div>
                         <p class="text-gray-400 mb-4">
-                            Creating music for viral social media trends and placements.
+                            Creating and distributing viral music content across social media platforms
                         </p>
                         <ul class="list-disc list-inside text-gray-400 space-y-2">
-                            <li>Created beats that were used in viral TikTok trends</li>
-                            <li>Tracks played in club mixes and DJ sets globally</li>
-                            <li>Built a network of artists and influencers for distribution</li>
+                            <li>Created beats that were used in viral TikTok trends and social media content</li>
+                            <li>Tracks played in club mixes and DJ sets globally with significant reach</li>
+                            <li>Built extensive network of artists and influencers for strategic distribution</li>
+                            <li>Managed music distribution for multiple talents across various platforms</li>
                         </ul>
                     <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">TikTok</span>
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Viral</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Viral Content</span>
+                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Distribution</span>
                         <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">Social Media</span>
                     </div>
                     </div>
-                    
-                    <div class="glass-effect p-6 rounded-xl hover-scale feature-card" data-aos="fade-up" data-aos-delay="300">
-                        <div class="flex flex-col md:flex-row md:items-center justify-between mb-4">
-                            <div class="flex items-center">
-                                <div class="bg-secondary/20 p-3 rounded-full mr-4 flex-shrink-0">
-                                    <i class="fas fa-brain text-secondary text-xl"></i>
-                                </div>
-                                <h3 class="text-xl font-semibold">AI MIDI Generator SaaS Project</h3>
-                            </div>
-                            <div class="text-sm text-gray-500 mt-3 md:mt-0 flex items-center">
-                                <i class="fas fa-code-branch mr-2"></i>
-                            <span class="bg-secondary/10 text-secondary px-2 py-1 rounded">In Development</span>
-                            </div>
-                        </div>
-                        <p class="text-gray-400 mb-4">
-                            Creating an innovative AI-powered platform that revolutionizes music composition workflows for producers across genres.
-                        </p>
-                        <ul class="list-disc list-inside text-gray-400 space-y-2">
-                            <li>Developing neural network models trained on thousands of MIDI patterns to generate genre-specific compositions</li>
-                            <li>Creating an intuitive web interface allowing producers to customize parameters like tempo, key, and mood</li>
-                            <li>Implementing export functionality for direct integration with major DAWs like FL Studio and Ableton</li>
-                            <li>Building a subscription-based platform with tiered access to different generation capabilities</li>
-                        </ul>
-                    <div class="mt-4 flex flex-wrap gap-2">
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">AI</span>
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">MIDI</span>
-                        <span class="inline-block text-xs font-medium bg-secondary/20 text-secondary rounded-full px-3 py-1">SaaS</span>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -1400,11 +1712,11 @@
             
             <!-- Main Skills Grid -->
             <div class="grid md:grid-cols-3 gap-8 mb-16">
-                <!-- Technical Skills -->
+                <!-- Technical Leadership -->
                 <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
                     <h3 class="text-xl font-semibold mb-6 text-primary flex items-center border-b border-primary/20 pb-3">
-                        <i class="fas fa-laptop-code mr-3 text-2xl"></i>
-                        Technical Skills
+                        <i class="fas fa-user-tie mr-3 text-2xl"></i>
+                        Technical Leadership
                     </h3>
                     <div class="space-y-6">
                         <div>
@@ -1413,9 +1725,9 @@
                                 Expert Level
                             </h4>
                             <div class="flex flex-wrap gap-2">
-                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Custom PC Building</span>
-                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Hardware Troubleshooting</span>
-                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">System Optimization</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">CTO Leadership</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Team Management</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Product Strategy</span>
                             </div>
                         </div>
                         <div>
@@ -1424,19 +1736,19 @@
                                 Advanced
                             </h4>
                             <div class="flex flex-wrap gap-2">
-                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Microsoft 365</span>
-                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">OS Configuration</span>
-                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Technical Documentation</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">GDPR/HIPAA Compliance</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">System Architecture</span>
+                                <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Stakeholder Management</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Digital Production Skills -->
+                <!-- Full-Stack Development -->
                 <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
                     <h3 class="text-xl font-semibold mb-6 text-secondary flex items-center border-b border-secondary/20 pb-3">
-                        <i class="fas fa-music mr-3 text-2xl"></i>
-                        Digital Production
+                        <i class="fas fa-code mr-3 text-2xl"></i>
+                        Full-Stack Development
                     </h3>
                     <div class="space-y-6">
                         <div>
@@ -1445,8 +1757,9 @@
                                 Expert Level
                             </h4>
                             <div class="flex flex-wrap gap-2">
-                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">FL Studio</span>
-                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Digital Audio Production</span>
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">AI Integration</span>
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">SaaS Development</span>
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">API Development</span>
                             </div>
                         </div>
                         <div>
@@ -1455,18 +1768,19 @@
                                 Advanced
                             </h4>
                             <div class="flex flex-wrap gap-2">
-                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Mixing & Mastering</span>
-                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Sound Design</span>
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Stripe Integration</span>
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Cloud Infrastructure</span>
+                                <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Database Design</span>
                             </div>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Professional Skills -->
+                <!-- Business & Creative -->
                 <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
                     <h3 class="text-xl font-semibold mb-6 text-accent flex items-center border-b border-accent/20 pb-3">
-                        <i class="fas fa-user-tie mr-3 text-2xl"></i>
-                        Professional Skills
+                        <i class="fas fa-rocket mr-3 text-2xl"></i>
+                        Business & Creative
                     </h3>
                     <div class="space-y-6">
                         <div>
@@ -1475,8 +1789,9 @@
                                 Expert Level
                             </h4>
                             <div class="flex flex-wrap gap-2">
-                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Project Management</span>
-                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Client Relations</span>
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Startup Founding</span>
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Music Production</span>
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Content Marketing</span>
                             </div>
                         </div>
                         <div>
@@ -1485,8 +1800,9 @@
                                 Advanced
                             </h4>
                             <div class="flex flex-wrap gap-2">
-                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Marketing Strategy</span>
-                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Release Planning</span>
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Digital Marketing</span>
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Growth Strategy</span>
+                                <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Brand Development</span>
                             </div>
                             </div>
                         </div>
@@ -1498,46 +1814,48 @@
                 <!-- Removed Additional Expertise h3 title as requested -->
                 
                 <div class="grid md:grid-cols-3 gap-8 mt-12">
-                    <!-- Technical Tools -->
+                    <!-- AI & Development Tools -->
                     <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="100">
                         <h4 class="text-xl font-semibold text-primary mb-4 flex items-center border-b border-primary/20 pb-3">
-                            <i class="fas fa-tools mr-3"></i>
-                            Technical
+                            <i class="fas fa-brain mr-3"></i>
+                            AI & Development
                         </h4>
                         <div class="flex flex-wrap gap-2">
-                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Network Configuration</span>
-                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Windows OS</span>
-                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">System Integration</span>
-                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Hardware Testing</span>
-                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Desktop Support</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Machine Learning APIs</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">OpenAI Integration</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Neural Networks</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Data Processing</span>
+                            <span class="skill-badge bg-gradient-to-r from-primary/20 to-primary/5 border-primary/30">Algorithm Design</span>
                         </div>
                             </div>
                     
-                    <!-- Digital Media -->
+                    <!-- Platform & Infrastructure -->
                     <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="200">
                         <h4 class="text-xl font-semibold text-secondary mb-4 flex items-center border-b border-secondary/20 pb-3">
-                            <i class="fas fa-photo-video mr-3"></i>
-                            Digital Media
+                            <i class="fas fa-server mr-3"></i>
+                            Platform & Infrastructure
                         </h4>
                         <div class="flex flex-wrap gap-2">
-                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Ghost Production</span>
-                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Stem Preparation</span>
-                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Beat Making</span>
-                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Audio Engineering</span>
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Cloud Deployment</span>
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Database Management</span>
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">API Architecture</span>
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Security Implementation</span>
+                            <span class="skill-badge bg-gradient-to-r from-secondary/20 to-secondary/5 border-secondary/30">Scalability Planning</span>
                 </div>
             </div>
             
-                    <!-- Business -->
+                    <!-- Startup & Business -->
                     <div class="glass-effect p-6 rounded-xl hover-scale transition-all duration-300" data-aos="fade-up" data-aos-delay="300">
                         <h4 class="text-xl font-semibold text-accent mb-4 flex items-center border-b border-accent/20 pb-3">
                             <i class="fas fa-chart-line mr-3"></i>
-                            Business & Professional
+                            Startup & Business
                         </h4>
                         <div class="flex flex-wrap gap-2">
-                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Contract Management</span>
-                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Release Strategy</span>
-                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Marketing Consultation</span>
-                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Client Communication</span>
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Bootstrapping</span>
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Product-Market Fit</span>
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">User Acquisition</span>
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Revenue Optimization</span>
+                            <span class="skill-badge bg-gradient-to-r from-accent/20 to-accent/5 border-accent/30">Global Expansion</span>
                 </div>
                 </div>
                 </div>
@@ -1613,6 +1931,21 @@
                     <div class="glass-effect p-6 rounded-xl hover-scale">
                         <div class="flex items-start">
                             <div class="bg-primary/10 p-3 rounded-full mr-4">
+                                <i class="fas fa-rocket text-primary"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-lg font-semibold mb-1">Tricion Studio</h3>
+                                <a href="https://tricion.studio" target="_blank" class="text-gray-400 hover:text-primary flex items-center">
+                                    <span>AI-Powered Music Tech Platform</span>&nbsp;
+                                    <i class="fas fa-external-link-alt text-xs ml-4"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="glass-effect p-6 rounded-xl hover-scale">
+                        <div class="flex items-start">
+                            <div class="bg-primary/10 p-3 rounded-full mr-4">
                                 <i class="fas fa-shopping-cart text-primary"></i>
                             </div>
                             <div>
@@ -1641,18 +1974,21 @@
                     </div>
                     
                     <div class="mt-8 glass-effect p-6 rounded-xl hover-scale" data-aos="fade-up" data-aos-delay="300">
-                        <h3 class="text-lg font-semibold mb-3">Looking for professional assistance?</h3>
+                        <h3 class="text-lg font-semibold mb-3">Ready to collaborate?</h3>
                         <p class="text-gray-400 mb-4">
-                            Whether you need a custom PC built, help with technical issues, or are interested in music production services, I'm here to help!
+                            As a CTO and startup founder, I'm always interested in discussing new opportunities, partnerships, and innovative projects in tech and creative industries.
                         </p>
                         <p class="text-gray-400 mb-4">
-                            Visit my <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-primary hover:underline flex items-center inline-flex">
-                                <span>Payhip store</span>&nbsp;
+                            Check out <a href="https://tricion.studio" target="_blank" class="text-primary hover:underline flex items-center inline-flex">
+                                <span>Tricion Studio</span>&nbsp;
                                 <i class="fas fa-external-link-alt text-xs ml-1"></i>
-                            </a> where you can purchase custom edits, ghost production services, merchandise, and marketing solutions.
+                            </a> to see our AI-powered music tech platform in action, or visit my <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-primary hover:underline flex items-center inline-flex">
+                                <span>commerce store</span>&nbsp;
+                                <i class="fas fa-external-link-alt text-xs ml-1"></i>
+                            </a> for music production services.
                         </p>
                         <p class="text-gray-400">
-                            Send me a message and I can provide my phone number for more direct communication and faster response times.
+                            Whether you're looking for technical leadership, full-stack development expertise, or creative collaboration, let's connect and explore how we can build something amazing together.
                         </p>
                     </div>
                 </div>
@@ -1669,7 +2005,7 @@
             <div class="flex flex-col md:flex-row justify-between items-center">
                 <div class="mb-6 md:mb-0">
                     <h2 class="text-2xl font-bold mb-2">Ivan<span class="text-primary">.dev</span></h2>
-                    <p class="text-gray-400">PC Builder | IT Professional | Music Producer</p>
+                    <p class="text-gray-400">CTO | Startup Founder | Full-Stack Developer</p>
                 </div>
                 <div class="flex space-x-4">
                     <a href="https://linkedin.com/in/ivan-van-der-schuit-b7ba0324a" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
@@ -1683,6 +2019,9 @@
                     </a>
                     <a href="https://open.spotify.com/artist/4I9Ky6xgFtzI13y535TNXP?si=H-GbxJa-QkGdmU6HXADjDA" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
                         <i class="fab fa-spotify text-xl"></i>
+                    </a>
+                    <a href="https://tricion.studio" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
+                        <i class="fas fa-rocket text-xl"></i>
                     </a>
                     <a href="https://payhip.com/TricionCommerce" target="_blank" class="text-gray-400 hover:text-primary transition-colors">
                         <i class="fas fa-shopping-cart text-xl"></i>
@@ -1713,34 +2052,105 @@
     
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // ... existing code (all your scripts except mobile menu) ...
-
-            // Add animation to page elements on scroll
-            const animateOnScroll = function() {
-                const elements = document.querySelectorAll('.feature-card, .skill-badge, .glass-effect');
-                
-                elements.forEach(element => {
-                    const elementTop = element.getBoundingClientRect().top;
-                    const elementVisible = 150;
+            // Enhanced mouse tracking for feature cards
+            const featureCards = document.querySelectorAll('.feature-card');
+            featureCards.forEach(card => {
+                card.addEventListener('mousemove', (e) => {
+                    const rect = card.getBoundingClientRect();
+                    const x = ((e.clientX - rect.left) / rect.width) * 100;
+                    const y = ((e.clientY - rect.top) / rect.height) * 100;
                     
-                    if (elementTop < window.innerHeight - elementVisible) {
-                        if (!element.classList.contains('animate__animated')) {
-                            element.classList.add('animate__animated', 'animate__fadeInUp');
-                        }
-                    }
+                    card.style.setProperty('--mouse-x', `${x}%`);
+                    card.style.setProperty('--mouse-y', `${y}%`);
                 });
+            });
+
+            // Enhanced scroll animations with intersection observer
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
             };
 
-            window.addEventListener('scroll', animateOnScroll);
-            animateOnScroll(); // Run once on page load
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate__animated', 'animate__fadeInUp');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
 
-            // Smooth scroll for back-to-top button
+            // Observe elements for animation
+            const animateElements = document.querySelectorAll('.feature-card, .skill-badge, .glass-effect');
+            animateElements.forEach(el => observer.observe(el));
+
+            // Enhanced skill badge interactions
+            const skillBadges = document.querySelectorAll('.skill-badge');
+            skillBadges.forEach(badge => {
+                badge.addEventListener('mouseenter', () => {
+                    // Add subtle vibration effect
+                    badge.style.transform = 'translateY(-2px) scale(1.05)';
+                });
+                
+                badge.addEventListener('mouseleave', () => {
+                    badge.style.transform = '';
+                });
+            });
+
+            // Smooth scroll for back-to-top button with enhanced visibility
             const backToTopBtn = document.getElementById('back-to-top');
             if (backToTopBtn) {
+                window.addEventListener('scroll', () => {
+                    if (window.pageYOffset > 300) {
+                        backToTopBtn.classList.add('show');
+                    } else {
+                        backToTopBtn.classList.remove('show');
+                    }
+                });
+
                 backToTopBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 });
+            }
+
+            // Add parallax effect to hero section
+            const heroSection = document.getElementById('hero');
+            if (heroSection) {
+                window.addEventListener('scroll', () => {
+                    const scrolled = window.pageYOffset;
+                    const parallaxElements = heroSection.querySelectorAll('.absolute');
+                    
+                    parallaxElements.forEach((element, index) => {
+                        const speed = 0.5 + (index * 0.1);
+                        element.style.transform = `translateY(${scrolled * speed}px)`;
+                    });
+                });
+            }
+
+            // Enhanced typing effect with cursor blinking
+            const typedText = document.querySelector('.typed-text');
+            if (typedText) {
+                // Add cursor element
+                const cursor = document.createElement('span');
+                cursor.className = 'typed-cursor';
+                cursor.textContent = '|';
+                cursor.style.cssText = `
+                    animation: blink 1s infinite;
+                    color: #4F46E5;
+                    font-weight: 300;
+                `;
+                typedText.parentNode.appendChild(cursor);
+
+                // Add cursor blink animation
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes blink {
+                        0%, 50% { opacity: 1; }
+                        51%, 100% { opacity: 0; }
+                    }
+                `;
+                document.head.appendChild(style);
             }
         });
     </script>
